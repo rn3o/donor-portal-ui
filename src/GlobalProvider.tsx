@@ -14,7 +14,7 @@ interface GlobalState {
 const GlobalContext = createContext<GlobalState | undefined>(undefined);
 
 // Create a provider component
-export const GlobalProvider: React.FC = ({ children }) => {
+export const GlobalProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [showAlerts, setShowAlerts] = useState<boolean>(() => {
     const storedShowAlerts = localStorage.getItem('showAlerts');
     return storedShowAlerts ? JSON.parse(storedShowAlerts) : false;

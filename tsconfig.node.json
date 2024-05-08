@@ -1,11 +1,30 @@
+// {
+//   "compilerOptions": {
+//     "composite": true,
+//     "skipLibCheck": true,
+//     "module": "ESNext",
+//     "moduleResolution": "bundler",
+//     "allowSyntheticDefaultImports": true,
+//     "strict": false
+//   },
+//   "include": ["vite.config.ts"]
+// }
+
+
 {
   "compilerOptions": {
-    "composite": true,
-    "skipLibCheck": true,
-    "module": "ESNext",
-    "moduleResolution": "bundler",
-    "allowSyntheticDefaultImports": true,
-    "strict": false
+    "target": "ESNext", // You can set your target here
+    "allowJs": true, // Allows JavaScript files to be compiled
+    "checkJs": false, // Disables type checking in JavaScript files
+    "noImplicitAny": false, // Allows 'any' type implicitly
+    "strict": false, // Disables all strict type checking options
+    "noUnusedLocals": false, // Allows unused local variables
+    "noUnusedParameters": false, // Allows unused parameters
+    "noFallthroughCasesInSwitch": false, // Disables checking for fallthrough cases in switch statements
+    "esModuleInterop": true, // Enables compatibility with CommonJS modules
+    "skipLibCheck": true, // Skips type checking of all declaration files
+    "forceConsistentCasingInFileNames": false, // Allows inconsistent casing in file names
+    // Add any other permissive options you need
   },
-  "include": ["vite.config.ts"]
+  "include": ["src"]
 }

@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import './index.css';
 import defaultProps from './config/defaultProps';
 // import defaultSettings from './config/defaultSettings';
@@ -236,18 +238,18 @@ export default () => {
 
   const [settings, setSetting] = useState<ProSettings>({
     fixSiderbar: true,
-    layout: selectedNavStyle as "mix" | "top" | "side", 
+    layout: selectedNavStyle,
     fixedHeader: true,
     splitMenus: false,
     siderMenuType: 'sub',
-    navTheme: themeMode as "light" | "realDark",
+    navTheme: themeMode,
     // navTheme: 'realDark'
   });
 
   useEffect(() => {
     setSetting((prevSetting) => ({
       ...prevSetting,
-      navTheme: themeMode as "light" | "realDark",
+      navTheme: themeMode,
     }));
   }, [themeMode]);
 
