@@ -2,7 +2,7 @@
 
 import './index.css';
 import defaultProps from './config/defaultProps';
-// import defaultSettings from './config/defaultSettings';
+import defaultSettings from './config/defaultSettings';
 
 import { Route, Routes, useNavigate, useLocation } from 'react-router-dom';
 import React, { useState, useEffect, lazy, Suspense } from 'react';
@@ -26,7 +26,9 @@ import {
 } from '@ant-design/icons';
 import type { ProSettings } from '@ant-design/pro-components';
 import {
+  ProConfigProvider,
   ProLayout,
+  SettingDrawer,
 } from '@ant-design/pro-components';
 
 import { css } from '@emotion/css';
@@ -35,6 +37,8 @@ import {
   ConfigProvider,
   Divider,
   Dropdown,
+  Input,
+  Popover,
   theme,
   Flex,
   FloatButton,
@@ -44,19 +48,37 @@ import {
   Slider,
   Drawer,
   InputNumber,
+  Switch,
   Radio,
 } from 'antd';
 
 import type { ColorPickerProps } from 'antd';
 
+import type { ConfigProviderProps } from 'antd';
+
 const { Text } = Typography;
 
+// import enUS from 'antd/es/locale/en_US';
 import enUS from 'antd/locale/en_US';
 
 import DesignSystem from './pages/DesignSystem';
-import QuickAccessMenu from './ui/QuickAccessMenu';
-import MyAccount from './pages/MyAccount';
+import TestPage from './pages/_TestPage';
+import FirstLevelPage from './pages/FirstLevelPage';
 
+import QuickAccessMenu from './ui/QuickAccessMenu';
+import NoDonation from './pages/NoDonation';
+import MyAccount from './pages/MyAccount';
+// import FundraisingPages from './pages/fundraising/FundraisingPages';
+// import FundraisingTeams from './pages/fundraising/FundraisingTeams';
+// import FundraisingTeamInvitation from './pages/fundraising/FundraisingTeamInvitation';
+// import FundraisingCreateTeam from './pages/fundraising/FundraisingCreateTeam';
+// import FundraisingCreatePage from './pages/fundraising/FundraisingCreatePage';
+// import DonationLists from './pages/donation/DonationLists';
+// import DonationCreate from './pages/donation/DonationCreate';
+// import GivingPlanLists from './pages/giving-plan/GivingPlanLists';
+// import GivingPlanCreate from './pages/giving-plan/GivingPlanCreate';
+
+// const MyAccount = lazy(() => import('./pages/MyAccount'));
 const FundraisingPages = lazy(() =>
   import('./pages/fundraising/FundraisingPages')
 );
@@ -100,6 +122,7 @@ export default () => {
   // const [pageContent, setPageContent] = useState(<CreateAccount />);
 
   const navigate = useNavigate();
+  const location = useLocation();
 
   const { token } = theme.useToken();
 
@@ -204,7 +227,7 @@ export default () => {
     'https://res.cloudinary.com/rn3o/image/upload/v1714470245/minimalist-vector-style-playful-geometric-pattern-_2_kcjitx.png'
   );
 
-  const handleThemePresets = (option) => {
+  const handleThemePresets = (value, option) => {
     console.log('change to ' + option.label);
     const {
       font,
@@ -213,6 +236,7 @@ export default () => {
       background,
       spacing,
       corner,
+      label,
       logo,
       title,
       heroImage,
@@ -384,7 +408,7 @@ export default () => {
                 min={11}
                 max={16}
                 defaultValue={themeFontSize}
-                // onChange={setThemeFontSize}
+                onChange={setThemeFontSize}
                 changeOnWheel
                 style={{ width: 60 }}
               />
@@ -666,7 +690,7 @@ export default () => {
           {...settings}
           // {...defaultSettings}
 
-          // disableContentMargin={true}
+          disableContentMargin={true}
         >
           {/* top border accent color theme hack*/}
           <Button
