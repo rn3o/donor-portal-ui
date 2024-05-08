@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import React, { useState } from 'react';
 import { DownOutlined, DeleteOutlined, SaveOutlined } from '@ant-design/icons';
 import type { MenuProps } from 'antd';

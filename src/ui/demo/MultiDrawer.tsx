@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import { Drawer, Button, Select, Space, Flex } from 'antd';
 
-import CreateAccountForm from '../ui/CreateAccountForm';
-
 const { Option } = Select;
 
 interface MultiDrawerProps {

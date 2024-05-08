@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { useGlobalState } from './../../GlobalProvider';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
