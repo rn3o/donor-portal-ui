@@ -3,7 +3,7 @@ import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import { Space, Switch, Divider } from 'antd';
 
 const SwitchesDemo: React.FC = () => (
-  <Space align="top">
+  <Space>
     <Switch
       checkedChildren="Active"
       unCheckedChildren="Inactive"

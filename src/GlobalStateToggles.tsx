@@ -34,7 +34,7 @@ const GlobalStateToggles: React.FC = () => {
         vertical
         justify="flex-end"
         gap={8}
-        style={{ align: 'right', background: 'white', padding: 8 }}
+        style={{ alignItems: 'right', background: 'white', padding: 8 }}
       >
         <Flex style={toggler}>
           {showAlerts ? 'Alerts: Visible' : 'Alerts: Hidden'}
@@ -50,22 +50,6 @@ const GlobalStateToggles: React.FC = () => {
         </Flex>
       </Flex>
     </FloatButton.Group>
-
-    // <div style={{ position: 'fixed', bottom: 80, left: 20, zIndex: 9999 }}>
-    //   for demo purpose
-    //   <div>
-    //     <Switch size="small" checked={showAlerts} onChange={setShowAlerts} />
-    //     <span>{showAlerts ? 'Alerts: Visible' : 'Alerts: Hidden'}</span>
-    //   </div>
-    //   <div>
-    //     <Switch size="small" checked={isEmpty} onChange={setIsEmpty} />
-    //     <span>{isEmpty ? 'Empty: YES' : 'Empty: NO'}</span>
-    //   </div>
-    //   <div>
-    //     <Switch size="small" checked={showMany} onChange={setShowMany} />
-    //     <span>{showMany ? 'Many: ON' : 'Many: OFF'}</span>
-    //   </div>
-    // </div>
   );
 };
 
