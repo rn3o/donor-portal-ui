@@ -382,7 +382,7 @@ export default () => {
                 min={11}
                 max={16}
                 defaultValue={themeFontSize}
-                onChange={setThemeFontSize}
+                // onChange={setThemeFontSize}
                 changeOnWheel
                 style={{ width: 60 }}
               />
@@ -664,7 +664,7 @@ export default () => {
           {...settings}
           // {...defaultSettings}
 
-          disableContentMargin={true}
+          // disableContentMargin={true}
         >
           {/* top border accent color theme hack*/}
           <Button
