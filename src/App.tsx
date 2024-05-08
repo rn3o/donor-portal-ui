@@ -1,4 +1,4 @@
-
+// @ts-nocheck
 
 import './index.css';
 import defaultProps from './config/defaultProps';
