@@ -1,6 +1,6 @@
 import './index.css';
 import defaultProps from './config/defaultProps';
-import defaultSettings from './config/defaultSettings';
+// import defaultSettings from './config/defaultSettings';
 
 import { Route, Routes, useNavigate, useLocation } from 'react-router-dom';
 import React, { useState, useEffect, lazy, Suspense } from 'react';
@@ -24,9 +24,7 @@ import {
 } from '@ant-design/icons';
 import type { ProSettings } from '@ant-design/pro-components';
 import {
-  ProConfigProvider,
   ProLayout,
-  SettingDrawer,
 } from '@ant-design/pro-components';
 
 import { css } from '@emotion/css';
@@ -35,8 +33,6 @@ import {
   ConfigProvider,
   Divider,
   Dropdown,
-  Input,
-  Popover,
   theme,
   Flex,
   FloatButton,
@@ -46,17 +42,13 @@ import {
   Slider,
   Drawer,
   InputNumber,
-  Switch,
   Radio,
 } from 'antd';
 
 import type { ColorPickerProps } from 'antd';
 
-import type { ConfigProviderProps } from 'antd';
-
 const { Text } = Typography;
 
-// import enUS from 'antd/es/locale/en_US';
 import enUS from 'antd/locale/en_US';
 
 import DesignSystem from './pages/DesignSystem';
@@ -106,7 +98,6 @@ export default () => {
   // const [pageContent, setPageContent] = useState(<CreateAccount />);
 
   const navigate = useNavigate();
-  const location = useLocation();
 
   const { token } = theme.useToken();
 
@@ -211,7 +202,7 @@ export default () => {
     'https://res.cloudinary.com/rn3o/image/upload/v1714470245/minimalist-vector-style-playful-geometric-pattern-_2_kcjitx.png'
   );
 
-  const handleThemePresets = (value, option) => {
+  const handleThemePresets = (option) => {
     console.log('change to ' + option.label);
     const {
       font,
@@ -220,7 +211,6 @@ export default () => {
       background,
       spacing,
       corner,
-      label,
       logo,
       title,
       heroImage,
@@ -246,18 +236,18 @@ export default () => {
 
   const [settings, setSetting] = useState<ProSettings>({
     fixSiderbar: true,
-    layout: selectedNavStyle,
+    layout: selectedNavStyle as "mix" | "top" | "side", 
     fixedHeader: true,
     splitMenus: false,
     siderMenuType: 'sub',
-    navTheme: themeMode,
+    navTheme: themeMode as "light" | "realDark",
     // navTheme: 'realDark'
   });
 
   useEffect(() => {
     setSetting((prevSetting) => ({
       ...prevSetting,
-      navTheme: themeMode,
+      navTheme: themeMode as "light" | "realDark",
     }));
   }, [themeMode]);
 
