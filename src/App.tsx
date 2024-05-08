@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 
 import './index.css';
 import defaultProps from './config/defaultProps';
@@ -739,7 +739,7 @@ const HeroBackgroundImage = ({ imageUrl }) => {
     <div
       style={{
         width: '100%',
-        margin: '-32px -24px 0 -24px',
+        margin: '-32px -8px 0 -8px',
         // background: 'blue',
         padding: 0,
         height: '280px',
