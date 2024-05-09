@@ -208,7 +208,7 @@ const StepTwo: React.FC = () => {
 
   const [inputValue, setInputValue] = useState<string>('');
 
-  const placeholder = "team1025";
+  const placeholder = "team-name";
 
   // to simulate error validation
   const [error, setError] = useState<string>('');
@@ -253,7 +253,7 @@ const StepTwo: React.FC = () => {
         ) : (
           <Typography.Text>
             <Typography.Text type="secondary">The page will live on: </Typography.Text>
-            https://fundraise.charitywebsite.org/{inputValue || placeholder}
+            https://fundraise.charitywebsite.org/<b>{inputValue || placeholder}</b>
           </Typography.Text>
         )}
 
