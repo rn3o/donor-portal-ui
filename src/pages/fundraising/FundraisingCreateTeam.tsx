@@ -1,6 +1,7 @@
 // @ts-nocheck
 
 import { useGlobalState } from './../../GlobalProvider';
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -13,18 +14,19 @@ import {
   Typography,
   Checkbox,
   Segmented,
-  Select,
-  Space
+  Select
+  
 } from 'antd';
 import { ProCard, PageContainer, CheckCard } from '@ant-design/pro-components';
-import { PlusOutlined } from '@ant-design/icons';
+import { CloseOutlined, MailOutlined, PlusOutlined } from '@ant-design/icons';
 
 const FundraisingCreateTeam: React.FC = () => {
+  const { setShowSuccessMessage } = useGlobalState();
   const { setIsEmpty } = useGlobalState();
   const navigate = useNavigate();
   const { token } = theme.useToken();
 
-  const goToPages = () => {
+  const goToTeams = () => {
     navigate('/fundraising/teams');
   };
 
@@ -41,14 +43,17 @@ const FundraisingCreateTeam: React.FC = () => {
   };
 
   const handleFinish = () => {
-    goToPages();
+    setShowSuccessMessage("Team successfully created"); 
     setIsEmpty(false);
+    goToTeams();
   };
+
+
 
   return (
     <PageContainer
       extra={
-        <Button key="2" type="text" onClick={goToPages}>
+        <Button key="2" type="text" onClick={goToTeams}>
           Cancel
         </Button>
       }
@@ -68,12 +73,14 @@ const FundraisingCreateTeam: React.FC = () => {
           ],
         },
       }}
-      style={{ width: '100%', margin: 'auto', maxWidth: '800px' }}
+      style={{ width: '100%', margin: 'auto', maxWidth: '640px' }}
     >
+      
       <CreateSteps currentStep={currentStep} />
       <br />
       <br />
       <ProCard>
+      
         <div>
           {steps[currentStep]}
           <Divider />
@@ -85,7 +92,7 @@ const FundraisingCreateTeam: React.FC = () => {
               </Button>
             ) : (
               <Button type="primary" onClick={handleFinish}>
-                Finish
+                Create the team
               </Button>
             )}
           </Flex>
@@ -109,11 +116,11 @@ const CreateSteps: React.FC<{ currentStep: number }> = ({ currentStep }) => {
         },
         {
           title: 'Step 2',
-          description: 'About the Team',
+          description: 'Page Detail',
         },
         {
           title: 'Step 3',
-          description: 'Finishing Touch',
+          description: 'Team Up',
         },
       ]}
     />
@@ -201,12 +208,20 @@ const StepTwo: React.FC = () => {
 
   const [inputValue, setInputValue] = useState<string>('');
 
+  const placeholder = "team-name";
+
+  // to simulate error validation
+  const [error, setError] = useState<string>('');
+
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setInputValue(e.target.value);
+    const value = e.target.value;
+    setInputValue(value);
+    if (value === 'ryan' || value === 'asdf') {
+      setError('already taken');
+    } else {
+      setError('');
+    }
   };
-
-  const placeholder = "team-doe-page";
-
 
   return (
     <Flex vertical gap={0}>
@@ -222,17 +237,30 @@ const StepTwo: React.FC = () => {
         />
         <Typography.Text type="secondary">Write campaign name up to 60 characters.</Typography.Text>
       </div>
-      <div>
+      <Flex vertical>
         <Typography.Title level={5}>Customise web page address</Typography.Title>
         <Input
           size="large"
           placeholder={placeholder}
           value={inputValue}
           onChange={handleInputChange}
+          status={error ? 'error' : undefined}
+        // style={{ width: '60%' }}
         />
-        <Typography.Text type="secondary">The page address will be https://fundraise.charitywebsite.org/</Typography.Text>
-        <Typography.Text>{inputValue || placeholder}</Typography.Text>
-      </div>
+
+        {error ? (
+          <Typography.Text type="danger">https://fundraise.charitywebsite.org/<b>{inputValue}</b> {error}</Typography.Text>
+        ) : (
+          <Typography.Text>
+            <Typography.Text type="secondary">The page will live on: </Typography.Text>
+            https://fundraise.charitywebsite.org/<b>{inputValue || placeholder}</b>
+          </Typography.Text>
+        )}
+
+<br />
+        <br />
+        <Typography.Text type="secondary">You can add more to the page like images and other cool stuff once page is created.</Typography.Text>
+      </Flex>
     </Flex>
   );
 };
@@ -264,14 +292,17 @@ const StepThree: React.FC = () => {
   return (
     <Flex vertical gap={0}>
       <div>
-        <Typography.Title level={5}>Invite Fundraisers</Typography.Title>
+        <Typography.Title level={5}>Invite others to team up with you</Typography.Title>
         <Flex gap={8}>
           <Select
+          size='large'
             mode="tags"
             style={{ width: '100%' }}
             placeholder="Type email addresses"
             value={emails}
             onChange={handleSelect}
+            suffixIcon={<MailOutlined />}
+            // removeIcon={<CloseOutlined />}
             onInputKeyDown={(e) => {
               if (e.keyCode === 13) {
                 // Prevent default behavior of Enter key
@@ -288,27 +319,26 @@ const StepThree: React.FC = () => {
               }
             }}
             tokenSeparators={[',']}
+            notFoundContent={null} // Remove "no data" message
           >
             {emails.map((email) => (
               <Option key={email}>{email}</Option>
             ))}
           </Select>
-          <Button
+          {/* <Button
             type="primary"
             onClick={handleInvite}
             disabled={emails.length === 0}
           >
             Invite
-          </Button>
+          </Button> */}
 
         </Flex>
-        <Typography.Text type="secondary">Add email addresses, separate by commas (,)</Typography.Text>
+        <Typography.Text type="secondary">Add email addresses, separate by commas (,) to add multiple.</Typography.Text>
 
         <br />
         <br />
         <Typography.Text type="secondary">You can always do this later after you created the team.</Typography.Text>
-        <br />
-        <Typography.Text type="secondary">You can skip this step and create the team</Typography.Text>
       </div>
     </Flex>
   );

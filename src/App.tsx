@@ -5,7 +5,7 @@ import defaultProps from './config/defaultProps';
 import defaultSettings from './config/defaultSettings';
 
 import { Route, Routes, useNavigate, useLocation } from 'react-router-dom';
-import React, { useState, useEffect, lazy, Suspense } from 'react';
+import React, { useState, useEffect, lazy, Suspense, startTransition } from 'react';
 
 import {
   LogoutOutlined,
@@ -85,6 +85,9 @@ const FundraisingPages = lazy(() =>
 const FundraisingTeams = lazy(() =>
   import('./pages/fundraising/FundraisingTeams')
 );
+const FundraisingTeamMember = lazy(() =>
+  import('./pages/fundraising/FundraisingTeamMember')
+);
 const FundraisingTeamInvitation = lazy(() =>
   import('./pages/fundraising/FundraisingTeamInvitation')
 );
@@ -134,8 +137,11 @@ export default () => {
     setOpenThemerDrawer(true);
   };
 
+  // Wrap the state update with startTransition
   const onCloseThemerDrawer = () => {
-    setOpenThemerDrawer(false);
+    startTransition(() => {
+      setOpenThemerDrawer(false);
+    });
   };
 
   // color theme presets
@@ -480,7 +486,7 @@ export default () => {
                     type="primary"
                     shape="circle"
                     icon={<HeartOutlined />}
-                    // size='small'
+                  // size='small'
                   />
                   <QuickAccessMenu />
                 </Flex>
@@ -511,7 +517,7 @@ export default () => {
                     shape="circle"
                     icon={<HeartOutlined />}
                     size="small"
-                    // style={{fontWeight: 'bold',}}
+                  // style={{fontWeight: 'bold',}}
                   />
 
                   <Text
@@ -615,7 +621,7 @@ export default () => {
                     shape="circle"
                     icon={<HeartOutlined />}
                     size="small"
-                    // style={{fontWeight: 'bold',}}
+                  // style={{fontWeight: 'bold',}}
                   />
 
                   <span
@@ -743,10 +749,9 @@ const HeroBackgroundImage = ({ imageUrl }) => {
         // background: 'blue',
         padding: 0,
         height: '280px',
-        backgroundImage: `url(${
-          imageUrl ||
+        backgroundImage: `url(${imageUrl ||
           'https://res.cloudinary.com/rn3o/image/upload/v1714470245/minimalist-vector-style-playful-geometric-pattern-_2_kcjitx.png'
-        })`,
+          })`,
         backgroundSize: 'cover',
         backgroundPosition: 'top',
         position: 'fixed', // Change position to fixed
@@ -877,6 +882,16 @@ const Content = () => (
         <Suspense fallback={<>loading</>}>
           {' '}
           <FundraisingTeams />{' '}
+        </Suspense>
+      }
+    />
+
+    <Route
+      path="/fundraising/teams/members"
+      element={
+        <Suspense fallback={<>loading</>}>
+          {' '}
+          <FundraisingTeamMember />{' '}
         </Suspense>
       }
     />

@@ -1,13 +1,16 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { message } from 'antd';
 
 // Define the shape of your global state
 interface GlobalState {
   showAlerts: boolean;
   isEmpty: boolean;
   showMany: boolean;
+  showSuccessMessage: boolean; // Add success message state
   setShowAlerts: React.Dispatch<React.SetStateAction<boolean>>;
   setIsEmpty: React.Dispatch<React.SetStateAction<boolean>>;
   setShowMany: React.Dispatch<React.SetStateAction<boolean>>;
+  setShowSuccessMessage: React.Dispatch<React.SetStateAction<boolean>>; // Function to toggle success message
 }
 
 // Create the context
@@ -30,6 +33,16 @@ export const GlobalProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     return storedShowMany ? JSON.parse(storedShowMany) : true;
   });
 
+  const [showSuccessMessage, setShowSuccessMessage] = useState<boolean>(false); // Initialize success message state
+  const [messageApi, contextHolder] = message.useMessage();
+
+  useEffect(() => {
+    if (showSuccessMessage) {
+      message.success('Successfuly created'); // Display success message
+      setShowSuccessMessage(false); // Reset success message state after displaying
+    }
+  }, [showSuccessMessage]);
+
   useEffect(() => {
     localStorage.setItem('showAlerts', JSON.stringify(showAlerts));
   }, [showAlerts]);
@@ -48,12 +61,16 @@ export const GlobalProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         showAlerts,
         isEmpty,
         showMany,
+        showSuccessMessage,
         setShowAlerts,
         setIsEmpty,
         setShowMany,
+        setShowSuccessMessage,
       }}
     >
       {children}
+      {showSuccessMessage && <>{contextHolder}</>} {/* Render message component with contextHolder */}
+
     </GlobalContext.Provider>
   );
 };

@@ -1,42 +1,50 @@
 import React from 'react';
-import { Card, Progress, Flex, theme, Button } from 'antd';
+import { Card, Progress, Flex, theme, Button, Tooltip, Divider, Avatar } from 'antd';
 
-import { ShareAltOutlined } from '@ant-design/icons';
+import { UserOutlined } from '@ant-design/icons';
 
 import { css } from '@emotion/css';
+import { useNavigate } from 'react-router-dom'; 
 
-interface FundraisingListItemProps {
-  name: string;
+interface FundraisingTeamMemberListItemProps {
+  pageTitle: string;
+  fundraiserName: string,
+  fundraiserAvatarURL: string,
   imgUrl: string;
   completionPercent: number;
-  supporterCount: number;
   amountRaised: string;
-  target: string;
+  supporterCount: number;
   dayLeft: number;
+  target: string;
 }
 
-export const FundraisingListItem: React.FC<FundraisingListItemProps> = ({
-  name,
+export const FundraisingTeamMemberListItem: React.FC<FundraisingTeamMemberListItemProps> = ({
+  pageTitle,
+  fundraiserName,
+  fundraiserAvatarURL,
   imgUrl,
   supporterCount,
-  completionPercent,
   amountRaised,
-  target,
-  dayLeft,
+  completionPercent,
+  dayLeft
 }) => {
   const { token } = theme.useToken();
   const isMobile = window.innerWidth < 600;
 
-  return (
-    <Card hoverable styles={{ body: { padding: 0, overflow: 'hidden' } }}
-    className={css`&{
+  const navigate = useNavigate(); // Initialize useNavigate
 
+
+  return (
+    <Card hoverable styles={{ body: { padding: 0, overflow: 'hidden', maxWidth: isMobile ? '100%' : '288px',  }, }}
+    className={css`&{  
       border-right: 0px solid ${token.colorPrimary};
       transition: all 0.25s ease-out;
     }
     &:hover {
       // background-color: ${token.colorPrimaryBgHover}15;
-      border-right: 2px solid ${token.colorPrimary};
+    //   border-right: 2px solid ${token.colorPrimary};
+    //   border-right: 2px solid ${token.colorPrimary};
+    //   box-shadow: inset -2px 0 0px -0px ${token.colorPrimary};
     }
   `}
 >
@@ -50,8 +58,9 @@ export const FundraisingListItem: React.FC<FundraisingListItemProps> = ({
         <img
           src={imgUrl}
           style={{
-            height: 188,
-            width: isMobile ? '100%' : '180px',
+            height: 160,
+            width: '100%' ,
+            // width: isMobile ? '100%' : '180px',
             objectFit: 'cover',
             borderRadius: token.borderRadius,
             // objectPosition: 'center',
@@ -62,7 +71,7 @@ export const FundraisingListItem: React.FC<FundraisingListItemProps> = ({
         <Flex
           gap={token.sizeMD}
           wrap="wrap"
-          style={{ flex: 1, padding: token.sizeSM }}
+          style={{ flex: 1, padding: token.sizeSM}}
           vertical
         >
           <Flex
@@ -79,16 +88,17 @@ export const FundraisingListItem: React.FC<FundraisingListItemProps> = ({
                 flex: 1,
                 width: '70%',
               }}
+              gap={token.sizeXS}
+              vertical
             >
-              {name}
+              <Flex align='end' gap={token.sizeXS} style={{ marginTop: -`${token.sizeXL}` }}>
+                <Avatar src={fundraiserAvatarURL} size={token.sizeXXL} icon={<UserOutlined />} /> 
+                {fundraiserName}
+              </Flex>
+              <Divider style={{ margin: 2}} />
+              {pageTitle}
             </Flex>
 
-            <Flex gap={token.sizeXS}>
-              <Button type="text" icon={<ShareAltOutlined />}>
-                Share
-              </Button>
-              <Button>Edit Page</Button>
-            </Flex>
           </Flex>
 
           <Flex
@@ -98,26 +108,42 @@ export const FundraisingListItem: React.FC<FundraisingListItemProps> = ({
             style={{
               flex: 1,
               padding: token.sizeSM,
+            //   background: `${token.colorPrimaryBgHover}25`,
               background: token.colorBgTextHover,
               borderRadius: token.borderRadius,
             }}
           >
             <Flex vertical>
               <div style={{ fontSize: token.fontSizeLG, fontWeight: 600 }}>
-                {supporterCount} Supporters
+                {supporterCount}
               </div>
               <div
                 style={{ fontSize: token.fontSizeSM }}
-              >{`${completionPercent}% Collected`}</div>
+              >
+                {/* {`${completionPercent}% Collected`} */}
+                Total Supporters
+              </div>
             </Flex>
 
             <Flex vertical>
               <div style={{ fontSize: token.fontSizeLG, fontWeight: 600 }}>
-                {amountRaised} / {target}
+                {dayLeft}
               </div>
               <div
                 style={{ fontSize: token.fontSizeSM }}
-              >{`${dayLeft} Days left`}</div>
+              >days left</div>
+            </Flex>
+
+            <Flex vertical>
+              <div style={{ fontSize: token.fontSizeLG, fontWeight: 600 }}>
+                {amountRaised}
+              </div>
+              <div
+                style={{ fontSize: token.fontSizeSM }}
+              >
+                {/* {`${dayLeft} Days left`} */}
+                Total Funded
+                </div>
             </Flex>
 
             <Progress
@@ -132,4 +158,4 @@ export const FundraisingListItem: React.FC<FundraisingListItemProps> = ({
   );
 };
 
-export default FundraisingListItem;
+export default FundraisingTeamMemberListItem;
