@@ -13,6 +13,8 @@ import {
   Typography,
   Checkbox,
   Segmented,
+  Select,
+  Space
 } from 'antd';
 import { ProCard, PageContainer, CheckCard } from '@ant-design/pro-components';
 import { PlusOutlined } from '@ant-design/icons';
@@ -98,6 +100,7 @@ export default FundraisingCreateTeam;
 const CreateSteps: React.FC<{ currentStep: number }> = ({ currentStep }) => {
   return (
     <Steps
+      // onChange={ () => (console.log())}
       current={currentStep}
       items={[
         {
@@ -152,7 +155,7 @@ const StepOne: React.FC = () => {
           <div>
             <Typography.Title level={5}>Team Goal</Typography.Title>
 
-            <CheckCard.Group
+            {/* <CheckCard.Group
               onChange={(value) => handleGoalOption(value)}
               defaultValue="A"
             >
@@ -162,7 +165,7 @@ const StepOne: React.FC = () => {
                 <CheckCard title="£ 100,000" value="100,000" />
                 <CheckCard title="Custom" value="Custom" />
               </Flex>
-            </CheckCard.Group>
+            </CheckCard.Group> */}
 
             <Segmented<string>
               block
@@ -176,7 +179,7 @@ const StepOne: React.FC = () => {
               <Input
                 size="large"
                 type="number"
-                placeholder="Custom Goal"
+                placeholder="£125,000"
                 required
               />
             </div>
@@ -192,10 +195,121 @@ const StepOne: React.FC = () => {
   );
 };
 
+
+
 const StepTwo: React.FC = () => {
-  return <>Step Two</>;
+
+  const [inputValue, setInputValue] = useState<string>('');
+
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setInputValue(e.target.value);
+  };
+
+  const placeholder = "team-doe-page";
+
+
+  return (
+    <Flex vertical gap={0}>
+      <div>
+        <Typography.Title level={5}>Main Fundraising Page Title</Typography.Title>
+        <Input
+          size="large"
+          count={{
+            show: true,
+            max: 60,
+          }}
+          placeholder="Example: We Are Building a School!"
+        />
+        <Typography.Text type="secondary">Write campaign name up to 60 characters.</Typography.Text>
+      </div>
+      <div>
+        <Typography.Title level={5}>Customise web page address</Typography.Title>
+        <Input
+          size="large"
+          placeholder={placeholder}
+          value={inputValue}
+          onChange={handleInputChange}
+        />
+        <Typography.Text type="secondary">The page address will be https://fundraise.charitywebsite.org/</Typography.Text>
+        <Typography.Text>{inputValue || placeholder}</Typography.Text>
+      </div>
+    </Flex>
+  );
 };
 
+
+
 const StepThree: React.FC = () => {
-  return <>Step Three</>;
+
+  const [emails, setEmails] = useState([]);
+  const [inputValue, setInputValue] = useState('');
+
+  const handleInputChange = (value) => {
+    setInputValue(value);
+  };
+
+  const handleSelect = (value) => {
+    setEmails(value);
+  };
+
+  const handleInvite = () => {
+    // Here you can implement the logic for inviting emails
+    console.log('Inviting emails:', emails);
+    // Reset the input value and selected emails after inviting
+    setInputValue('');
+    setEmails([]);
+  };
+
+
+  return (
+    <Flex vertical gap={0}>
+      <div>
+        <Typography.Title level={5}>Invite Fundraisers</Typography.Title>
+        <Flex gap={8}>
+          <Select
+            mode="tags"
+            style={{ width: '100%' }}
+            placeholder="Type email addresses"
+            value={emails}
+            onChange={handleSelect}
+            onInputKeyDown={(e) => {
+              if (e.keyCode === 13) {
+                // Prevent default behavior of Enter key
+                e.preventDefault();
+                // Manually trigger selection
+                handleSelect([...emails, inputValue.trim()]);
+                setInputValue('');
+              }
+            }}
+            onBlur={() => {
+              if (inputValue.trim() !== '') {
+                handleSelect([...emails, inputValue.trim()]);
+                setInputValue('');
+              }
+            }}
+            tokenSeparators={[',']}
+          >
+            {emails.map((email) => (
+              <Option key={email}>{email}</Option>
+            ))}
+          </Select>
+          <Button
+            type="primary"
+            onClick={handleInvite}
+            disabled={emails.length === 0}
+          >
+            Invite
+          </Button>
+
+        </Flex>
+        <Typography.Text type="secondary">Add email addresses, separate by commas (,)</Typography.Text>
+
+        <br />
+        <br />
+        <Typography.Text type="secondary">You can always do this later after you created the team.</Typography.Text>
+        <br />
+        <Typography.Text type="secondary">You can skip this step and create the team</Typography.Text>
+      </div>
+    </Flex>
+  );
 };
