@@ -43,7 +43,7 @@ const FundraisingCreatePage: React.FC = () => {
         },
       }}
       // subTitle="Simple Description"
-      style={{ width: '100%', margin: 'auto', maxWidth: '800px' }}
+      style={{ width: '100%', margin: 'auto', maxWidth: '640px' }}
     >
       
       <StepsDemo />

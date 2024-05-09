@@ -7,7 +7,6 @@ import { ProCard, PageContainer } from '@ant-design/pro-components';
 import { useNavigate } from 'react-router-dom';
 
 import { PlusOutlined } from '@ant-design/icons';
-// import { FundraisingListItem } from '../../ui/CardFundraisingSummary';
 import { FundraisingListItem } from '../../ui/FundraisingListItem';
 
 const FundraisingPages: React.FC = () => {
