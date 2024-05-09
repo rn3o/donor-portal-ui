@@ -6,10 +6,10 @@ import { ProCard, PageContainer } from '@ant-design/pro-components';
 
 import { useNavigate } from 'react-router-dom';
 
-import { PlusOutlined } from '@ant-design/icons';
+import { ArrowLeftOutlined, PlusOutlined } from '@ant-design/icons';
 import { FundraisingTeamListItem } from '../../ui/FundraisingTeamListItem';
 
-const FundraisingTeams: React.FC = () => {
+const FundraisingTeamMember: React.FC = () => {
   const { isEmpty } = useGlobalState();
   const { token } = theme.useToken();
   const navigate = useNavigate();
@@ -18,14 +18,18 @@ const FundraisingTeams: React.FC = () => {
     navigate('/fundraising/teams/invitations');
   };
 
-  const createTeams = () => {
-    navigate('/fundraising/teams/create');
+  const inviteMember = () => {
+    navigate('/fundraising/teams/invite-member');
+  };
+
+  const goToTeams = () => {
+    navigate('/fundraising/teams');
   };
 
   return (
     <PageContainer
       header={{
-        title: 'Teams',
+        title: 'Firdaus Fields School',
         breadcrumb: {
           items: [
             {
@@ -34,15 +38,18 @@ const FundraisingTeams: React.FC = () => {
             {
               title: 'Teams',
             },
+            {
+              title: 'Fundraisers',
+            },
           ],
         },
       }}
       extra={[
-        <Button type="text" key="2" onClick={seeInvitations}>
-          See Invitations
+        <Button type="text" key="2" onClick={goToTeams}>
+          <ArrowLeftOutlined /> Back to Teams
         </Button>,
-        <Button key="1" onClick={createTeams} icon={<PlusOutlined />}>
-          Create a Team
+        <Button key="1" onClick={seeInvitations}>
+          Invite Member
         </Button>,
       ]}
       // subTitle="Simple Description"
@@ -67,9 +74,7 @@ const FundraisingTeams: React.FC = () => {
               title="Let's team up!"
               subTitle={
                 <>
-                  You are not part of any team at the moment.
-                  <br />
-                  Team up with others or create a team to get started.
+                  No Member yet
                 </>
               }
               extra={
@@ -78,9 +83,9 @@ const FundraisingTeams: React.FC = () => {
                   type="primary"
                   size="large"
                   icon={<PlusOutlined />}
-                  onClick={createTeams}
+                  onClick={inviteMember}
                 >
-                  Create a Team
+                  Invite Fundraiser to team up
                 </Button>
               }
             />
@@ -114,7 +119,7 @@ const FundraisingTeams: React.FC = () => {
                   type="primary"
                   size="large"
                   icon={<PlusOutlined />}
-                  onClick={createTeams}
+                  onClick={inviteMember}
                 >
                   Create a Fundraising Page
                 </Button>
@@ -129,21 +134,7 @@ const FundraisingTeams: React.FC = () => {
           vertical
           // style={{ margin: `-${token.sizeLG}px 0` }}
         >
-          {mockData.map((data, index) => (
-            <FundraisingTeamListItem
-              key={index}
-              imgUrl={data.imgUrl}
-              name={data.title}
-              supporterCount={data.supporters}
-              completionPercent={data.progress}
-              teamMember={data.teamMember}
-              amountRaised={data.fundraised}
-              target={data.target}
-              dayLeft={data.dayLeft}
-              isOwner={data.isOwner}
-              pageRoute={data.pageRoute}
-            />
-          ))}
+          list of members
         </Flex>
       )}
         </>
@@ -152,35 +143,7 @@ const FundraisingTeams: React.FC = () => {
   );
 };
 
-export default FundraisingTeams;
+export default FundraisingTeamMember;
 
 
 // Mockup data
-const mockData = [
-  {
-    title: 'Safa Springs Academy',
-    imgUrl:
-      'https://placehold.co/300x300?text=No Image',
-    supporters: 0,
-    progress: 0,
-    fundraised: '0',
-    teamMember: 0,
-    target: '£100,000',
-    dayLeft: 120,
-    isOwner: true,
-    pageRoute: '/fundraising/teams/members'
-  },
-  {
-    title: 'Firdaus Fields School',
-    imgUrl:
-      'https://images.pexels.com/photos/1206101/pexels-photo-1206101.jpeg?auto=compress&cs=tinysrgb&w=300&h=300&dpr=2',
-    supporters: 998,
-    progress: 58,
-    fundraised: '£71,740',
-    teamMember: 38,
-    target: '£123,000',
-    dayLeft: 120,
-    isOwner: false,
-    pageRoute: '/fundraising/teams/members'
-  },
-];

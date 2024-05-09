@@ -18,7 +18,7 @@ import {
   
 } from 'antd';
 import { ProCard, PageContainer, CheckCard } from '@ant-design/pro-components';
-import { PlusOutlined } from '@ant-design/icons';
+import { CloseOutlined, MailOutlined, PlusOutlined } from '@ant-design/icons';
 
 const FundraisingCreateTeam: React.FC = () => {
   const { setShowSuccessMessage } = useGlobalState();
@@ -26,7 +26,7 @@ const FundraisingCreateTeam: React.FC = () => {
   const navigate = useNavigate();
   const { token } = theme.useToken();
 
-  const goToPages = () => {
+  const goToTeams = () => {
     navigate('/fundraising/teams');
   };
 
@@ -45,7 +45,7 @@ const FundraisingCreateTeam: React.FC = () => {
   const handleFinish = () => {
     setShowSuccessMessage("Team successfully created"); 
     setIsEmpty(false);
-    goToPages();
+    goToTeams();
   };
 
 
@@ -53,7 +53,7 @@ const FundraisingCreateTeam: React.FC = () => {
   return (
     <PageContainer
       extra={
-        <Button key="2" type="text" onClick={goToPages}>
+        <Button key="2" type="text" onClick={goToTeams}>
           Cancel
         </Button>
       }
@@ -116,11 +116,11 @@ const CreateSteps: React.FC<{ currentStep: number }> = ({ currentStep }) => {
         },
         {
           title: 'Step 2',
-          description: 'About the Team',
+          description: 'Page Detail',
         },
         {
           title: 'Step 3',
-          description: 'Finishing Touch',
+          description: 'Team Up',
         },
       ]}
     />
@@ -257,6 +257,9 @@ const StepTwo: React.FC = () => {
           </Typography.Text>
         )}
 
+<br />
+        <br />
+        <Typography.Text type="secondary">You can add more to the page like images and other cool stuff once page is created.</Typography.Text>
       </Flex>
     </Flex>
   );
@@ -292,11 +295,14 @@ const StepThree: React.FC = () => {
         <Typography.Title level={5}>Invite others to team up with you</Typography.Title>
         <Flex gap={8}>
           <Select
+          size='large'
             mode="tags"
             style={{ width: '100%' }}
             placeholder="Type email addresses"
             value={emails}
             onChange={handleSelect}
+            suffixIcon={<MailOutlined />}
+            // removeIcon={<CloseOutlined />}
             onInputKeyDown={(e) => {
               if (e.keyCode === 13) {
                 // Prevent default behavior of Enter key
