@@ -25,7 +25,7 @@ const FundraisingTeams: React.FC = () => {
   return (
     <PageContainer
       header={{
-        title: 'Teams',
+        title: 'My Teams',
         breadcrumb: {
           items: [
             {
@@ -168,7 +168,7 @@ const mockData = [
     target: '£100,000',
     dayLeft: 120,
     isOwner: true,
-    pageRoute: '/fundraising/teams/members'
+    pageRoute: '/fundraising/teams/members-empty'
   },
   {
     title: 'Firdaus Fields School',

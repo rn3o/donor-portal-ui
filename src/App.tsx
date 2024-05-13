@@ -88,6 +88,9 @@ const FundraisingTeams = lazy(() =>
 const FundraisingTeamMember = lazy(() =>
   import('./pages/fundraising/FundraisingTeamMember')
 );
+const FundraisingTeamMemberEmpty = lazy(() =>
+  import('./pages/fundraising/FundraisingTeamMemberEmpty')
+);
 const FundraisingTeamInvitation = lazy(() =>
   import('./pages/fundraising/FundraisingTeamInvitation')
 );
@@ -892,6 +895,16 @@ const Content = () => (
         <Suspense fallback={<>loading</>}>
           {' '}
           <FundraisingTeamMember />{' '}
+        </Suspense>
+      }
+    />
+
+    <Route
+      path="/fundraising/teams/members-empty"
+      element={
+        <Suspense fallback={<>loading</>}>
+          {' '}
+          <FundraisingTeamMemberEmpty />{' '}
         </Suspense>
       }
     />

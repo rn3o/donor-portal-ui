@@ -96,7 +96,9 @@ export const FundraisingTeamMemberListItem: React.FC<FundraisingTeamMemberListIt
                 {fundraiserName}
               </Flex>
               <Divider style={{ margin: 2}} />
-              {pageTitle}
+              <div style={{ maxHeight: 30}}>
+                {pageTitle}
+              </div>
             </Flex>
 
           </Flex>
@@ -121,7 +123,7 @@ export const FundraisingTeamMemberListItem: React.FC<FundraisingTeamMemberListIt
                 style={{ fontSize: token.fontSizeSM }}
               >
                 {/* {`${completionPercent}% Collected`} */}
-                Total Supporters
+                Supporters
               </div>
             </Flex>
 
