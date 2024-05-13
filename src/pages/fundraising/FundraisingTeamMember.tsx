@@ -193,7 +193,9 @@ const InviteModal: React.FC = () => {
         setInputValue('');
         setEmails([]);
         setIsModalOpen(false);
+        message.success('Invitation Sent');
     };
+
 
     return (
         <>

@@ -27,7 +27,7 @@ const FundraisingTeamMemberEmpty: React.FC = () => {
     return (
         <PageContainer
             header={{
-                title: 'Firdaus Fields School Fundraisers',
+                title: 'Safa Spring Academy',
                 breadcrumb: {
                     items: [
                         {
@@ -76,15 +76,7 @@ const FundraisingTeamMemberEmpty: React.FC = () => {
                             </>
                         }
                         extra={
-                            <Button
-                                key="1"
-                                type="primary"
-                                size="large"
-                                icon={<PlusOutlined />}
-                                onClick={inviteFundraiser}
-                            >
-                                Invite Fundraiser to team up
-                            </Button>
+                            <InviteModal />
                         }
                     />
                 </Flex>

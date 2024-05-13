@@ -25,7 +25,7 @@ const FundraisingTeams: React.FC = () => {
   return (
     <PageContainer
       header={{
-        title: 'Teams',
+        title: 'My Teams',
         breadcrumb: {
           items: [
             {
