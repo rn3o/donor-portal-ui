@@ -11,6 +11,7 @@ import { FundraisingListItem } from '../../ui/FundraisingListItem';
 
 const FundraisingPages: React.FC = () => {
   const { isEmpty } = useGlobalState();
+  const { showMany } = useGlobalState();
   const { token } = theme.useToken();
   const navigate = useNavigate();
 
@@ -85,20 +86,36 @@ const FundraisingPages: React.FC = () => {
           gap={token.sizeMD}
           wrap="wrap"
           vertical
-          // style={{ margin: `-${token.sizeLG}px 0` }}
+        // style={{ margin: `-${token.sizeLG}px 0` }}
         >
-          {mockData.map((data, index) => (
-            <FundraisingListItem
-              key={index}
-              imgUrl={data.imgUrl}
-              name={data.title}
-              supporterCount={data.supporters}
-              completionPercent={data.progress}
-              amountRaised={data.fundraised}
-              target={data.target}
-              dayLeft={data.dayLeft}
-            />
-          ))}
+          {showMany ? (
+            mockData.map((data, index) => (
+              <FundraisingListItem
+                key={index}
+                imgUrl={data.imgUrl}
+                name={data.title}
+                supporterCount={data.supporters}
+                completionPercent={data.progress}
+                amountRaised={data.fundraised}
+                target={data.target}
+                dayLeft={data.dayLeft}
+              />
+            ))
+          ) : (
+            mockData.slice(0, 1).map((data, index) => (
+              <FundraisingListItem
+                key={index}
+                imgUrl={data.imgUrl}
+                name={data.title}
+                supporterCount={data.supporters}
+                completionPercent={data.progress}
+                amountRaised={data.fundraised}
+                target={data.target}
+                dayLeft={data.dayLeft}
+              />
+            ))
+          )}
+
         </Flex>
       )}
       {/* </ProCard> */}
@@ -110,6 +127,16 @@ export default FundraisingPages;
 
 // Mockup data
 const mockData = [
+  {
+    title: 'Food Bank Initiatives',
+    imgUrl:
+      'https://placehold.co/300x300?text=No Image',
+    supporters: 0,
+    progress: 0,
+    fundraised: '£0',
+    target: '£3,000',
+    dayLeft: 60,
+  },
   {
     title: 'Water Well Project in Sudan',
     imgUrl:

@@ -193,11 +193,11 @@ const StepOne: React.FC = () => {
           )}
         </>
       )}
-      {!customValueVisible && (
+      {/* {!customValueVisible && (
         <Flex style={{ marginTop: token.sizeMD }}>
-          <Checkbox onChange={handleOpenEndedChange}>Open Ended Goal</Checkbox>
+          <Checkbox onChange={handleOpenEndedChange}>Can Fundraise Indefinitely</Checkbox>
         </Flex>
-      )}
+      )} */}
     </Flex>
   );
 };
@@ -259,7 +259,7 @@ const StepTwo: React.FC = () => {
 
 <br />
         <br />
-        <Typography.Text type="secondary">You can add more to the page like images and other cool stuff once page is created.</Typography.Text>
+        <Typography.Text type="secondary">You can add more to the page like images and long descriptions once page is created.</Typography.Text>
       </Flex>
     </Flex>
   );
