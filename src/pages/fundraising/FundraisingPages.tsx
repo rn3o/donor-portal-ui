@@ -35,7 +35,7 @@ const FundraisingPages: React.FC = () => {
       }}
       extra={[
         <Button key="1" onClick={createPage} icon={<PlusOutlined />}>
-          Create a Fundraising Page
+          Create a Page
         </Button>,
       ]}
       // subTitle="Simple Description"
