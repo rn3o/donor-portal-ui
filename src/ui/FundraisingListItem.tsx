@@ -1,7 +1,11 @@
-import React from 'react';
-import { Card, Progress, Flex, theme, Button } from 'antd';
+// @ts-nocheck
+import React, { useState } from 'react';
+import { Card, Progress, Flex, theme, Button, Drawer, Space, Image, Upload, Input, InputNumber, Typography } from 'antd';
+import type { GetProp, UploadFile, UploadProps } from 'antd';
+import ImgCrop from 'antd-img-crop';
 
-import { ShareAltOutlined } from '@ant-design/icons';
+
+import { ShareAltOutlined, PlusOutlined } from '@ant-design/icons';
 
 import { css } from '@emotion/css';
 
@@ -29,7 +33,7 @@ export const FundraisingListItem: React.FC<FundraisingListItemProps> = ({
 
   return (
     <Card hoverable styles={{ body: { padding: 0, overflow: 'hidden' } }}
-    className={css`&{
+      className={css`&{
 
       border-right: 0px solid ${token.colorPrimary};
       transition: all 0.25s ease-out;
@@ -39,7 +43,7 @@ export const FundraisingListItem: React.FC<FundraisingListItemProps> = ({
       border-right: 2px solid ${token.colorPrimary};
     }
   `}
->
+    >
       <Flex
         gap={token.sizeXXS}
         wrap="wrap"
@@ -87,7 +91,16 @@ export const FundraisingListItem: React.FC<FundraisingListItemProps> = ({
               <Button type="text" icon={<ShareAltOutlined />}>
                 Share
               </Button>
-              <Button>Edit Page</Button>
+              {/* <Button>Edit Page</Button> */}
+              <EditPage
+                name={name}
+                imgUrl={imgUrl}
+                supporterCount={supporterCount}
+                completionPercent={completionPercent}
+                amountRaised={amountRaised}
+                target={target}
+                dayLeft={dayLeft}
+              />
             </Flex>
           </Flex>
 
@@ -133,3 +146,150 @@ export const FundraisingListItem: React.FC<FundraisingListItemProps> = ({
 };
 
 export default FundraisingListItem;
+
+
+const EditPage: React.FC<FundraisingListItemProps> = ({
+  name,
+  imgUrl,
+  target,
+}) => {
+
+  const { token } = theme.useToken();
+
+  const [open, setOpen] = useState(false);
+
+
+  const showDrawer = () => {
+    setOpen(true);
+  };
+
+  const onClose = () => {
+    setOpen(false);
+  };
+
+  return (
+    <>
+      <Space>
+        <Button type="default" onClick={showDrawer}>
+          Edit Page
+        </Button>
+      </Space>
+      <Drawer
+        title='Edit Page'
+        placement="right"
+        // size="large"
+        onClose={onClose}
+        open={open}
+        extra={
+          <Space>
+            <Button onClick={onClose}>Cancel</Button>
+            <Button type="primary" onClick={onClose}>
+              OK
+            </Button>
+          </Space>
+        }
+      >
+        <Flex vertical gap={0} style={{ marginTop: `-${token.sizeLG}px` }}>
+          <Typography.Title level={5}>Fundraising Target</Typography.Title>
+          <InputNumber<number>
+            style={{ width: '100%' }}
+            size="large"
+            prefix="£"
+            value={target}
+            formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+            parser={(value) => value?.replace(/\$\s?|(,*)/g, '') as unknown as number}
+            required
+          />
+
+          <Typography.Title level={5}>For</Typography.Title>
+          <Input size="large" value={name} />
+
+          <Typography.Title level={5}>Some Pictures</Typography.Title>
+            <ImageUploader imgUrl={imgUrl} />
+          
+          <Typography.Title level={5}>Page Cover</Typography.Title>
+
+
+          <Typography.Title level={5}>The Story</Typography.Title>
+
+          <Space style={{ marginTop: token.sizeMD }}>
+          </Space>
+
+        </Flex>
+      </Drawer>
+    </>
+  )
+};
+
+
+// Image Uploader
+
+type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
+
+const getBase64 = (file: FileType): Promise<string> =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = (error) => reject(error);
+  });
+
+const ImageUploader: React.FC<FundraisingListItemProps> = ({
+  imgUrl
+}) => {
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const [previewImage, setPreviewImage] = useState('');
+  const [fileList, setFileList] = useState<UploadFile[]>([
+    {
+      uid: '-1',
+      name: 'image.png',
+      status: 'done',
+      url: imgUrl
+    },
+  ]);
+
+  const handlePreview = async (file: UploadFile) => {
+    if (!file.url && !file.preview) {
+      file.preview = await getBase64(file.originFileObj as FileType);
+    }
+
+    setPreviewImage(file.url || (file.preview as string));
+    setPreviewOpen(true);
+  };
+
+  const handleChange: UploadProps['onChange'] = ({ fileList: newFileList }) =>
+    setFileList(newFileList);
+
+  const uploadButton = (
+    <button style={{ border: 0, background: 'none' }} type="button">
+      <PlusOutlined />
+      <div style={{ marginTop: 8 }}>Upload</div>
+    </button>
+  );
+  return (
+    <>
+    <ImgCrop rotationSlider>
+      <Upload
+        action="https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload"
+        listType="picture-card"
+        fileList={fileList}
+        onPreview={handlePreview}
+        onChange={handleChange}
+      >
+        {fileList.length >= 8 ? null : uploadButton}
+      </Upload>
+      {previewImage && (
+        <Image
+          wrapperStyle={{ display: 'none' }}
+          preview={{
+            visible: previewOpen,
+            onVisibleChange: (visible) => setPreviewOpen(visible),
+            afterOpenChange: (visible) => !visible && setPreviewImage(''),
+          }}
+          src={previewImage}
+        />
+      )}
+    </ImgCrop>
+    </>
+  );
+};

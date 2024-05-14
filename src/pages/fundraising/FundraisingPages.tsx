@@ -125,6 +125,7 @@ const FundraisingPages: React.FC = () => {
 
 export default FundraisingPages;
 
+
 // Mockup data
 const mockData = [
   {
@@ -140,7 +141,7 @@ const mockData = [
   {
     title: 'Water Well Project in Sudan',
     imgUrl:
-      'https://images.pexels.com/photos/5742575/pexels-photo-5742575.jpeg?auto=compress&cs=tinysrgb&w=300',
+      'https://images.pexels.com/photos/5742575/pexels-photo-5742575.jpeg?auto=compress&cs=tinysrgb&w=600',
     supporters: 128,
     progress: 58,
     fundraised: '£1,740',
@@ -151,7 +152,7 @@ const mockData = [
     title: 'Gaza Emergency',
     // imgUrl: 'https://placehold.co/300x200',
     imgUrl:
-      'https://images.pexels.com/photos/6929741/pexels-photo-6929741.jpeg?auto=compress&cs=tinysrgb&w=300',
+      'https://images.pexels.com/photos/6929741/pexels-photo-6929741.jpeg?auto=compress&cs=tinysrgb&w=600',
     supporters: 256,
     progress: 75,
     fundraised: '£2,250',
@@ -161,7 +162,7 @@ const mockData = [
   {
     title: 'School Playground Upgrade',
     imgUrl:
-      'https://images.pexels.com/photos/11128819/pexels-photo-11128819.jpeg?auto=compress&cs=tinysrgb&w=300',
+      'https://images.pexels.com/photos/11128819/pexels-photo-11128819.jpeg?auto=compress&cs=tinysrgb&w=600',
     supporters: 112,
     progress: 65,
     fundraised: '£1,950',

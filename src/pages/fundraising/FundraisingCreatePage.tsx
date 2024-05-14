@@ -295,7 +295,7 @@ const StepTwo: React.FC = () => {
   return (
     <Flex vertical gap={0}>
       <div>
-        <Typography.Title level={5}>Main Fundraising Page Title</Typography.Title>
+        <Typography.Title level={5}>Fundraising Page Title</Typography.Title>
         <Input
           size="large"
           count={{
@@ -328,7 +328,7 @@ const StepTwo: React.FC = () => {
 
         <br />
         <br />
-        <Typography.Text type="secondary">You can add more to the page like images and long descriptions once page is created.</Typography.Text>
+        <Typography.Text type="secondary">You can add more details like images and story once the page is created.</Typography.Text>
       </Flex>
     </Flex>
   );

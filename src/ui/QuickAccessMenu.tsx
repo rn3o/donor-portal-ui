@@ -151,15 +151,15 @@ interface quickMenuItem {
 
 const quickMenuItems: (quickMenuItem | JSX.Element)[] = [
   { name: 'Donate', icon: <HeartOutlined /> },
-  <Divider key="divider1" style={{ margin: '8px 0' }} />,
+  <Divider key="divider1" style={{ margin: '4px 0' }} />,
   { name: 'Make regular giving', icon: <SyncOutlined />},
   { name: 'Sponsor a child', icon: <UserOutlined /> },
   { name: 'Sponsor a student', icon: <UserOutlined /> },
   { name: 'Sponsor a family', icon: <TeamOutlined /> },
   { name: 'Create a pledge', icon: <FileAddOutlined /> },
-  <Divider key="divider1" style={{ margin: '8px 0' }} />,
+  <Divider key="divider1" style={{ margin: '4px 0' }} />,
   { name: 'Support a Campaign', icon: <FileAddOutlined /> },
-  <Divider key="divider1" style={{ margin: '8px 0' }} />,
+  <Divider key="divider1" style={{ margin: '4px 0' }} />,
   { name: 'Start a Fundraising Page', icon: <FileAddOutlined /> },
   // { name: 'Task', icon: <FileAddOutlined /> },
 ];

@@ -14,7 +14,8 @@ import {
   Typography,
   Checkbox,
   Segmented,
-  Select
+  Select,
+  InputNumber
   
 } from 'antd';
 import { ProCard, PageContainer, CheckCard } from '@ant-design/pro-components';
@@ -183,10 +184,13 @@ const StepOne: React.FC = () => {
           </div>
           {customValueVisible && (
             <div style={{ marginTop: token.sizeMD }}>
-              <Input
+              <InputNumber<number>
+                style={{width: '100%'}}
                 size="large"
-                type="number"
-                placeholder="£125,000"
+                prefix="£"
+                placeholder='125,000'
+                formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                parser={(value) => value?.replace(/\$\s?|(,*)/g, '') as unknown as number}
                 required
               />
             </div>
