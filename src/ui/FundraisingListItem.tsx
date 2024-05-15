@@ -34,6 +34,7 @@ interface FundraisingListItemProps {
   amountRaised: number;
   target: number;
   dayLeft: number;
+  team: string;
 }
 
 export const FundraisingListItem: React.FC<FundraisingListItemProps> = ({
@@ -44,6 +45,7 @@ export const FundraisingListItem: React.FC<FundraisingListItemProps> = ({
   amountRaised,
   target,
   dayLeft,
+  team
 }) => {
   const { token } = theme.useToken();
   const isMobile = window.innerWidth < 600;
@@ -100,8 +102,25 @@ export const FundraisingListItem: React.FC<FundraisingListItemProps> = ({
                 flex: 1,
                 width: '70%',
               }}
+              gap={token.sizeXXS}
+              vertical
             >
               {name}
+
+              {/* if fundraising for team,  */}
+              {team &&
+                <Flex style={{
+                  fontSize: 'smaller',
+                  fontWeight: '500',
+                  background: token.colorPrimaryBg,
+                  width: 'fit-content',
+                  borderRadius: token.sizeXS,
+                  padding: `${token.sizeXXS}px ${token.sizeXS}px`
+                }}>
+                  fundraising for&nbsp;<b>{team}</b>
+                </Flex>
+              }
+
             </Flex>
 
             <Flex gap={token.sizeXS}>
@@ -117,6 +136,7 @@ export const FundraisingListItem: React.FC<FundraisingListItemProps> = ({
                 amountRaised={amountRaised}
                 target={target}
                 dayLeft={dayLeft}
+                team={team}
               />
             </Flex>
           </Flex>
@@ -169,6 +189,7 @@ const EditPage: React.FC<FundraisingListItemProps> = ({
   name,
   imgUrl,
   target,
+  team
 }) => {
 
   const { token } = theme.useToken();
@@ -218,6 +239,19 @@ const EditPage: React.FC<FundraisingListItemProps> = ({
         }
       >
         <Flex vertical gap={0} style={{ marginTop: `-${token.sizeLG}px` }}>
+
+          {team ?
+            (
+              <>
+                Fundraising for {team}
+              </>
+            ) : (
+              <>
+                TODO: Fundraise for a team * select a team *
+              </>
+            )
+          }
+
           <Typography.Title level={5}>Goal</Typography.Title>
           <InputNumber<number>
             style={{ width: '100%' }}
@@ -239,7 +273,7 @@ const EditPage: React.FC<FundraisingListItemProps> = ({
             size="large"
             value={pageName}
             onChange={handlePageNameChange}
-             />
+          />
 
           <Typography.Title level={5}>Pictures</Typography.Title>
           <ImageUploader imgUrl={imgUrl} />

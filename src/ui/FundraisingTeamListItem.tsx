@@ -4,7 +4,7 @@ import { Card, Progress, Flex, theme, Button, Tooltip } from 'antd';
 import { ShareAltOutlined } from '@ant-design/icons';
 
 import { css } from '@emotion/css';
-import { useNavigate } from 'react-router-dom'; 
+import { useNavigate } from 'react-router-dom';
 
 interface FundraisingTeamListItemProps {
   name: string;
@@ -15,8 +15,8 @@ interface FundraisingTeamListItemProps {
   supporterCount: number;
   target: string;
   dayLeft: number;
-  isOwner: boolean; 
-  pageRoute: string; 
+  isOwner: boolean;
+  pageRoute: string;
 
 }
 
@@ -40,7 +40,7 @@ export const FundraisingTeamListItem: React.FC<FundraisingTeamListItemProps> = (
 
   return (
     <Card hoverable styles={{ body: { padding: 0, overflow: 'hidden' } }}
-    className={css`&{
+      className={css`&{
         
 
       border-right: 0px solid ${token.colorPrimary};
@@ -53,7 +53,7 @@ export const FundraisingTeamListItem: React.FC<FundraisingTeamListItemProps> = (
     //   box-shadow: inset -2px 0 0px -0px ${token.colorPrimary};
     }
   `}
->
+    >
       <Flex
         gap={token.sizeXXS}
         wrap="wrap"
@@ -64,7 +64,7 @@ export const FundraisingTeamListItem: React.FC<FundraisingTeamListItemProps> = (
         <img
           src={imgUrl}
           style={{
-            height: 186,
+            height: 160,
             width: isMobile ? '100%' : '180px',
             objectFit: 'cover',
             borderRadius: token.borderRadius,
@@ -100,9 +100,9 @@ export const FundraisingTeamListItem: React.FC<FundraisingTeamListItemProps> = (
             <Flex gap={token.sizeXS}>
               <Button type="text" icon={<Tooltip title="Share"><ShareAltOutlined /></Tooltip>} />
               {isOwner ? (<Button>Edit Page</Button>)
-              :
-              (<Tooltip title="You are not an organiser of this team"><Button disabled>Edit Page</Button></Tooltip>)
-                } {/* Render Edit Page button based on isOwner prop */}
+                :
+                (<Tooltip title="You are not an organiser of this team"><Button disabled>Edit Page</Button></Tooltip>)
+              } {/* Render Edit Page button based on isOwner prop */}
               <Button type="primary" onClick={seeFundraisers}>See Fundraisers</Button> {/* Call seeFundraisers function on click */}
             </Flex>
           </Flex>
@@ -113,9 +113,11 @@ export const FundraisingTeamListItem: React.FC<FundraisingTeamListItemProps> = (
             align="center"
             style={{
               flex: 1,
-              padding: token.sizeSM,
-            //   background: `${token.colorPrimaryBgHover}25`,
-              background: token.colorBgTextHover,
+              borderTop: `solid 1px ${token.colorBorder}`,
+              paddingTop: token.sizeSM,
+              // padding: token.sizeSM,
+              //   background: `${token.colorPrimaryBgHover}25`,
+              // background: token.colorBgTextHover,
               borderRadius: token.borderRadius,
             }}
           >
@@ -148,8 +150,8 @@ export const FundraisingTeamListItem: React.FC<FundraisingTeamListItemProps> = (
                 style={{ fontSize: token.fontSizeSM }}
               >
                 {/* {`${dayLeft} Days left`} */}
-                Total Funded
-                </div>
+                Total Fundraised
+              </div>
             </Flex>
 
             {/* <Progress

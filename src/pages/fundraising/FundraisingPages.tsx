@@ -99,6 +99,7 @@ const FundraisingPages: React.FC = () => {
                 amountRaised={data.fundraised}
                 target={data.target}
                 dayLeft={data.dayLeft}
+                team={data.team}
               />
             ))
           ) : (
@@ -112,6 +113,7 @@ const FundraisingPages: React.FC = () => {
                 amountRaised={data.fundraised}
                 target={data.target}
                 dayLeft={data.dayLeft}
+                team={data.team}
               />
             ))
           )}
@@ -137,6 +139,18 @@ const mockData = [
     fundraised:0,
     target: 3000,
     dayLeft: 60,
+    team: undefined,
+  },
+  {
+    title: 'Running for Kids',
+    imgUrl:
+      'https://images.pexels.com/photos/11128819/pexels-photo-11128819.jpeg?auto=compress&cs=tinysrgb&w=600',
+    supporters: 112,
+    progress: 65,
+    fundraised: 1950,
+    target: 3000,
+    dayLeft: 45,
+    team: 'Firdaus Field School',
   },
   {
     title: 'Water Well Project in Sudan',
@@ -147,6 +161,7 @@ const mockData = [
     fundraised: 1740,
     target: 3000,
     dayLeft: 48,
+    team: undefined,
   },
   {
     title: 'Gaza Emergency',
@@ -158,15 +173,6 @@ const mockData = [
     fundraised: 2250,
     target: 3000,
     dayLeft: 30,
-  },
-  {
-    title: 'School Playground Upgrade',
-    imgUrl:
-      'https://images.pexels.com/photos/11128819/pexels-photo-11128819.jpeg?auto=compress&cs=tinysrgb&w=600',
-    supporters: 112,
-    progress: 65,
-    fundraised: 1950,
-    target: 3000,
-    dayLeft: 45,
+    team: undefined,
   },
 ];
