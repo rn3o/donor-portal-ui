@@ -134,8 +134,8 @@ const mockData = [
       'https://placehold.co/300x300?text=No Image',
     supporters: 0,
     progress: 0,
-    fundraised: '£0',
-    target: '£3,000',
+    fundraised:0,
+    target: 3000,
     dayLeft: 60,
   },
   {
@@ -144,8 +144,8 @@ const mockData = [
       'https://images.pexels.com/photos/5742575/pexels-photo-5742575.jpeg?auto=compress&cs=tinysrgb&w=600',
     supporters: 128,
     progress: 58,
-    fundraised: '£1,740',
-    target: '£3,000',
+    fundraised: 1740,
+    target: 3000,
     dayLeft: 48,
   },
   {
@@ -155,8 +155,8 @@ const mockData = [
       'https://images.pexels.com/photos/6929741/pexels-photo-6929741.jpeg?auto=compress&cs=tinysrgb&w=600',
     supporters: 256,
     progress: 75,
-    fundraised: '£2,250',
-    target: '£3,000',
+    fundraised: 2250,
+    target: 3000,
     dayLeft: 30,
   },
   {
@@ -165,8 +165,8 @@ const mockData = [
       'https://images.pexels.com/photos/11128819/pexels-photo-11128819.jpeg?auto=compress&cs=tinysrgb&w=600',
     supporters: 112,
     progress: 65,
-    fundraised: '£1,950',
-    target: '£3,000',
+    fundraised: 1950,
+    target: 3000,
     dayLeft: 45,
   },
 ];

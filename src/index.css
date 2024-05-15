@@ -41,3 +41,30 @@ body, h1,h2,h3,h4, h5, input {
     padding-inline-end: 0px;
   }
 }
+
+
+/* Quill Rich Text Editor styles  */
+.controls {
+  display: flex;
+  border: 1px solid #ccc;
+  border-top: 0;
+  padding: 10px;
+}
+
+.controls-right {
+  margin-left: auto;
+}
+
+.state {
+  margin: 10px 0;
+  font-family: monospace;
+}
+
+.state-title {
+  color: #999;
+  text-transform: uppercase;
+}
+
+.ql-snow .ql-editor * {
+  font-family: inherit;
+}

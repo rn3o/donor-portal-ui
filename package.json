@@ -20,6 +20,7 @@
     "antd": "5.16.4",
     "antd-img-crop": "^4.22.0",
     "dayjs": "1.11.10",
+    "quill": "^2.0.2",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-router-dom": "^6.23.0"
