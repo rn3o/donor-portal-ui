@@ -35,7 +35,7 @@ export const FundraisingTeamMemberListItem: React.FC<FundraisingTeamMemberListIt
 
 
   return (
-    <Card hoverable styles={{ body: { padding: 0, overflow: 'hidden', maxWidth: isMobile ? '100%' : '288px',  }, }}
+    <Card hoverable styles={{ body: { padding: 0, overflow: 'hidden', minWidth: '250px', maxWidth: isMobile ? '100%' : '288px',  }, }}
     className={css`&{  
       border-right: 0px solid ${token.colorPrimary};
       transition: all 0.25s ease-out;

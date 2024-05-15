@@ -129,22 +129,11 @@ const InviteModal: React.FC = () => {
             <Button key="1" onClick={showModal}>
                 Invite others to join
             </Button>
-            <Modal title="Invite other to fundraise for Firdaus Fields School" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}
-                footer={[
-                    <Button key="back" onClick={handleCancel}>
-                        Cancel
-                    </Button>,
-                    <Button
-                        type="primary"
-                        onClick={handleInvite}
-                        disabled={emails.length === 0}
-                    >
-                        Send Invites
-                    </Button>
-                ]}
+            <Modal title="Invite other to fundraise for Safa Springs Academy" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}
+                footer={[]}
             >
 
-                <Typography.Title level={5}>Share a link to send your invites</Typography.Title>
+                <Typography.Title level={5}>Share a link</Typography.Title>
 
                 <CopyInput />
 
@@ -154,36 +143,47 @@ const InviteModal: React.FC = () => {
 
                 <Typography.Title level={5}>Invites via Email Addresses</Typography.Title>
 
-                <Select
-                    size='large'
-                    mode="tags"
-                    style={{ width: '100%' }}
-                    placeholder="Type email addresses"
-                    value={emails}
-                    onChange={handleSelect}
-                    suffixIcon={<MailOutlined />}
-                    // removeIcon={<CloseOutlined />}
-                    onInputKeyDown={(e) => {
-                        if (e.keyCode === 13) {
-                            // Prevent default behavior of Enter key
-                            e.preventDefault();
-                            // Manually trigger selection
-                            handleSelect([...emails, inputValue.trim()]);
-                            setInputValue('');
-                        }
-                    }}
-                    onBlur={() => {
-                        if (inputValue.trim() !== '') {
-                            handleSelect([...emails, inputValue.trim()]);
-                            setInputValue('');
-                        }
-                    }}
-                    tokenSeparators={[',']}
-                    notFoundContent={null} // Remove "no data" message
-                >
-                </Select>
+                <Flex gap={8}>
+                    <Select
+                        size='large'
+                        mode="tags"
+                        style={{ width: '100%' }}
+                        placeholder="Type email addresses"
+                        value={emails}
+                        onChange={handleSelect}
+                        suffixIcon={<MailOutlined />}
+                        // removeIcon={<CloseOutlined />}
+                        onInputKeyDown={(e) => {
+                            if (e.keyCode === 13) {
+                                // Prevent default behavior of Enter key
+                                e.preventDefault();
+                                // Manually trigger selection
+                                handleSelect([...emails, inputValue.trim()]);
+                                setInputValue('');
+                            }
+                        }}
+                        onBlur={() => {
+                            if (inputValue.trim() !== '') {
+                                handleSelect([...emails, inputValue.trim()]);
+                                setInputValue('');
+                            }
+                        }}
+                        tokenSeparators={[',']}
+                        notFoundContent={null} // Remove "no data" message
+                    >
+                    </Select>
 
-                <Typography.Text type="secondary">Add email addresses, separate by commas (,) to add multiple.</Typography.Text>
+                    <Button
+                        type="primary"
+                        size="large"
+                        onClick={handleInvite}
+                        disabled={emails.length === 0}
+                    >
+                        Send Invitation(s)
+                    </Button>
+                </Flex>
+
+                <Typography.Text type="secondary">Separate by commas (,) to add multiple.</Typography.Text>
 
 
             </Modal>

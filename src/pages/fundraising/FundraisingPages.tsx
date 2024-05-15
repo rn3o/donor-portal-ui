@@ -11,6 +11,7 @@ import { FundraisingListItem } from '../../ui/FundraisingListItem';
 
 const FundraisingPages: React.FC = () => {
   const { isEmpty } = useGlobalState();
+  const { showMany } = useGlobalState();
   const { token } = theme.useToken();
   const navigate = useNavigate();
 
@@ -35,7 +36,7 @@ const FundraisingPages: React.FC = () => {
       }}
       extra={[
         <Button key="1" onClick={createPage} icon={<PlusOutlined />}>
-          Create a Fundraising Page
+          Create a Page
         </Button>,
       ]}
       // subTitle="Simple Description"
@@ -85,20 +86,38 @@ const FundraisingPages: React.FC = () => {
           gap={token.sizeMD}
           wrap="wrap"
           vertical
-          // style={{ margin: `-${token.sizeLG}px 0` }}
+        // style={{ margin: `-${token.sizeLG}px 0` }}
         >
-          {mockData.map((data, index) => (
-            <FundraisingListItem
-              key={index}
-              imgUrl={data.imgUrl}
-              name={data.title}
-              supporterCount={data.supporters}
-              completionPercent={data.progress}
-              amountRaised={data.fundraised}
-              target={data.target}
-              dayLeft={data.dayLeft}
-            />
-          ))}
+          {showMany ? (
+            mockData.map((data, index) => (
+              <FundraisingListItem
+                key={index}
+                imgUrl={data.imgUrl}
+                name={data.title}
+                supporterCount={data.supporters}
+                completionPercent={data.progress}
+                amountRaised={data.fundraised}
+                target={data.target}
+                dayLeft={data.dayLeft}
+                team={data.team}
+              />
+            ))
+          ) : (
+            mockData.slice(0, 1).map((data, index) => (
+              <FundraisingListItem
+                key={index}
+                imgUrl={data.imgUrl}
+                name={data.title}
+                supporterCount={data.supporters}
+                completionPercent={data.progress}
+                amountRaised={data.fundraised}
+                target={data.target}
+                dayLeft={data.dayLeft}
+                team={data.team}
+              />
+            ))
+          )}
+
         </Flex>
       )}
       {/* </ProCard> */}
@@ -108,37 +127,52 @@ const FundraisingPages: React.FC = () => {
 
 export default FundraisingPages;
 
+
 // Mockup data
 const mockData = [
   {
+    title: 'Food Bank Initiatives',
+    imgUrl:
+      'https://placehold.co/300x300?text=No Image',
+    supporters: 0,
+    progress: 0,
+    fundraised:0,
+    target: 3000,
+    dayLeft: 60,
+    team: undefined,
+  },
+  {
+    title: 'Running for Kids',
+    imgUrl:
+      'https://images.pexels.com/photos/11128819/pexels-photo-11128819.jpeg?auto=compress&cs=tinysrgb&w=600',
+    supporters: 112,
+    progress: 65,
+    fundraised: 1950,
+    target: 3000,
+    dayLeft: 45,
+    team: 'Firdaus Field School',
+  },
+  {
     title: 'Water Well Project in Sudan',
     imgUrl:
-      'https://images.pexels.com/photos/5742575/pexels-photo-5742575.jpeg?auto=compress&cs=tinysrgb&w=300',
+      'https://images.pexels.com/photos/5742575/pexels-photo-5742575.jpeg?auto=compress&cs=tinysrgb&w=600',
     supporters: 128,
     progress: 58,
-    fundraised: '£1,740',
-    target: '£3,000',
+    fundraised: 1740,
+    target: 3000,
     dayLeft: 48,
+    team: undefined,
   },
   {
     title: 'Gaza Emergency',
     // imgUrl: 'https://placehold.co/300x200',
     imgUrl:
-      'https://images.pexels.com/photos/6929741/pexels-photo-6929741.jpeg?auto=compress&cs=tinysrgb&w=300',
+      'https://images.pexels.com/photos/6929741/pexels-photo-6929741.jpeg?auto=compress&cs=tinysrgb&w=600',
     supporters: 256,
     progress: 75,
-    fundraised: '£2,250',
-    target: '£3,000',
+    fundraised: 2250,
+    target: 3000,
     dayLeft: 30,
-  },
-  {
-    title: 'School Playground Upgrade',
-    imgUrl:
-      'https://images.pexels.com/photos/11128819/pexels-photo-11128819.jpeg?auto=compress&cs=tinysrgb&w=300',
-    supporters: 112,
-    progress: 65,
-    fundraised: '£1,950',
-    target: '£3,000',
-    dayLeft: 45,
+    team: undefined,
   },
 ];

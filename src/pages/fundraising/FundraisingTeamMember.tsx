@@ -203,61 +203,61 @@ const InviteModal: React.FC = () => {
                 Invite others to join
             </Button>
             <Modal title="Invite other to fundraise for Firdaus Fields School" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}
-            footer={[
-                <Button key="back" onClick={handleCancel}>
-                  Cancel
-                </Button>,
-                <Button
-                type="primary"
-                onClick={handleInvite}
-                disabled={emails.length === 0}
+            footer={[]}
             >
-                Send Invites
-            </Button>
-              ]}
-              >
-                
-                <Typography.Title level={5}>Share a link to send your invites</Typography.Title>
+
+                <Typography.Title level={5}>Share a link</Typography.Title>
 
                 <CopyInput />
 
 
-                <Divider style={{ marginTop: 30}}>OR</Divider>
+                <Divider style={{ marginTop: 30 }}>OR</Divider>
 
 
-                <Typography.Title level={5}>Invites via Email Addresses</Typography.Title>
-                
-                <Select
-                    size='large'
-                    mode="tags"
-                    style={{ width: '100%' }}
-                    placeholder="Type email addresses"
-                    value={emails}
-                    onChange={handleSelect}
-                    suffixIcon={<MailOutlined />}
-                    // removeIcon={<CloseOutlined />}
-                    onInputKeyDown={(e) => {
-                        if (e.keyCode === 13) {
-                            // Prevent default behavior of Enter key
-                            e.preventDefault();
-                            // Manually trigger selection
-                            handleSelect([...emails, inputValue.trim()]);
-                            setInputValue('');
-                        }
-                    }}
-                    onBlur={() => {
-                        if (inputValue.trim() !== '') {
-                            handleSelect([...emails, inputValue.trim()]);
-                            setInputValue('');
-                        }
-                    }}
-                    tokenSeparators={[',']}
-                    notFoundContent={null} // Remove "no data" message
-                >
-                </Select>
+                <Typography.Title level={5}>Send Invitation Email</Typography.Title>
 
-                <Typography.Text type="secondary">Add email addresses, separate by commas (,) to add multiple.</Typography.Text>
-                
+                <Flex gap={8}>
+                    <Select
+                        size='large'
+                        mode="tags"
+                        style={{ width: '100%' }}
+                        placeholder="Type email addresses"
+                        value={emails}
+                        onChange={handleSelect}
+                        suffixIcon={<MailOutlined />}
+                        // removeIcon={<CloseOutlined />}
+                        onInputKeyDown={(e) => {
+                            if (e.keyCode === 13) {
+                                // Prevent default behavior of Enter key
+                                e.preventDefault();
+                                // Manually trigger selection
+                                handleSelect([...emails, inputValue.trim()]);
+                                setInputValue('');
+                            }
+                        }}
+                        onBlur={() => {
+                            if (inputValue.trim() !== '') {
+                                handleSelect([...emails, inputValue.trim()]);
+                                setInputValue('');
+                            }
+                        }}
+                        tokenSeparators={[',']}
+                        notFoundContent={null} // Remove "no data" message
+                    >
+                    </Select>
+
+                    <Button
+                        type="primary"
+                        size="large"
+                        onClick={handleInvite}
+                        disabled={emails.length === 0}
+                    >
+                        Send Invitation(s)
+                    </Button>
+                </Flex>
+
+                <Typography.Text type="secondary">Separate by commas (,) to add multiple.</Typography.Text>
+
 
             </Modal>
         </>
@@ -266,31 +266,31 @@ const InviteModal: React.FC = () => {
 
 const CopyInput: React.FC = () => {
     const inputValue = 'https://teamup.xyz.org/234234'; // Default value
-  
+
     const handleCopy = () => {
-      const inputElement = document.getElementById('copy-input') as HTMLInputElement;
-      inputElement.select();
-      document.execCommand('copy');
-      message.success('Copied to clipboard');
+        const inputElement = document.getElementById('copy-input') as HTMLInputElement;
+        inputElement.select();
+        document.execCommand('copy');
+        message.success('Copied to clipboard');
     };
-  
+
     return (
-      <Input
-        id="copy-input"
-        defaultValue={inputValue}
-        suffix={
-          <Button
-            // type="text"
-            icon={<CopyOutlined />}
-            onClick={handleCopy}
-          >Copy</Button>
-        }
-        readOnly
-      />
+        <Input
+            id="copy-input"
+            defaultValue={inputValue}
+            suffix={
+                <Button
+                    // type="text"
+                    icon={<CopyOutlined />}
+                    onClick={handleCopy}
+                >Copy</Button>
+            }
+            readOnly
+        />
     );
-  };
-  
-  
+};
+
+
 
 
 // Mockup data

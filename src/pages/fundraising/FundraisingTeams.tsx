@@ -11,6 +11,7 @@ import { FundraisingTeamListItem } from '../../ui/FundraisingTeamListItem';
 
 const FundraisingTeams: React.FC = () => {
   const { isEmpty } = useGlobalState();
+  const { showMany } = useGlobalState();
   const { token } = theme.useToken();
   const navigate = useNavigate();
 
@@ -89,63 +90,82 @@ const FundraisingTeams: React.FC = () => {
       ) : (
         <>
           {isEmpty ? (
-        <ProCard
-          style={{
-            padding: `${token.sizeSM}px 0`,
-          }}
-        >
-          <Flex align="center" vertical>
-            <Result
-              // status="404"
-              icon={
-                <img src="https://res.cloudinary.com/rn3o/image/upload/v1714641887/empty-no-fundraising-page_uv6kkn.svg" />
-              }
-              title="Still Empty"
-              subTitle={
-                <>
-                  You don’t have any Fundraising Page yet.
-                  <br />
-                  Let’s start one whenever you are ready.
-                </>
-              }
-              extra={
-                <Button
-                  key="1"
-                  type="primary"
-                  size="large"
-                  icon={<PlusOutlined />}
-                  onClick={createTeams}
-                >
-                  Create a Fundraising Page
-                </Button>
-              }
-            />
-          </Flex>
-        </ProCard>
-      ) : (
-        <Flex
-          gap={token.sizeMD}
-          wrap="wrap"
-          vertical
-          // style={{ margin: `-${token.sizeLG}px 0` }}
-        >
-          {mockData.map((data, index) => (
-            <FundraisingTeamListItem
-              key={index}
-              imgUrl={data.imgUrl}
-              name={data.title}
-              supporterCount={data.supporters}
-              completionPercent={data.progress}
-              teamMember={data.teamMember}
-              amountRaised={data.fundraised}
-              target={data.target}
-              dayLeft={data.dayLeft}
-              isOwner={data.isOwner}
-              pageRoute={data.pageRoute}
-            />
-          ))}
-        </Flex>
-      )}
+            <ProCard
+              style={{
+                padding: `${token.sizeSM}px 0`,
+              }}
+            >
+              <Flex align="center" vertical>
+                <Result
+                  // status="404"
+                  icon={
+                    <img src="https://res.cloudinary.com/rn3o/image/upload/v1714641887/empty-no-fundraising-page_uv6kkn.svg" />
+                  }
+                  title="Still Empty"
+                  subTitle={
+                    <>
+                      You don’t have any Fundraising Page yet.
+                      <br />
+                      Let’s start one whenever you are ready.
+                    </>
+                  }
+                  extra={
+                    <Button
+                      key="1"
+                      type="primary"
+                      size="large"
+                      icon={<PlusOutlined />}
+                      onClick={createTeams}
+                    >
+                      Create a Fundraising Page
+                    </Button>
+                  }
+                />
+              </Flex>
+            </ProCard>
+          ) : (
+            <Flex
+              gap={token.sizeMD}
+              wrap="wrap"
+              vertical
+            // style={{ margin: `-${token.sizeLG}px 0` }}
+            >
+              {showMany ? (
+                mockData.map((data, index) => (
+                  <FundraisingTeamListItem
+                    key={index}
+                    imgUrl={data.imgUrl}
+                    name={data.title}
+                    supporterCount={data.supporters}
+                    completionPercent={data.progress}
+                    teamMember={data.teamMember}
+                    amountRaised={data.fundraised}
+                    target={data.target}
+                    dayLeft={data.dayLeft}
+                    isOwner={data.isOwner}
+                    pageRoute={data.pageRoute}
+                  />
+                ))
+              ) : (
+                mockData.slice(0, 1).map((data, index) => (
+                  <FundraisingTeamListItem
+                    key={index}
+                    imgUrl={data.imgUrl}
+                    name={data.title}
+                    supporterCount={data.supporters}
+                    completionPercent={data.progress}
+                    teamMember={data.teamMember}
+                    amountRaised={data.fundraised}
+                    target={data.target}
+                    dayLeft={data.dayLeft}
+                    isOwner={data.isOwner}
+                    pageRoute={data.pageRoute}
+                  />
+                ))
+              )}
+
+            </Flex>
+          )}
         </>
       )}
     </PageContainer>

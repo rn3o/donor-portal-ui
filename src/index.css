@@ -10,6 +10,9 @@
 * {
   font-family: var(--font-family);
 }
+body, h1,h2,h3,h4, h5, input {
+  font-family: 'inherit';
+}
 
 .ant-layout-sider-children {
   font-weight: 500;
@@ -30,11 +33,38 @@
 
 @media (max-width: 600px) {
   .ant-pro-page-container-children-container {
-    padding-inline: 0;
+    padding-inline: 8px;
   }
 
   .ant-pro-page-container .ant-pro-page-container-warp-page-header {
     padding-inline-start: 0px;
     padding-inline-end: 0px;
   }
+}
+
+
+/* Quill Rich Text Editor styles  */
+.controls {
+  display: flex;
+  border: 1px solid #ccc;
+  border-top: 0;
+  padding: 10px;
+}
+
+.controls-right {
+  margin-left: auto;
+}
+
+.state {
+  margin: 10px 0;
+  font-family: monospace;
+}
+
+.state-title {
+  color: #999;
+  text-transform: uppercase;
+}
+
+.ql-snow .ql-editor * {
+  font-family: inherit;
 }
