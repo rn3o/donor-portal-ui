@@ -251,7 +251,7 @@ const EditPage: React.FC<FundraisingListItemProps> = ({
               <Flex justify='space-between' align='center' style={{ background: token.colorPrimaryBg, padding: token.sizeSM, borderRadius: token.sizeXS }}>
                 <Flex gap={token.sizeXXS}>
                   <TeamOutlined />&nbsp;
-                  Fundraise for your team
+                  Team up?
                 </Flex>
 
                 <Select
