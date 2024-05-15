@@ -1,6 +1,6 @@
 // @ts-nocheck
 import React, { useState, useRef, useEffect, forwardRef, useLayoutEffect } from 'react';
-import { Card, Progress, Flex, theme, Button, Drawer, Space, Image, Upload, Input, InputNumber, Typography } from 'antd';
+import { Card, Progress, Flex, theme, Button, Drawer, Space, Image, Upload, Input, InputNumber, Typography, Select } from 'antd';
 import type { GetProp, UploadFile, UploadProps } from 'antd';
 import ImgCrop from 'antd-img-crop';
 import Quill from 'quill';
@@ -13,6 +13,7 @@ import Bold from "quill/formats/bold";
 import Italic from "quill/formats/italic";
 import Header from "quill/formats/header";
 
+
 Quill.register({
   "modules/toolbar": Toolbar,
   "themes/snow": Snow,
@@ -22,7 +23,7 @@ Quill.register({
 });
 
 
-import { ShareAltOutlined, PlusOutlined, UploadOutlined } from '@ant-design/icons';
+import { ShareAltOutlined, PlusOutlined, UploadOutlined, TeamOutlined } from '@ant-design/icons';
 
 import { css } from '@emotion/css';
 
@@ -117,7 +118,7 @@ export const FundraisingListItem: React.FC<FundraisingListItemProps> = ({
                   borderRadius: token.sizeXS,
                   padding: `${token.sizeXXS}px ${token.sizeXS}px`
                 }}>
-                  fundraising for&nbsp;<b>{team}</b>
+                  with&nbsp;<b>{team}</b>&nbsp;team
                 </Flex>
               }
 
@@ -238,17 +239,37 @@ const EditPage: React.FC<FundraisingListItemProps> = ({
           </Space>
         }
       >
-        <Flex vertical gap={0} style={{ marginTop: `-${token.sizeLG}px` }}>
+        <Flex vertical gap={0}>
 
           {team ?
             (
-              <>
-                This page is fundraising for {team}
-              </>
+              <Flex align='center' style={{ background: token.colorPrimaryBg, padding: token.sizeSM, borderRadius: token.sizeXS }}>
+                <TeamOutlined />&nbsp;
+                Fundraising for {team}
+              </Flex>
             ) : (
-              <>
-                TODO: Fundraise for a team * select a team *
-              </>
+              <Flex justify='space-between' align='center' style={{ background: token.colorPrimaryBg, padding: token.sizeSM, borderRadius: token.sizeXS }}>
+                <Flex gap={token.sizeXXS}>
+                  <TeamOutlined />&nbsp;
+                  Team up?
+                </Flex>
+
+                <Select
+                  style={{ width: '180px' }}
+                  placeholder="Select your team"
+                  optionFilterProp="children"
+                  options={[
+                    {
+                      value: 'Safa Springs Academy',
+                      label: 'Safa Springs Academy',
+                    },
+                    {
+                      value: 'Firdaus Field School',
+                      label: 'Firdaus Field School',
+                    },
+                  ]}
+                />
+              </Flex>
             )
           }
 
