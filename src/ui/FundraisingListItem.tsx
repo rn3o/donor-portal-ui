@@ -243,7 +243,7 @@ const EditPage: React.FC<FundraisingListItemProps> = ({
           {team ?
             (
               <>
-                Fundraising for {team}
+                This page is fundraising for {team}
               </>
             ) : (
               <>
