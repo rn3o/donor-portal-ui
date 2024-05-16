@@ -99,10 +99,11 @@ export const FundraisingTeamListItem: React.FC<FundraisingTeamListItemProps> = (
 
             <Flex gap={token.sizeXS}>
               <Button type="text" icon={<Tooltip title="Share"><ShareAltOutlined /></Tooltip>} />
-              {isOwner ? (<Button>Edit Page</Button>)
+              {isOwner ? (<Button>Edit Team Page</Button>)
                 :
-                (<Tooltip title="You are not an organiser of this team"><Button disabled>Edit Page</Button></Tooltip>)
-              } {/* Render Edit Page button based on isOwner prop */}
+                // Render Edit Page button based on isOwner prop
+                (<Tooltip title="You are not an organiser of this team"><Button disabled>Edit Team Page</Button></Tooltip>)
+              } 
               <Button type="primary" onClick={seeFundraisers}>See Fundraisers</Button> {/* Call seeFundraisers function on click */}
             </Flex>
           </Flex>

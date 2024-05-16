@@ -232,7 +232,7 @@ const EditPage: React.FC<FundraisingListItemProps> = ({
         open={open}
         extra={
           <Space>
-            <Button onClick={onClose}>Cancel</Button>
+            {/* <Button onClick={onClose}>Cancel</Button> */}
             <Button type="primary" onClick={onClose}>
               Save Changes
             </Button>
