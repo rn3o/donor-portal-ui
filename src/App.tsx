@@ -5,7 +5,7 @@ import defaultProps from './config/defaultProps';
 import defaultSettings from './config/defaultSettings';
 
 import { Route, Routes, useNavigate, useLocation } from 'react-router-dom';
-import React, { useState, useEffect, lazy, Suspense, startTransition } from 'react';
+import React, { useState, useEffect, lazy, Suspense, startTransition, createContext } from 'react';
 
 import {
   LogoutOutlined,
@@ -23,10 +23,12 @@ import {
   MoonFilled,
   FormatPainterOutlined,
   ControlOutlined,
+  HomeOutlined,
+  LoginOutlined,
+  MailOutlined,
 } from '@ant-design/icons';
 import type { ProSettings } from '@ant-design/pro-components';
 import {
-  ProConfigProvider,
   ProLayout,
   SettingDrawer,
 } from '@ant-design/pro-components';
@@ -37,8 +39,6 @@ import {
   ConfigProvider,
   Divider,
   Dropdown,
-  Input,
-  Popover,
   theme,
   Flex,
   FloatButton,
@@ -63,11 +63,13 @@ import enUS from 'antd/locale/en_US';
 
 import DesignSystem from './pages/DesignSystem';
 import TestPage from './pages/_TestPage';
-import FirstLevelPage from './pages/FirstLevelPage';
+import FirstLevelPage from './pages/TopLevelPage';
 
 import QuickAccessMenu from './ui/QuickAccessMenu';
 import NoDonation from './pages/NoDonation';
 import MyAccount from './pages/MyAccount';
+import TopLevelPage from './pages/TopLevelPage';
+import TeamInvitation from './pages/TeamInvitation';
 // import FundraisingPages from './pages/fundraising/FundraisingPages';
 // import FundraisingTeams from './pages/fundraising/FundraisingTeams';
 // import FundraisingTeamInvitation from './pages/fundraising/FundraisingTeamInvitation';
@@ -123,12 +125,24 @@ const ZakatCalcCreate = lazy(() =>
 
 const AccountSettings = lazy(() => import('./pages/AccountSettings'));
 
+export const AppLogoContext = createContext<string>('');
+
 export default () => {
   const [pathname, setPathname] = useState('/dashboard');
   // const [pageContent, setPageContent] = useState(<CreateAccount />);
 
   const navigate = useNavigate();
   const location = useLocation();
+
+  // array of routes that shall not be rendered in the ProLayout
+  const excludedRoutes = [
+    '/top-level-page',
+    '/login',
+    '/team-invitation',
+    // add more
+  ]
+
+  const shouldRenderProLayout = !excludedRoutes.some(route => location.pathname.startsWith(route));
 
   const { token } = theme.useToken();
 
@@ -463,6 +477,7 @@ export default () => {
 
         {/* Themer End */}
 
+        {shouldRenderProLayout && (
         <ProLayout
           menuExtraRender={({ collapsed }) =>
             collapsed ? (
@@ -722,7 +737,70 @@ export default () => {
           <Content />
           {/* </Flex> */}
         </ProLayout>
+        )}
+
+        {/* non-dashboard routes*/}
+        {!shouldRenderProLayout && (
+        <div>
+        <HeroBackgroundImage imageUrl={heroImage} />
+        <AppLogoContext.Provider value={appLogo}>
+          <NonDashboardPage />
+        </AppLogoContext.Provider>
+        </div>)}
+
       </ConfigProvider>
+
+      {/* page shortcuts: */}
+
+      <FloatButton.Group shape="square" 
+      style={{ left: 4, bottom:200, zIndex: 9999 }}
+      className={css`&{
+        flex-direction: row;
+        margin-left: -56px;
+        transition: all ease 0.3s;
+        border-left: solid 30px transparent;
+      }
+        &:hover {
+          margin-left: -8px;
+        }
+        &::after {
+          content: "SHORTCUTS";
+          letter-spacing: 2px;
+          display: block;
+          position: absolute;
+          top: 50%;
+          opacity: .5;
+          left: -64px; /* Adjust as needed */
+          transform: translateY(-50%) rotate(-90deg);
+          white-space: nowrap;
+        }
+      `}
+      >
+        <FloatButton
+        tooltip={<div>Dashboard View</div>}
+        onClick={() => navigate('/my-account')}
+        icon={<LayoutOutlined />}
+         />
+
+        <FloatButton
+        tooltip={<div>Login Screen (TODO)</div>}
+        onClick={() => navigate('/login')}
+        icon={<LoginOutlined />}
+         />
+
+        <FloatButton
+        tooltip={<div>Team invitation</div>}
+        onClick={() => navigate('/team-invitation')}
+        icon={<MailOutlined />}
+         />
+
+        <FloatButton
+        tooltip={<div>Top level page (non-dashboard)</div>}
+        onClick={() => navigate('/top-level-page')}
+        />
+
+        {/* <FloatButton.BackTop visibilityHeight={0} /> */}
+      </FloatButton.Group>
     </>
   );
 };
@@ -770,7 +848,16 @@ const HeroBackgroundImage = ({ imageUrl }) => {
   );
 };
 
-// All routes
+// Non Dashboard Routes
+
+const NonDashboardPage = () => (
+  <Routes>
+    <Route path="/top-level-page" element={<TopLevelPage />} />
+    <Route path="/team-invitation" element={<TeamInvitation />} />
+  </Routes>
+)
+
+// Logged in Routes, Everyting that appears inside dashboard view / ProLayout
 
 const Content = () => (
   <Routes>
