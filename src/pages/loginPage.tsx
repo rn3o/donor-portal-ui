@@ -17,7 +17,7 @@ import { AppLogoContext } from '../App';
 const { Text, Link } = Typography;
 
 
-const TeamInvitation: React.FC = () => {
+const LoginPage: React.FC = () => {
 
   const { token } = theme.useToken();
   const appLogo: string | undefined = useContext(AppLogoContext);
@@ -35,25 +35,17 @@ const TeamInvitation: React.FC = () => {
   };
 
   return (
-    <Flex vertical align='center' justify='space-between' gap={token.sizeXL} style={{ minHeight: '90vh'}}>
-      <Card bordered={false} style={{
-        width: '100%',
-        maxWidth: 360,
-        marginTop: 50,
-        background: '#ffffff02',
-        backdropFilter: 'blur(8px)',
-      }}>
-        <Flex vertical align='center'>
-          <Avatar size={'large'} src='https://images.pexels.com/photos/1681010/pexels-photo-1681010.jpeg?auto=compress&cs=tinysrgb&w=80' /><br />
-          <Text style={{ textAlign: 'center' }}>Mikael is inviting you to team up with
-            <br /><b>Safa Springs Academy</b></Text>
-        </Flex>
-      </Card>
-
+    <Flex vertical align='center' justify='space-around' gap={token.sizeXL} style={{ minHeight: '90vh'}}>
       {!signInAttempted ? (
         <Card hoverable bordered={false} style={{ width: '100%', maxWidth: 360, cursor: 'default' }}>
           <Flex vertical align='center' gap={token.sizeSM}>
-            <Typography.Title level={3} style={{ textAlign: 'center' }}>Sign In to Accept Invitation</Typography.Title>
+          <Flex align='center' vertical>
+        <img
+          src={appLogo || 'https://framerusercontent.com/images/jHJJtoi1lAZTFGfJvCtM70gp4.png'}
+          style={{ height: token.sizeXL }}
+        />
+      </Flex>
+            <Typography.Title level={3} style={{ textAlign: 'center' }}>Sign In </Typography.Title>
             <Typography.Text type="secondary">Enter your email for a one-time login link</Typography.Text>
 
             <Flex vertical gap={token.sizeXS} style={{ width: '100%' }}>
@@ -82,22 +74,9 @@ const TeamInvitation: React.FC = () => {
           </Card>
         )
       }
-
-      <Flex align='center' vertical>
-        <img
-          src={appLogo || 'https://framerusercontent.com/images/jHJJtoi1lAZTFGfJvCtM70gp4.png'}
-          style={{ height: token.sizeXL }}
-        />
-        <Divider />
-        <div style={{ fontSize: token.sizeSM}} >
-          Fundraising & Donor Portal
-        </div>
-      </Flex>
-
-
     </Flex>
   );
 };
 
-export default TeamInvitation;
+export default LoginPage;
 

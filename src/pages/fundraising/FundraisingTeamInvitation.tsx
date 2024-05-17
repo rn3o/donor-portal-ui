@@ -1,6 +1,7 @@
+import { useGlobalState } from './../../GlobalProvider';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Flex, Button, Result, Empty } from 'antd';
+import { Flex, Button, Avatar, Empty, Typography, theme } from 'antd';
 import { ProCard, PageContainer } from '@ant-design/pro-components';
 
 import {
@@ -11,6 +12,8 @@ import {
 
 const FundraisingTeamInvitation: React.FC = () => {
   const navigate = useNavigate();
+  const { isEmpty } = useGlobalState();
+  
 
   const goToTeams = () => {
     navigate('/fundraising/teams');
@@ -52,10 +55,16 @@ const FundraisingTeamInvitation: React.FC = () => {
         }
       >
         <Flex align="center" vertical>
-          <Empty
-            image={Empty.PRESENTED_IMAGE_SIMPLE}
-            description="No invitation"
-          />
+          {isEmpty ?
+            (
+              <Empty
+                image={Empty.PRESENTED_IMAGE_SIMPLE}
+                description="You don't have team invitation at the moment"
+              />
+            ) : (
+              <InvitationItem />
+            )
+          }
         </Flex>
       </ProCard>
     </PageContainer>
@@ -63,3 +72,22 @@ const FundraisingTeamInvitation: React.FC = () => {
 };
 
 export default FundraisingTeamInvitation;
+
+
+const InvitationItem: React.FC = () => {
+
+  const { token } = theme.useToken();
+
+  return (
+    <Flex justify='space-between' style={{ width: '100%'}}>
+
+      <Flex gap={token.sizeXS}>
+        <Avatar size={'large'} src='https://images.pexels.com/photos/1681010/pexels-photo-1681010.jpeg?auto=compress&cs=tinysrgb&w=80' /><br />
+        <Typography.Text><b>Mikael</b> is inviting you to team up with
+          <br /><b>Safa Springs Academy</b></Typography.Text>
+      </Flex>
+
+      <Button>Accept</Button>
+    </Flex>
+  );
+};

@@ -22,6 +22,8 @@ const TopLevelPage: React.FC = () => {
     >
       <Flex vertical>
         <Text>I'm a top <s>notch</s> level page </Text>
+        <Text style={{ opacity: 0.2}}>for test purposes only</Text>
+
       </Flex>
       
       <div />
