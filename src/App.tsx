@@ -70,6 +70,7 @@ import NoDonation from './pages/NoDonation';
 import MyAccount from './pages/MyAccount';
 import TopLevelPage from './pages/TopLevelPage';
 import TeamInvitation from './pages/TeamInvitation';
+import LoginPage from './pages/loginPage';
 // import FundraisingPages from './pages/fundraising/FundraisingPages';
 // import FundraisingTeams from './pages/fundraising/FundraisingTeams';
 // import FundraisingTeamInvitation from './pages/fundraising/FundraisingTeamInvitation';
@@ -783,7 +784,7 @@ export default () => {
          />
 
         <FloatButton
-        tooltip={<div>Login Screen (TODO)</div>}
+        tooltip={<div>Login Screen</div>}
         onClick={() => navigate('/login')}
         icon={<LoginOutlined />}
          />
@@ -854,6 +855,7 @@ const NonDashboardPage = () => (
   <Routes>
     <Route path="/top-level-page" element={<TopLevelPage />} />
     <Route path="/team-invitation" element={<TeamInvitation />} />
+    <Route path="/login" element={<LoginPage />} />
   </Routes>
 )
 
