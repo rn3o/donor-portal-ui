@@ -45,7 +45,7 @@ const TeamInvitation: React.FC = () => {
       }}>
         <Flex vertical align='center'>
           <Avatar size={'large'} src='https://images.pexels.com/photos/1681010/pexels-photo-1681010.jpeg?auto=compress&cs=tinysrgb&w=80' /><br />
-          <Text style={{ textAlign: 'center' }}>Mikael is inviting you to team up with
+          <Text style={{ textAlign: 'center' }}>Ryan is inviting you to team up with
             <br /><b>Safa Springs Academy</b></Text>
         </Flex>
       </Card>
