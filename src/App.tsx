@@ -578,7 +578,7 @@ export default () => {
             defaultOpenAll: true,
           }}
           avatarProps={{
-            src: 'https://ghavatars.staticblitz.com/rn3o.png?size=50',
+            src: 'https://images.pexels.com/photos/1681010/pexels-photo-1681010.jpeg?auto=compress&cs=tinysrgb&w=60',
             size: 'small',
             title: 'Ryan S.',
             render: (props, dom) => {

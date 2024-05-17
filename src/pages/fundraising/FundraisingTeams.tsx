@@ -6,7 +6,7 @@ import { ProCard, PageContainer } from '@ant-design/pro-components';
 
 import { useNavigate } from 'react-router-dom';
 
-import { PlusOutlined } from '@ant-design/icons';
+import { MailOutlined, PlusOutlined } from '@ant-design/icons';
 import { FundraisingTeamListItem } from '../../ui/FundraisingTeamListItem';
 
 const FundraisingTeams: React.FC = () => {
@@ -39,8 +39,8 @@ const FundraisingTeams: React.FC = () => {
         },
       }}
       extra={[
-        <Button type="text" key="2" onClick={seeInvitations}>
-          See Invitations
+        <Button icon={<MailOutlined />} type="text" key="2" onClick={seeInvitations}>
+          Invitations
         </Button>,
         <Button key="1" onClick={createTeams} icon={<PlusOutlined />}>
           Create a Team
@@ -185,7 +185,7 @@ const mockData = [
     progress: 0,
     fundraised: '0',
     teamMember: 0,
-    target: '£100,000',
+    target: 100000,
     dayLeft: 120,
     isOwner: true,
     pageRoute: '/fundraising/teams/members-empty'
@@ -198,7 +198,20 @@ const mockData = [
     progress: 58,
     fundraised: '£71,740',
     teamMember: 38,
-    target: '£123,000',
+    target: 123000,
+    dayLeft: 120,
+    isOwner: true,
+    pageRoute: '/fundraising/teams/members'
+  },
+  {
+    title: 'Lyne Food Bank',
+    imgUrl:
+      'https://images.pexels.com/photos/6995298/pexels-photo-6995298.jpeg?auto=compress&cs=tinysrgb&w=300',
+    supporters: 412,
+    progress: 58,
+    fundraised: '£28,256',
+    teamMember: 38,
+    target: 123000,
     dayLeft: 120,
     isOwner: false,
     pageRoute: '/fundraising/teams/members'
