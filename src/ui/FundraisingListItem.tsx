@@ -230,16 +230,16 @@ const EditPage: React.FC<FundraisingListItemProps> = ({
         width={480}
         onClose={onClose}
         open={open}
-        extra={
-          <Space>
-            {/* <Button onClick={onClose}>Cancel</Button> */}
-            <Button type="primary" onClick={onClose}>
-              Save Changes
-            </Button>
-          </Space>
-        }
+        // extra={
+        //   <Space>
+        //     <Button onClick={onClose}>Cancel</Button>
+        //     <Button type="primary" onClick={onClose}>
+        //       Save Changes
+        //     </Button>
+        //   </Space>
+        // }
       >
-        <Flex vertical gap={0}>
+        <Flex vertical gap={0} style={{ marginBottom: token.sizeXXL }}>
 
           {team ?
             (
@@ -313,12 +313,21 @@ const EditPage: React.FC<FundraisingListItemProps> = ({
             // width={330}
             src="https://placehold.co/800x240"
           />
-          <Button icon={<UploadOutlined />}>Change Cover</Button>
+          <Button size='large' icon={<UploadOutlined />}>Change Cover</Button>
 
+        </Flex>
 
-          <Space style={{ marginTop: token.sizeMD }}>
-          </Space>
-
+        <Flex gap={token.sizeSM} style={{ 
+            margin: `-${token.sizeLG}px`, 
+            padding: `${token.sizeLG}px`, 
+            background: token.colorBgBase,
+            borderTop: `solid 1px ${token.colorBorder}`,
+            position: 'sticky',
+            bottom: `-${token.sizeLG}px`,
+            boxShadow: token.boxShadow
+            }}>
+            <Button block>Reset Changes</Button>
+            <Button block type='primary'>Save Changes</Button>
         </Flex>
       </Drawer>
     </>

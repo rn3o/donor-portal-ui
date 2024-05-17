@@ -84,7 +84,7 @@ const InvitationItem: React.FC = () => {
       <Flex gap={token.sizeXS}>
         <Avatar size={'large'} src='https://images.pexels.com/photos/1681010/pexels-photo-1681010.jpeg?auto=compress&cs=tinysrgb&w=80' /><br />
         <Typography.Text><b>Mikael</b> is inviting you to team up with
-          <br /><b>Safa Springs Academy</b></Typography.Text>
+          <br /><b>Brum Food Bank</b></Typography.Text>
       </Flex>
 
       <Button>Accept</Button>
