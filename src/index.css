@@ -84,3 +84,12 @@ input {
   background: white;
   z-index: 1;
 }
+
+/* size of custom input when selecting amount */
+.embed-donation-form .ant-input-number-input {
+  /* font: inherit; */
+  font-size: 24px; 
+  height: 46px !important; 
+  padding: unset !important;
+  font-family: inherit;
+}
