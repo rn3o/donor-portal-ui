@@ -60,7 +60,7 @@ const CreateDonationForm: React.FC = () => {
         alignItems: 'center',
         justifyContent: 'center',
         fontWeight: 500,
-        fontSize: token.sizeMD,
+        fontSize: token.sizeMS,
     };
 
     const renderCheckCards = (amounts1: number[], amounts2: number[]) => (
@@ -92,14 +92,16 @@ const CreateDonationForm: React.FC = () => {
     );
 
     return (
-        <Card bordered={false} style={{ width: '400px' }}>
+        // <Card bordered={false} style={{ width: '400px' }}>
+        <Card bordered={false} style={{ width: '100%' }}>
             <Flex
                 gap={token.sizeXL}
                 wrap="wrap"
                 justify="space-between"
                 align="center"
                 vertical
-                style={{ width: '100%' }}
+                // style={{ width: '100%' }}
+                style={{ minWidth: 280, maxWidth: 400 }}
             >
                 <Flex style={{ flex: '1 0 0', width: '100%' }}>
 
@@ -141,7 +143,7 @@ const CreateDonationForm: React.FC = () => {
                         required
                         addonBefore={<Select
                             defaultValue="gbp"
-                            style={{ width: 100, zIndex: 1 }}
+                            style={{ width: 90, zIndex: 1 }}
                             onChange={handleChangeCurrency}
                             options={[
                               { value: 'gbp', label: '🇬🇧 GBP' },
