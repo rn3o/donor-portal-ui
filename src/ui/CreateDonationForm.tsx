@@ -14,6 +14,7 @@ import {
 } from 'antd';
 import { CalendarOutlined, FileOutlined, HeartFilled, LeftOutlined } from '@ant-design/icons';
 import { CheckCard } from '@ant-design/pro-components';
+import SelectAllocationCascader from './SelectAllocationCascader';
 
 const CreateDonationForm: React.FC = () => {
     const { token } = theme.useToken();
@@ -134,8 +135,13 @@ const CreateDonationForm: React.FC = () => {
                 <style>{pulseStyle}</style>
 
                 {currentStep === 1 && (
-                    <>
-                        <Flex style={{ flex: '1 0 0', width: '100%' }}>
+                    <Flex
+                        vertical 
+                        justify='space-between'
+                        gap={token.sizeMD}
+                        style={{ flex: '1 0 0', width: '100%', minHeight: 400 }}>
+
+                        <Flex vertical gap={token.sizeMD}>
                             <Segmented
                                 style={{ width: '100%', fontWeight: 600 }}
                                 block
@@ -156,8 +162,6 @@ const CreateDonationForm: React.FC = () => {
                                 value={selectedSegment}
                                 onChange={handleSegmentChange}
                             />
-                        </Flex>
-                        <div style={{ maxWidth: '100%' }}>
                             {selectedSegment === 'Give Once' && renderCheckCards([700, 500, 300], [200, 100, 50])}
                             {selectedSegment === 'Monthly' && renderCheckCards([100, 75, 50], [30, 10, 5])}
                             <InputNumber<number>
@@ -185,7 +189,9 @@ const CreateDonationForm: React.FC = () => {
                                     ]}
                                 />}
                             />
-                        </div>
+                        </Flex>
+
+                        <SelectAllocationCascader />
                         <Button
                             block
                             size="large"
@@ -195,13 +201,15 @@ const CreateDonationForm: React.FC = () => {
                         >
                             Donate
                         </Button>
-                    </>
+                    </Flex>
                 )}
 
                 {currentStep === 2 && selectedSegment === 'Give Once' && (
                     <Flex gap={token.sizeSM} style={{ width: '100%' }} vertical>
-                        Will you consider becoming one of our valued monthly supporters by converting your {currencySymbol}{donationAmountValue} contribution into a monthly donation?
-                        <br />Ongoing monthly donations allow us to better focus on our mission.
+                        Would you like to join us as a valued monthly supporter by converting your $100 contribution into a monthly gift.
+                        <br />
+                        <br />
+                        Monthly donations help us make a greater impact.
                         <Button
                             block
                             size="large"
@@ -225,13 +233,9 @@ const CreateDonationForm: React.FC = () => {
 
                 {currentStep === 2 && selectedSegment === 'Monthly' && (() => { handleNextStep(); return null; })()}
 
-                {/* {currentStep === 2 && selectedSegment === 'Monthly' && 
-                    handleNextStep()
-                } */}
-
                 {currentStep === 3 && (
                     <Flex vertical gap={token.sizeMD} style={{ width: '100%' }}>
-                        <Button
+                        {/* <Button
                             block
                             size="large"
                             type='text'
@@ -240,7 +244,7 @@ const CreateDonationForm: React.FC = () => {
                             onClick={() => setCurrentStep(1)}
                         >
                             Go Back
-                        </Button>
+                        </Button> */}
                         <Flex vertical gap={token.sizeSM}>
                             <div>
                                 <Typography.Title level={5} style={{ fontFamily: 'inherit', margin: `0px 0px ${token.sizeXXS}px` }}>
@@ -276,7 +280,15 @@ const CreateDonationForm: React.FC = () => {
                             <Checkbox>Subscribe to Our Newsletter</Checkbox>
                             <Checkbox>I agree with terms and condition</Checkbox>
                         </Flex>
-                        <Flex vertical gap={token.sizeSM}>
+                        <Flex gap={token.sizeSM}>
+                            <Button
+                                size="large"
+                                type='text'
+                                icon={<LeftOutlined />}
+                                // onClick={handlePreviousStep}
+                                onClick={() => setCurrentStep(1)}
+                            />
+
                             <Button
                                 block
                                 size="large"
