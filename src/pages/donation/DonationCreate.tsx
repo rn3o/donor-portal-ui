@@ -38,21 +38,12 @@ const DonationCreate: React.FC = () => {
         },
       }}
       // subTitle="Make a difference!"
-      style={{ width: '100%', margin: 'auto', maxWidth: '800px' }}
+      style={{ width: '100%', margin: 'auto', maxWidth: '480px' }}
     >
-      <ProCard
-        style={
-          {
-            // height: '80vh',
-            // minHeight: 600,
-            // paddingBottom: 40,
-          }
-        }
-      >
-        <Flex align="center" vertical>
+
+      <Flex align="center" vertical>
           <CreateDonationForm />
         </Flex>
-      </ProCard>
     </PageContainer>
   );
 };

@@ -88,8 +88,10 @@ input {
 /* size of custom input when selecting amount */
 .embed-donation-form .ant-input-number-input {
   /* font: inherit; */
-  font-size: 24px; 
-  height: 46px !important; 
+  font-size: 32px; 
+  height: 52px !important; 
   padding: unset !important;
   font-family: inherit;
+  font-weight: 600;
+  /* color: var(--ant-color-info); */
 }
