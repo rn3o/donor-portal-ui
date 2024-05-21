@@ -39,7 +39,8 @@ const CreateDonationForm: React.FC = () => {
             'gbp': '£',
             'usd': '$',
             'eur': '€',
-            'sgd': '$S ',
+            'cad': 'CA$',
+            'sgd': 'S$ ',
         };
         setCurrencySymbol(currencySymbols[value]);
     };
@@ -101,7 +102,7 @@ const CreateDonationForm: React.FC = () => {
                 align="center"
                 vertical
                 // style={{ width: '100%' }}
-                style={{ minWidth: 280, maxWidth: 400 }}
+                style={{ minWidth: 260, maxWidth: 400 }}
             >
                 <Flex style={{ flex: '1 0 0', width: '100%' }}>
 
@@ -135,7 +136,7 @@ const CreateDonationForm: React.FC = () => {
                         style={{ color: token.colorPrimary}}
                         size="large"
                         prefix={<div style={{fontSize: token.sizeMD}}>{currencySymbol}</div>}
-                        suffix={<div style={{fontSize: token.sizeMD, marginRight: token.sizeMD}}>{selectedSegment === 'Monthly' && "/month" || null} </div>}
+                        suffix={<div style={{fontSize: token.sizeMD, marginRight: token.sizeMS}}>{selectedSegment === 'Monthly' && "/month" || null} </div>}
                         value={donationAmountValue}
                         onChange={handleInputChange}
                         formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
@@ -143,20 +144,25 @@ const CreateDonationForm: React.FC = () => {
                         required
                         addonBefore={<Select
                             defaultValue="gbp"
-                            style={{ width: 90, zIndex: 1 }}
+                            style={{ width: 92, zIndex: 1 }}
                             onChange={handleChangeCurrency}
                             options={[
                               { value: 'gbp', label: '🇬🇧 GBP' },
                               { value: 'usd', label: '🇺🇸 USD' },
                               { value: 'eur', label: '🇪🇺 EUR' },
+                              { value: 'cad', label: '🇨🇦 CAD' },
                               { value: 'sgd', label: '🇸🇬 SGD' },
                             ]}
                           />}
                     />
                 </div>
 
-                <Button block size="large" icon={<FileOutlined />} type="primary">
-                    Checkout
+                <Button 
+                    block
+                    size="large" 
+                    icon={<FileOutlined />} 
+                    type="primary">
+                    Donate
                 </Button>
             </Flex>
         </Card>
