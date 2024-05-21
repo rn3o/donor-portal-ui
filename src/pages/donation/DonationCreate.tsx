@@ -8,6 +8,7 @@ import {
   LeftOutlined,
   ArrowLeftOutlined,
 } from '@ant-design/icons';
+import CreateDonationForm from '../../ui/CreateDonationForm';
 
 const DonationCreate: React.FC = () => {
   const navigate = useNavigate();
@@ -24,41 +25,25 @@ const DonationCreate: React.FC = () => {
         </Button>
       }
       header={{
-        title: 'Make an Impact!',
-        // breadcrumb: {
-        //   items: [
-        //     {
-        //       title: 'Donation',
-        //     },
-        //     {
-        //       title: 'Create',
-        //     },
-        //   ],
-        // },
+        title: 'Make a donation',
+        breadcrumb: {
+          items: [
+            {
+              title: 'Donations',
+            },
+            {
+              title: 'Create',
+            },
+          ],
+        },
       }}
-      // subTitle="Simple Description"
-      style={{ width: '100%', margin: 'auto', maxWidth: '800px' }}
+      // subTitle="Make a difference!"
+      style={{ width: '100%', margin: 'auto', maxWidth: '480px' }}
     >
-      <ProCard
-        style={
-          {
-            // height: '80vh',
-            // minHeight: 600,
-            // paddingBottom: 40,
-          }
-        }
-      >
-        <Flex align="center" vertical>
-          TODO
-          <br />
-          ...
-          <br />
-          <br />
-          <br />
-          Create this : {'<'} DonationForm / {'>'}
-          {/* <DonationForm /> */}
+
+      <Flex align="center" vertical>
+          <CreateDonationForm />
         </Flex>
-      </ProCard>
     </PageContainer>
   );
 };
