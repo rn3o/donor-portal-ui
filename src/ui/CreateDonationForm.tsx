@@ -8,7 +8,7 @@ import {
     InputNumber,
     Select
 } from 'antd';
-import { CalendarOutlined, FileOutlined } from '@ant-design/icons';
+import { CalendarOutlined, FileOutlined, HeartFilled } from '@ant-design/icons';
 import { CheckCard } from '@ant-design/pro-components';
 
 const CreateDonationForm: React.FC = () => {
@@ -53,16 +53,35 @@ const CreateDonationForm: React.FC = () => {
     };
 
     const amountOptionStyle = {
-        display: 'flex', 
+        display: 'flex',
         justifyContent: 'center',
     };
     const amountTitle = {
-        display: 'flex', 
+        display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         fontWeight: 500,
         fontSize: token.sizeMS,
     };
+
+
+    const pulseStyle = `
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.8);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+.pulse-animation {
+  animation: pulse 0.5s ease-in-out;
+}
+`;
+
 
     const renderCheckCards = (amounts1: number[], amounts2: number[]) => (
         <CheckCard.Group
@@ -105,7 +124,7 @@ const CreateDonationForm: React.FC = () => {
                 style={{ minWidth: 260, maxWidth: 400 }}
             >
                 <Flex style={{ flex: '1 0 0', width: '100%' }}>
-
+                    <style>{pulseStyle}</style>
                     <Segmented
                         style={{ width: '100%', fontWeight: 600 }}
                         block
@@ -118,7 +137,13 @@ const CreateDonationForm: React.FC = () => {
                             {
                                 label: 'Monthly',
                                 value: 'Monthly',
-                                icon: <CalendarOutlined />
+                                // icon: <HeartFilled style={{color: token.colorPrimary}} />
+                                icon: selectedSegment === 'Monthly' ? (
+                                    <HeartFilled
+                                        className="pulse-animation"
+                                        style={{ color: token.colorErrorActive }}
+                                    />
+                                ) : null,
                             },
                         ]}
                         value={selectedSegment}
@@ -133,34 +158,34 @@ const CreateDonationForm: React.FC = () => {
 
                     <InputNumber<number>
                         className='embed-donation-form'
-                        style={{ color: token.colorPrimary}}
+                        style={{ color: token.colorPrimary }}
                         size="large"
-                        prefix={<div style={{fontSize: token.sizeMD}}>{currencySymbol}</div>}
-                        suffix={<div style={{fontSize: token.sizeMD, marginRight: token.sizeMS}}>{selectedSegment === 'Monthly' && "/month" || null} </div>}
+                        prefix={<div style={{ fontSize: token.sizeMD }}>{currencySymbol}</div>}
+                        suffix={<div style={{ fontSize: token.sizeMD, marginRight: token.sizeMS }}>{selectedSegment === 'Monthly' && "/month" || null} </div>}
                         value={donationAmountValue}
                         onChange={handleInputChange}
                         formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                         parser={(value) => value?.replace(/\$\s?|(,*)/g, '') as unknown as number}
                         required
-                        addonBefore={<Select
+                        addonAfter={<Select
                             defaultValue="gbp"
                             style={{ width: 92, zIndex: 1 }}
                             onChange={handleChangeCurrency}
                             options={[
-                              { value: 'gbp', label: '🇬🇧 GBP' },
-                              { value: 'usd', label: '🇺🇸 USD' },
-                              { value: 'eur', label: '🇪🇺 EUR' },
-                              { value: 'cad', label: '🇨🇦 CAD' },
-                              { value: 'sgd', label: '🇸🇬 SGD' },
+                                { value: 'gbp', label: '🇬🇧 GBP' },
+                                { value: 'usd', label: '🇺🇸 USD' },
+                                { value: 'eur', label: '🇪🇺 EUR' },
+                                { value: 'cad', label: '🇨🇦 CAD' },
+                                { value: 'sgd', label: '🇸🇬 SGD' },
                             ]}
-                          />}
+                        />}
                     />
                 </div>
 
-                <Button 
+                <Button
                     block
-                    size="large" 
-                    icon={<FileOutlined />} 
+                    size="large"
+                    icon={<FileOutlined />}
                     type="primary">
                     Donate
                 </Button>
