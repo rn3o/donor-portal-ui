@@ -12,7 +12,7 @@ import {
     Space,
     Checkbox
 } from 'antd';
-import { CalendarOutlined, FileOutlined, HeartFilled, LeftOutlined } from '@ant-design/icons';
+import { CalendarOutlined, CreditCardOutlined, FileOutlined, HeartFilled, LeftOutlined } from '@ant-design/icons';
 import { CheckCard } from '@ant-design/pro-components';
 import SelectAllocationCascader from './SelectAllocationCascader';
 
@@ -81,9 +81,11 @@ const CreateDonationForm: React.FC = () => {
 @keyframes pulse {
   0% {
     transform: scale(1);
+    opacity: 0;
   }
   50% {
-    transform: scale(1.8);
+    opacity: 100;
+    transform: scale(2) rotate(-10deg);
   }
   100% {
     transform: scale(1);
@@ -137,9 +139,9 @@ const CreateDonationForm: React.FC = () => {
                 {currentStep === 1 && (
                     <Flex
                         vertical 
-                        justify='space-between'
-                        gap={token.sizeMD}
-                        style={{ flex: '1 0 0', width: '100%', minHeight: 400 }}>
+                        // justify='space-between'
+                        // gap={token.sizeMD}
+                        style={{ flex: '1 0 0', width: '100%', minHeight: 420 }}>
 
                         <Flex vertical gap={token.sizeMD}>
                             <Segmented
@@ -189,52 +191,70 @@ const CreateDonationForm: React.FC = () => {
                                     ]}
                                 />}
                             />
+                            {donationAmountValue > 0 && 
+                            <SelectAllocationCascader />
+                            }
                         </Flex>
 
-                        <SelectAllocationCascader />
+                        
                         <Button
+                            style={{ marginTop: 'auto' }}
                             block
                             size="large"
-                            icon={<FileOutlined />}
+                            // icon={<FileOutlined />}
                             type="primary"
                             onClick={handleNextStep}
+                            disabled={donationAmountValue === undefined || donationAmountValue <= 0 && true}
                         >
-                            Donate
+                            Continue
                         </Button>
                     </Flex>
                 )}
 
                 {currentStep === 2 && selectedSegment === 'Give Once' && (
-                    <Flex gap={token.sizeSM} style={{ width: '100%' }} vertical>
-                        Would you like to join us as a valued monthly supporter by converting your $100 contribution into a monthly gift.
-                        <br />
-                        <br />
-                        Monthly donations help us make a greater impact.
-                        <Button
-                            block
-                            size="large"
-                            type="primary"
-                            onClick={() => {
-                                setSelectedSegment('Monthly');
-                                handleNextStep();
-                            }}
-                        >
-                            Donate {currencySymbol}{donationAmountValue/2} per month
-                        </Button>
-                        <Button
-                            block
-                            size="large"
-                            onClick={handleNextStep}
-                        >
-                            Donate {currencySymbol}{donationAmountValue} as one-off
-                        </Button>
+                    <Flex gap={token.sizeSM} style={{ width: '100%', minHeight: 420}}
+                    vertical
+                    justify='space-between'>
+                        <Typography.Text style={{ fontFamily : 'inherit', fontSize: 'large', textAlign: 'center'}}>
+                            Would you like to join us as a valued monthly supporter by converting your $100 contribution into a monthly gift.
+                            <br />
+                            <br />
+                            Monthly donations help us
+                            <br />
+                            make a greater impact.
+                        </Typography.Text>
+
+                        <Flex vertical gap={token.sizeSM}>
+                            <Button
+                                block
+                                size="large"
+                                type="primary"
+                                onClick={() => {
+                                    setSelectedSegment('Monthly');
+                                    handleNextStep();
+                                }}
+                                icon={<HeartFilled
+                                    className="pulse-animation"
+                                    style={{ color: 'white' }}
+                                />}
+                            >
+                                Donate {currencySymbol}{donationAmountValue/2} per month
+                            </Button>
+                            <Button
+                                block
+                                size="large"
+                                onClick={handleNextStep}
+                            >
+                                Donate {currencySymbol}{donationAmountValue} as one-off
+                            </Button>
+                        </Flex>
                     </Flex>
                 )}
 
                 {currentStep === 2 && selectedSegment === 'Monthly' && (() => { handleNextStep(); return null; })()}
 
                 {currentStep === 3 && (
-                    <Flex vertical gap={token.sizeMD} style={{ width: '100%' }}>
+                    <Flex vertical gap={token.sizeMD} style={{ width: '100%', minHeight: 420 }}>
                         {/* <Button
                             block
                             size="large"
@@ -251,10 +271,12 @@ const CreateDonationForm: React.FC = () => {
                                     Your Name
                                 </Typography.Title>
                                 <Input
+                                    style={{ borderRadius: `${token.borderRadius}px ${token.borderRadius}px 0px 0px`, marginBottom: '-1px',}}
                                     size="large"
                                     placeholder="First Name"
                                 />
                                 <Input
+                                    style={{ borderRadius: `0px 0px ${token.borderRadius}px ${token.borderRadius}px `}}
                                     size="large"
                                     placeholder="Last Name"
                                 />
@@ -273,17 +295,18 @@ const CreateDonationForm: React.FC = () => {
                                     Postcode
                                 </Typography.Title>
                                 <Input
+                                    style={{ width : 120}}
                                     size="large"
                                     placeholder=""
                                 />
                             </div>
                             <Checkbox>Subscribe to Our Newsletter</Checkbox>
-                            <Checkbox>I agree with terms and condition</Checkbox>
+                            <Checkbox>I agree with <a>terms and condition</a></Checkbox>
                         </Flex>
-                        <Flex gap={token.sizeSM}>
+                        <Flex gap={token.sizeSM} style={{marginTop: 'auto'}}>
                             <Button
                                 size="large"
-                                type='text'
+                                // type='text'
                                 icon={<LeftOutlined />}
                                 // onClick={handlePreviousStep}
                                 onClick={() => setCurrentStep(1)}
@@ -302,44 +325,123 @@ const CreateDonationForm: React.FC = () => {
                 )}
 
                 {currentStep === 4 && (
-                    <Flex gap={token.sizeSM} style={{ width: '100%' }} vertical>
-                        <Button
-                            block
-                            size="large"
-                            type='text'
-                            icon={<LeftOutlined />}
-                            onClick={handlePreviousStep}
-                        >
-                            Go Back
-                        </Button>
-                        <div>Upsell option, checkbox to cover admin fee. Don't modify this for now</div>
-                        <br />
-                        <div>This will list option to pay with card / apple pay / google pay etc. Don't modify this for now</div>
-                        <Button
-                            block
-                            size="large"
-                            type="primary"
-                            onClick={handleNextStep}
-                        >
-                            Pay
-                        </Button>
+                    <Flex gap={token.sizeSM} style={{ width: '100%', minHeight: 420 }} vertical>
+                        
+                        <Checkbox>Cover admin fee</Checkbox>
+                        <Checkbox>Add gift aid to my donation</Checkbox>
+                        
+                        <Flex vertical gap={token.sizeSM} style={{ marginTop: 'auto'}}>
+
+                            <Button
+                                block
+                                size="large"
+                                type='text'
+                                icon={<LeftOutlined />}
+                                onClick={handlePreviousStep}
+                                >
+                                Change my detail
+                            </Button>
+                            
+                            <Button
+                                block
+                                size="large"
+                                type="primary"
+                                onClick={handleNextStep}
+                                icon={<CreditCardOutlined />}
+                            >
+                                Credit/Debit Card
+                            </Button>
+
+                            <Button
+                                block
+                                size="large"
+                                type="primary"
+                                // onClick={handleNextStep}
+                                style={{ background: 'black'}}
+                            >
+                                <img height={22} src="https://res.cloudinary.com/rn3o/image/upload/v1716372044/apay_rpqnwe.png" />
+                            </Button>
+
+                            <Button
+                                block
+                                size="large"
+                                type="primary"
+                                // onClick={handleNextStep}
+                                style={{ background: 'black'}}
+                            >
+                                <img height={25} src="https://res.cloudinary.com/rn3o/image/upload/v1716372043/gpay_bljz0a.png" />
+                            </Button>
+
+                            <Button
+                                block
+                                size="large"
+                                type="primary"
+                                // onClick={handleNextStep}
+                                style={{ background: '#ffc439'}}
+                            >
+                                <img height={22} src="https://res.cloudinary.com/rn3o/image/upload/v1716372594/paypal_jilpym.png" />
+                            </Button>
+
+                            
+                        </Flex>
                     </Flex>
                 )}
 
                 {currentStep === 5 && (
-                    <Flex gap={token.sizeSM} style={{ width: '100%' }} vertical>
+                    <Flex gap={token.sizeSM} style={{ width: '100%', minHeight: 420 }} vertical>
                         <Button
                             block
                             size="large"
                             type='text'
                             icon={<LeftOutlined />}
                             onClick={handlePreviousStep}
+                            style={{ fontSize: 'smaller'}}
                         >
                             Change Payment Option
                         </Button>
-                        <div>This will be payment page with card details to input. Don't modify this for now</div>
+
+                        <Typography.Text style={{ fontFamily: 'inherit', fontSize: token.sizeMS, textAlign: 'center', padding: token.sizeMD}}>
+                            Please enter your card details<br/>to complete your donation.
+                        </Typography.Text>
+
+                        <div>
+                                <Typography.Title level={5} style={{ fontFamily: 'inherit', margin: `0px 0px ${token.sizeXXS}px` }}>
+                                    Cardholder Name
+                                </Typography.Title>
+                                <Input
+                                    size="large"
+                                    placeholder="Full Name"
+                                />
+                        </div>
+                        <div>
+                                <Typography.Title level={5} style={{ fontFamily: 'inherit', margin: `0px 0px ${token.sizeXXS}px` }}>
+                                    Card Details
+                                </Typography.Title>
+                                <Input
+                                    size="large"
+                                    placeholder="12 Digits"
+                                    suffix={<CreditCardOutlined style={{ opacity: 0.3}} />}
+                                />
+                        </div>
+                        <Flex>
+                                
+                                <Input
+                                    style={{ borderRadius: `${token.borderRadius}px 0px 0px ${token.borderRadius}px`}}
+                                    size="large"
+                                    placeholder="MM / YY"
+                                />
+                                <Input
+                                    style={{ borderRadius: `0px ${token.borderRadius}px ${token.borderRadius}px 0px`, marginLeft: '-1px',}}
+                                    size="large"
+                                    placeholder="CVC"
+                                />
+                        </Flex>
+
+
+                        
                         <Button
                             block
+                            style={{ marginTop: 'auto'}}
                             size="large"
                             type="primary"
                             onClick={handleNextStep}
