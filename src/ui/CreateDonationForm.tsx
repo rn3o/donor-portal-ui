@@ -69,6 +69,7 @@ const CreateDonationForm: React.FC = () => {
     const handlePreviousStep = () => {
         setCurrentStep((prev) => prev - 1);
         setIsAdminFeeChecked(false)
+        setFeePercentageSliderValue(4)
     };
 
     const amountOptionStyle = {
@@ -142,7 +143,7 @@ const CreateDonationForm: React.FC = () => {
 
 
     return (
-        <Card hoverable bordered={false} style={{ width: '100%' }}>
+        <Card bordered={false} style={{ width: '100%' }}>
             <Flex
                 gap={token.sizeXL}
                 wrap="wrap"
@@ -515,7 +516,6 @@ const CreateDonationForm: React.FC = () => {
                                 // onClick={handlePreviousStep}
                                 onClick={() => {
                                     handlePreviousStep();
-                                    setFeePercentageSliderValue(4)
                                 }}
                                 style={{ fontSize: 'smaller'}}
                                 >
@@ -606,6 +606,8 @@ const CreateDonationForm: React.FC = () => {
                             size="large"
                             onClick={() => {
                                 setDonationAmountValue(Math.floor(donationAmountValue))
+                                setFeePercentageSliderValue(4)
+                                setIsAdminFeeChecked(false)
                                 setCurrentStep(1)
                             }}
                         >

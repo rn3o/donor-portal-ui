@@ -26,6 +26,7 @@ import {
   HomeOutlined,
   LoginOutlined,
   MailOutlined,
+  ProductOutlined,
 } from '@ant-design/icons';
 import type { ProSettings } from '@ant-design/pro-components';
 import {
@@ -71,6 +72,7 @@ import MyAccount from './pages/MyAccount';
 import TopLevelPage from './pages/TopLevelPage';
 import TeamInvitation from './pages/TeamInvitation';
 import LoginPage from './pages/loginPage';
+import EmbedExample from './pages/EmbedExample';
 // import FundraisingPages from './pages/fundraising/FundraisingPages';
 // import FundraisingTeams from './pages/fundraising/FundraisingTeams';
 // import FundraisingTeamInvitation from './pages/fundraising/FundraisingTeamInvitation';
@@ -137,9 +139,10 @@ export default () => {
 
   // array of routes that shall not be rendered in the ProLayout
   const excludedRoutes = [
-    '/top-level-page',
     '/login',
     '/team-invitation',
+    '/top-level-page',
+    '/embed-example',
     // add more
   ]
 
@@ -800,6 +803,12 @@ export default () => {
         onClick={() => navigate('/top-level-page')}
         />
 
+        <FloatButton
+        tooltip={<div>Donation Widgets Examples</div>}
+        onClick={() => navigate('/embed-example')}
+        icon={<ProductOutlined />}
+        />
+
         {/* <FloatButton.BackTop visibilityHeight={0} /> */}
       </FloatButton.Group>
     </>
@@ -853,9 +862,10 @@ const HeroBackgroundImage = ({ imageUrl }) => {
 
 const NonDashboardPage = () => (
   <Routes>
-    <Route path="/top-level-page" element={<TopLevelPage />} />
     <Route path="/team-invitation" element={<TeamInvitation />} />
     <Route path="/login" element={<LoginPage />} />
+    <Route path="/top-level-page" element={<TopLevelPage />} />
+    <Route path="/embed-example" element={<EmbedExample />} />
   </Routes>
 )
 
