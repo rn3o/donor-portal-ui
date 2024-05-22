@@ -11,11 +11,15 @@ import {
     Input,
     Space,
     Checkbox,
-    Tooltip
+    Tooltip,
+    Slider
 } from 'antd';
-import { CalendarOutlined, CreditCardOutlined, FileOutlined, HeartFilled, LeftOutlined } from '@ant-design/icons';
+import { CalendarOutlined, CreditCardOutlined, FileOutlined, GiftFilled, HeartFilled, LeftOutlined } from '@ant-design/icons';
 import { CheckCard } from '@ant-design/pro-components';
 import SelectAllocationCascader from './SelectAllocationCascader';
+import type { SliderSingleProps } from 'antd';
+
+const formatter: NonNullable<SliderSingleProps['tooltip']>['formatter'] = (value) => `${value}%`;
 
 const CreateDonationForm: React.FC = () => {
     const { token } = theme.useToken();
@@ -130,7 +134,11 @@ const CreateDonationForm: React.FC = () => {
     // for processing fee an upsells
 
     const [isAdminFeeChecked, setIsAdminFeeChecked] = useState(false);
-    const donationAmountValueWithFee = donationAmountValue + (donationAmountValue / 25);
+    const [feePercentageSliderValue, setFeePercentageSliderValue] = useState(4); // Initial slider value
+
+    const donationAmountValueWithFee = donationAmountValue + (donationAmountValue*(feePercentageSliderValue/100));
+
+
 
     return (
         <Card hoverable bordered={false} style={{ width: '100%' }}>
@@ -233,6 +241,24 @@ const CreateDonationForm: React.FC = () => {
                         </Typography.Text>
 
                         <Flex vertical gap={token.sizeSM}>
+                            <Button
+                                block
+                                size="large"
+                                type="primary"
+                                onClick={() => {
+                                    setSelectedSegment('Monthly');
+                                    handleNextStep();
+                                    setDonationAmountValue(donationAmountValue/3)
+                                }}
+                                style={{ background: token.colorError}}
+                                icon={<GiftFilled
+                                    className="pulse-animation"
+                                    style={{ color: 'white' }}
+                                />}
+                            >
+                                Donate {currencySymbol}${Math.floor(donationAmountValue / 3)} per month
+                            </Button>
+
                             <Button
                                 block
                                 size="large"
@@ -355,8 +381,14 @@ const CreateDonationForm: React.FC = () => {
                                 <CheckCard
                                     avatar="https://images.pexels.com/photos/6289064/pexels-photo-6289064.jpeg?auto=compress&cs=tinysrgb&w=200"
                                     style={{display: 'flex', flex: 1, width: '100%'}}
-                                    title={"Cover Admin Fee" + ` ${currencySymbol}${donationAmountValue/25}` + ' ?'}
-                                    description="Help us pay the processing and platform fee"
+                                    title={"Cover Our Fee" + ` ${currencySymbol}${(donationAmountValue*(feePercentageSliderValue/100)).toFixed(2)}` + ' ?'}
+                                    // description="Help us pay the processing & platform fee"
+                                    description={
+                                        <>
+                                        Help us pay the processing & platform fee
+                                            <Slider tooltip={{ formatter }} defaultValue={feePercentageSliderValue} min={3} max={28} onChange={setFeePercentageSliderValue}/>
+                                        </>
+                                    }
                                     onChange={
                                         (checked) => { console.log('checked', checked); setIsAdminFeeChecked(checked); }
                                     }
@@ -387,7 +419,7 @@ const CreateDonationForm: React.FC = () => {
                                 {/* {currencySymbol}{donationAmountValue} {selectedSegment === 'Monthly' && "/month" || null}  */}
                                 <Typography.Title level={3} style={{ fontFamily: 'inherit', textAlign: 'center', marginTop: 0}}>
                                 {currencySymbol}
-                                {isAdminFeeChecked ? donationAmountValueWithFee : donationAmountValue}
+                                {isAdminFeeChecked ? ((donationAmountValueWithFee).toFixed(2)) : ((donationAmountValue).toFixed(2))}
                                 {selectedSegment === 'Monthly' && "/month" || null} 
                                 </Typography.Title>
                         </Typography.Title>
@@ -467,7 +499,7 @@ const CreateDonationForm: React.FC = () => {
                         </Button>
 
                         <Typography.Text style={{ fontFamily: 'inherit', fontSize: token.sizeMS, textAlign: 'center', padding: token.sizeMD}}>
-                            Please enter your card details<br/>to complete your donation.
+                            Please enter your card details to complete your donation.
                         </Typography.Text>
 
                         <div>
@@ -512,7 +544,10 @@ const CreateDonationForm: React.FC = () => {
                             type="primary"
                             onClick={handleNextStep}
                         >
-                            Pay
+                            Pay &nbsp;
+                            {currencySymbol}
+                            {isAdminFeeChecked ? ((donationAmountValueWithFee).toFixed(2)) : ((donationAmountValue).toFixed(2))}
+                            {selectedSegment === 'Monthly' && "/month" || null} 
                         </Button>
                     </Flex>
                 )}
