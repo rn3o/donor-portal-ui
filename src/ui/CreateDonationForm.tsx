@@ -461,39 +461,52 @@ const CreateDonationForm: React.FC = () => {
                                 Pay with Credit/Debit Card
                             </Button>
 
-                            {/* apple pay */}
-                            {/* <Button
-                                block
-                                size="large"
-                                type="primary"
-                                // onClick={handleNextStep}
-                                style={{ background: 'black'}}
+                            {selectedSegment === 'Monthly' ? (
+                                <Button
+                                    block
+                                    size="large"
+                                    type="primary"
+                                    // onClick={handleNextStep}
                                 >
-                                <img height={22} src="https://res.cloudinary.com/rn3o/image/upload/v1716372044/apay_rpqnwe.png" />
-                            </Button> */}
+                                    Set up Direct Debit
+                                </Button>
+                            ):(
+                                <>
+                                {/* google pay */}
+                                <Button
+                                    block
+                                    size="large"
+                                    type="primary"
+                                    // onClick={handleNextStep}
+                                    style={{ background: 'black'}}
+                                >
+                                    <img height={25} src="https://res.cloudinary.com/rn3o/image/upload/v1716372043/gpay_bljz0a.png" />
+                                </Button>
 
-                            {/* google pay */}
-                            <Button
-                                block
-                                size="large"
-                                type="primary"
-                                // onClick={handleNextStep}
-                                style={{ background: 'black'}}
-                            >
-                                <img height={25} src="https://res.cloudinary.com/rn3o/image/upload/v1716372043/gpay_bljz0a.png" />
-                            </Button>
+                                {/* apple pay */}
+                                {/* <Button
+                                    block
+                                    size="large"
+                                    type="primary"
+                                    // onClick={handleNextStep}
+                                    style={{ background: 'black'}}
+                                    >
+                                    <img height={22} src="https://res.cloudinary.com/rn3o/image/upload/v1716372044/apay_rpqnwe.png" />
+                                </Button> */}
 
-                            {/* paypal */}
-                            <Button
-                                block
-                                size="large"
-                                type="primary"
-                                // onClick={handleNextStep}
-                                style={{ background: '#ffc439'}}
-                            >
-                                <img height={22} src="https://res.cloudinary.com/rn3o/image/upload/v1716372594/paypal_jilpym.png" />
-                            </Button>
-
+                                {/* paypal */}
+                                <Button
+                                    block
+                                    size="large"
+                                    type="primary"
+                                    // onClick={handleNextStep}
+                                    style={{ background: '#ffc439'}}
+                                >
+                                    <img height={22} src="https://res.cloudinary.com/rn3o/image/upload/v1716372594/paypal_jilpym.png" />
+                                </Button>
+                                </>
+                            )}  
+                            
                             <Button
                                 block
                                 size="large"
@@ -508,7 +521,6 @@ const CreateDonationForm: React.FC = () => {
                                 >
                                 Change my detail
                             </Button>
-                            
                         </Flex>
                     </Flex>
                 )}
