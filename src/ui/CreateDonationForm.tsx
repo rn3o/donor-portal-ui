@@ -12,9 +12,10 @@ import {
     Space,
     Checkbox,
     Tooltip,
-    Slider
+    Slider,
+    Badge
 } from 'antd';
-import { CalendarOutlined, CreditCardOutlined, FileOutlined, GiftFilled, HeartFilled, LeftOutlined } from '@ant-design/icons';
+import { CalendarOutlined, CheckCircleFilled, CreditCardOutlined, FileOutlined, GiftFilled, HeartFilled, LeftOutlined } from '@ant-design/icons';
 import { CheckCard } from '@ant-design/pro-components';
 import SelectAllocationCascader from './SelectAllocationCascader';
 import type { SliderSingleProps } from 'antd';
@@ -235,9 +236,10 @@ const CreateDonationForm: React.FC = () => {
                             Would you like to join us as a valued monthly supporter by converting your {currencySymbol}{donationAmountValue} contribution into a monthly gift.
                             <br />
                             <br />
+                            <b>
                             Monthly donations help us
-                            <br />
-                            make a greater impact.
+                            make a long lasting impact.
+                            </b>
                         </Typography.Text>
 
                         <Flex vertical gap={token.sizeSM}>
@@ -350,7 +352,10 @@ const CreateDonationForm: React.FC = () => {
                                 // type='text'
                                 icon={<LeftOutlined />}
                                 // onClick={handlePreviousStep}
-                                onClick={() => setCurrentStep(1)}
+                                onClick={() => {
+                                    setDonationAmountValue(Math.floor(donationAmountValue))
+                                    setCurrentStep(1)
+                                }}
                             />
 
                             <Button
@@ -378,22 +383,41 @@ const CreateDonationForm: React.FC = () => {
                                 open={donationAmountValue > 100 && isAdminFeeChecked === false && true}
                                 placement='right'
                                 title="Would you like to cover the transaction costs so that we receive 100% of your gift?">
-                                <CheckCard
-                                    avatar="https://images.pexels.com/photos/6289064/pexels-photo-6289064.jpeg?auto=compress&cs=tinysrgb&w=200"
-                                    style={{display: 'flex', flex: 1, width: '100%'}}
-                                    title={"Cover Our Fee" + ` ${currencySymbol}${(donationAmountValue*(feePercentageSliderValue/100)).toFixed(2)}` + ' ?'}
-                                    // description="Help us pay the processing & platform fee"
-                                    description={
-                                        <>
-                                        Help us pay the processing & platform fee
-                                            <Slider tooltip={{ formatter }} defaultValue={feePercentageSliderValue} min={3} max={28} onChange={setFeePercentageSliderValue}/>
-                                        </>
-                                    }
-                                    onChange={
-                                        (checked) => { console.log('checked', checked); setIsAdminFeeChecked(checked); }
-                                    }
-                                    defaultChecked={donationAmountValue <= 100 && true}
-                                    />
+                                <Badge.Ribbon
+                                    text={<>{isAdminFeeChecked && feePercentageSliderValue > 9 && <HeartFilled className="pulse-animation" style={{ color: 'white' }} />}&nbsp;&nbsp;Woohoo!</>} 
+                                    style={{zIndex: 10, top: 4, padding: '4px 8px', visibility: `${isAdminFeeChecked && feePercentageSliderValue > 9 && 'visible' || 'hidden' }`}}>
+                                    <div>
+                                        <CheckCard
+                                            avatar="https://images.pexels.com/photos/6289064/pexels-photo-6289064.jpeg?auto=compress&cs=tinysrgb&w=200"
+                                            style={{display: 'flex', flex: 1, width: '100%', paddingBottom: `${isAdminFeeChecked && '24px' || 'unset' }`}}
+                                            title={"Cover Our Fee" + ` ${currencySymbol}${(donationAmountValue*(feePercentageSliderValue/100)).toFixed(2)}` 
+                                            + `${isAdminFeeChecked && ` ` || ` ?` }` }
+                                            // + `${isAdminFeeChecked && feePercentageSliderValue > 20 && `Thank you!` || `` }` }
+                                            // description="Help us pay the processing & platform fee"
+                                            description= "Help us pay the processing & platform fee"
+                                            onChange={
+                                                (checked) => { console.log('checked', checked); setIsAdminFeeChecked(checked); }
+                                            }
+                                            defaultChecked={donationAmountValue <= 100 && true}
+                                                extra={isAdminFeeChecked && <CheckCircleFilled style={{ position: 'absolute', top: 0, right: 0, zIndex: 1, padding: token.sizeXXS, background: token.colorPrimaryBg, fontSize: token.sizeLG, color: token.colorPrimary}} />
+                                            }
+                                            />
+
+                                            <Slider 
+                                                style={{ 
+                                                    position: 'absolute',
+                                                    bottom: 30, left: '5%',
+                                                    width: '90%',
+                                                    margin: 'auto',
+                                                    visibility: `${isAdminFeeChecked && 'visible' || 'hidden' }`
+                                                }}
+                                                tooltip={{ formatter }} 
+                                                defaultValue={feePercentageSliderValue} 
+                                                min={3} 
+                                                max={28} 
+                                                onChange={setFeePercentageSliderValue}/>
+                                    </div>
+                                </Badge.Ribbon>
                             </Tooltip>
 
                             {/* upsell */}
@@ -434,7 +458,7 @@ const CreateDonationForm: React.FC = () => {
                                 onClick={handleNextStep}
                                 icon={<CreditCardOutlined />}
                             >
-                                Credit/Debit Card
+                                Pay with Credit/Debit Card
                             </Button>
 
                             {/* apple pay */}
@@ -475,7 +499,11 @@ const CreateDonationForm: React.FC = () => {
                                 size="large"
                                 type='text'
                                 icon={<LeftOutlined />}
-                                onClick={handlePreviousStep}
+                                // onClick={handlePreviousStep}
+                                onClick={() => {
+                                    handlePreviousStep();
+                                    setFeePercentageSliderValue(4)
+                                }}
                                 style={{ fontSize: 'smaller'}}
                                 >
                                 Change my detail
@@ -564,7 +592,10 @@ const CreateDonationForm: React.FC = () => {
                             style={{marginTop: 'auto'}}
                             block
                             size="large"
-                            onClick={() => setCurrentStep(1)}
+                            onClick={() => {
+                                setDonationAmountValue(Math.floor(donationAmountValue))
+                                setCurrentStep(1)
+                            }}
                         >
                             Make another donation
                         </Button>
