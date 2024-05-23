@@ -9,14 +9,13 @@ import {
     Select,
     Typography,
     Input,
-    Space,
     Checkbox,
     Tooltip,
     Slider,
     Badge,
     Tag
 } from 'antd';
-import { CalendarOutlined, CheckCircleFilled, CreditCardOutlined, FileOutlined, GiftFilled, HeartFilled, LeftOutlined } from '@ant-design/icons';
+import { CalendarOutlined, CheckCircleFilled, CreditCardOutlined, GiftFilled, HeartFilled, LeftOutlined, LinkOutlined } from '@ant-design/icons';
 import { CheckCard } from '@ant-design/pro-components';
 import SelectAllocationCascader from './SelectAllocationCascader';
 import type { SliderSingleProps } from 'antd';
@@ -38,6 +37,11 @@ interface CreateDonationFormProps {
     allowGiftAid?: boolean;
     allowUpsell?: boolean;
     customFields?: CustomField[];
+
+    upsellItemTitle?: string;
+    upsellItemImgUrl?: string;
+    upsellItemDescription?: string;
+    upsellItemValue?: number;
 }
 
 const CreateDonationForm: React.FC<CreateDonationFormProps> = ({
@@ -45,7 +49,13 @@ const CreateDonationForm: React.FC<CreateDonationFormProps> = ({
     allowAllocate = false,
     allowGiftAid = false,
     allowUpsell = false,
-    customFields = []
+    customFields = [],
+
+    // assigned default for demo purpose
+    upsellItemImgUrl = 'https://images.pexels.com/photos/7132575/pexels-photo-7132575.jpeg?auto=compress&cs=tinysrgb&w=200',
+    upsellItemTitle = 'Help Gaza Emergency',
+    upsellItemDescription = 'Save lives in Gaza',
+    upsellItemValue = 20,
 }) => {
     const { token } = theme.useToken();
 
@@ -93,6 +103,8 @@ const CreateDonationForm: React.FC<CreateDonationFormProps> = ({
     const handlePreviousStep = () => {
         setCurrentStep((prev) => prev - 1);
         setIsAdminFeeChecked(false)
+        setIsGiftAidChecked(false)
+        setIsUpsellChecked(false)
         setFeePercentageSliderValue(4)
     };
 
@@ -466,19 +478,22 @@ const CreateDonationForm: React.FC<CreateDonationFormProps> = ({
                             {/* upsell */}
                             {allowUpsell &&
                                 <CheckCard
-                                    avatar="https://images.pexels.com/photos/7132575/pexels-photo-7132575.jpeg?auto=compress&cs=tinysrgb&w=200"
+                                    avatar={upsellItemImgUrl}
                                     style={{ display: 'flex', flex: 1, width: '100%' }}
-                                    title="Help Gaza Emergency"
-                                    description="Save lives in Gaza"
+                                    // title="Help Gaza Emergency "
+                                    title={<>{upsellItemTitle} -&nbsp;{currencySymbol}{upsellItemValue}</>}
+                                    description={upsellItemDescription}
+                                    extra={isUpsellChecked && <CheckCircleFilled style={{ position: 'absolute', top: 0, right: 0, zIndex: 1, padding: token.sizeXXS, background: token.colorPrimaryBg, fontSize: token.sizeLG, color: token.colorPrimary }} />
+                                            }
                                     onChange={
                                         (checked) => { 
                                             console.log('checked', checked); 
                                             setIsUpsellChecked(checked);
                                             if (checked == true) {
-                                                setDonationAmountValue(donationAmountValue+20)
+                                                setDonationAmountValue(donationAmountValue+upsellItemValue)
                                             } else
                                             {
-                                                setDonationAmountValue(donationAmountValue-20)
+                                                setDonationAmountValue(donationAmountValue-upsellItemValue)
                                             }
                                         }
                                     }
@@ -487,11 +502,14 @@ const CreateDonationForm: React.FC<CreateDonationFormProps> = ({
 
                             {/* gift aid */}
                             {allowGiftAid &&
-                            <Tooltip trigger='hover' placement='right'
+                            <Tooltip trigger='hover' placement='right' open={!isGiftAidChecked}
                                 title={
                                     <>
-                                    If you are a UK Taxpayer, you can increase your donation by 25%!<br />
-                                    <a href='https://www.gov.uk/donating-to-charity/gift-aid' target='blank'>Learn more here</a>
+                                    If you are a UK Taxpayer, we can claim an extra 25p for every £1 you give!<br />
+                                    <a href='https://www.gov.uk/donating-to-charity/gift-aid'
+                                        target='blank' style={{ fontWeight: '600', lineHeight: 2.5, color: 'white'}}>
+                                        <LinkOutlined />&nbsp;<u>Learn more</u>
+                                    </a>
                                     </>
                                 }>
                                 <CheckCard
@@ -505,6 +523,8 @@ const CreateDonationForm: React.FC<CreateDonationFormProps> = ({
                                             setIsGiftAidChecked(checked)
                                         }
                                     }
+                                    extra={isGiftAidChecked && <CheckCircleFilled style={{ position: 'absolute', top: 0, right: 0, zIndex: 1, padding: token.sizeXXS, background: token.colorPrimaryBg, fontSize: token.sizeLG, color: token.colorPrimary }} />
+                                            }
                                     description={
                                             <>
                                             Boost gift by 25% at no extra cost!

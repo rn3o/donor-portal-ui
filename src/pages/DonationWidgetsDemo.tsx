@@ -98,6 +98,21 @@ const DonatonWidgetsDemo: React.FC = () => {
             allowRegular={false}
             />
         </div>
+
+        <div style={{ width: 360 }}>
+        <h3>Changeable upsell item</h3>
+        <CreateDonationForm
+            allowAllocate
+            allowGiftAid
+            allowUpsell
+            allowRegular={false}
+
+            upsellItemTitle='Turkey Earthquake Relief'
+            upsellItemDescription='Help people rebuild their homes'
+            upsellItemImgUrl='https://images.pexels.com/photos/15558948/pexels-photo-15558948/free-photo-of-people-in-a-destroyed-city.jpeg?auto=compress&cs=tinysrgb&w=200'
+            upsellItemValue={15}
+            />
+        </div>
       </Flex>
 
       <div />
