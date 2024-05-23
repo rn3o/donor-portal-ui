@@ -72,7 +72,7 @@ import MyAccount from './pages/MyAccount';
 import TopLevelPage from './pages/TopLevelPage';
 import TeamInvitation from './pages/TeamInvitation';
 import LoginPage from './pages/loginPage';
-import EmbedExample from './pages/EmbedExample';
+import DonationWidgetsDemo from './pages/DonationWidgetsDemo';
 // import FundraisingPages from './pages/fundraising/FundraisingPages';
 // import FundraisingTeams from './pages/fundraising/FundraisingTeams';
 // import FundraisingTeamInvitation from './pages/fundraising/FundraisingTeamInvitation';
@@ -142,7 +142,7 @@ export default () => {
     '/login',
     '/team-invitation',
     '/top-level-page',
-    '/embed-example',
+    '/donation-widgets-demo',
     // add more
   ]
 
@@ -734,15 +734,17 @@ export default () => {
       {/* page shortcuts: */}
 
       <FloatButton.Group shape="square" 
-      style={{ left: 6, bottom:110, zIndex: 9999 }}
+      style={{ left: 6, bottom:180, zIndex: 9999 }}
       className={css`&{
         flex-direction: row;
         margin-left: -56px;
         transition: all ease 0.3s;
         border-left: solid 30px transparent;
+        opacity: 0.4;
       }
         &:hover {
-          margin-left: -8px;
+          margin-left: -12px;
+          opacity: 1;
         }
         &::after {
           content: "DEMO SHORTCUTS";
@@ -752,6 +754,21 @@ export default () => {
           top: 50%;
           opacity: .5;
           left: -90px; 
+          transform: translateY(-50%) rotate(-90deg);
+          white-space: nowrap;
+        }
+        &::before {
+          content: "DEMO SHORTCUTS SHORTCUTS";
+          color: white;
+          background: white;
+          letter-spacing: 2px;
+          padding: 10px;
+          display: block;
+          position: absolute;
+          top: 50%;
+          z-index: -1;
+          opacity: 0;
+          right: -180px; 
           transform: translateY(-50%) rotate(-90deg);
           white-space: nowrap;
         }
@@ -772,12 +789,18 @@ export default () => {
             navigate('/design-system');
           }}
         />
-        
+
         <FloatButton
         tooltip={<div>Dashboard View</div>}
         onClick={() => navigate('/my-account')}
         icon={<LayoutOutlined />}
          />
+
+        <FloatButton
+        tooltip={<div>Donation Widgets Examples</div>}
+        onClick={() => navigate('/donation-widgets-demo')}
+        icon={<ProductOutlined />}
+        />
 
         <FloatButton
         tooltip={<div>Login Screen</div>}
@@ -791,16 +814,13 @@ export default () => {
         icon={<MailOutlined />}
          />
 
+
+
         <FloatButton
         tooltip={<div>Blank page (non-dashboard)</div>}
         onClick={() => navigate('/top-level-page')}
         />
 
-        <FloatButton
-        tooltip={<div>Donation Widgets Examples</div>}
-        onClick={() => navigate('/embed-example')}
-        icon={<ProductOutlined />}
-        />
 
         {/* <FloatButton.BackTop visibilityHeight={0} /> */}
       </FloatButton.Group>
@@ -858,7 +878,7 @@ const NonDashboardPage = () => (
     <Route path="/team-invitation" element={<TeamInvitation />} />
     <Route path="/login" element={<LoginPage />} />
     <Route path="/top-level-page" element={<TopLevelPage />} />
-    <Route path="/embed-example" element={<EmbedExample />} />
+    <Route path="/donation-widgets-demo" element={<DonationWidgetsDemo />} />
   </Routes>
 )
 

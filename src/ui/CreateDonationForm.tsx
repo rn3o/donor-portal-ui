@@ -19,16 +19,17 @@ import { CalendarOutlined, CheckCircleFilled, CreditCardOutlined, FileOutlined, 
 import { CheckCard } from '@ant-design/pro-components';
 import SelectAllocationCascader from './SelectAllocationCascader';
 import type { SliderSingleProps } from 'antd';
+import CreateDonationFormCustomField from './CreateDonationFormCustomField';
 
 const formatter: NonNullable<SliderSingleProps['tooltip']>['formatter'] = (value) => `${value}%`;
 
 const CreateDonationForm: React.FC = () => {
     const { token } = theme.useToken();
 
-    const [donationAmountValue, setDonationAmountValue] = useState<number>();
+    const [donationAmountValue, setDonationAmountValue] = useState<number>(50);
     const [selectedCurrency, setSelectedCurrency] = useState<string>('gbp');
     const [currencySymbol, setCurrencySymbol] = useState<string>('£');
-    const [selectedAmount, setSelectedAmount] = useState<number | undefined>(undefined);
+    const [selectedAmount, setSelectedAmount] = useState<number | undefined>(50);
 
     const [selectedSegment, setSelectedSegment] = useState<string>('Give Once');
     const [currentStep, setCurrentStep] = useState<number>(1); // Add state for steps
@@ -57,7 +58,7 @@ const CreateDonationForm: React.FC = () => {
 
     const handleInputChange = (value: number) => {
         setDonationAmountValue(value);
-        if (![700, 500, 300, 200, 100, 50, 100, 75, 50, 30, 10, 5].includes(value)) {
+        if (![700, 500, 285, 100, 50, 25, 100, 75, 50, 30, 25, 10].includes(value)) {
             setSelectedAmount(undefined);
         }
     };
@@ -169,7 +170,7 @@ const CreateDonationForm: React.FC = () => {
                                 options={[
                                     { label: 'Give Once', value: 'Give Once' },
                                     {
-                                        label: 'Monthly',
+                                        label: 'Give Regularly',
                                         value: 'Monthly',
                                         icon: selectedSegment === 'Monthly' ? (
                                             <HeartFilled
@@ -182,9 +183,10 @@ const CreateDonationForm: React.FC = () => {
                                 value={selectedSegment}
                                 onChange={handleSegmentChange}
                             />
-                            {selectedSegment === 'Give Once' && renderCheckCards([700, 500, 300], [200, 100, 50])}
-                            {selectedSegment === 'Monthly' && renderCheckCards([100, 75, 50], [30, 10, 5])}
+                            {selectedSegment === 'Give Once' && renderCheckCards([700, 500, 285], [100, 50, 25])}
+                            {selectedSegment === 'Monthly' && renderCheckCards([100, 75, 50], [30, 25, 10])}
                             <InputNumber<number>
+                                autoFocus
                                 className='embed-donation-form'
                                 style={{ color: token.colorPrimary }}
                                 size="large"
@@ -209,9 +211,22 @@ const CreateDonationForm: React.FC = () => {
                                     ]}
                                 />}
                             />
+
+
+                            {/* TOOD only show if props allowAllocate, and donationAmountValue > 0 */}
                             {donationAmountValue > 0 && 
-                            <SelectAllocationCascader />
+                                <SelectAllocationCascader />
                             }
+                            
+                            {/* TOOD only show if props hasCustomField, and donationAmountValue > 0 */}
+                            {/* CreateDonationFormCustomField can be multiple, and its props can be passed from this component too
+                                example: <CreateDonationForm allowAllocate hasCustomField={2} customField[1] is shortText, customField[2] is date 
+                            */}
+                            {donationAmountValue > 0 && 
+                                <CreateDonationFormCustomField customFieldType='shortText' />
+                            }
+
+
                         </Flex>
 
                         
@@ -383,9 +398,9 @@ const CreateDonationForm: React.FC = () => {
                             <Tooltip
                                 open={donationAmountValue > 100 && isAdminFeeChecked === false && true}
                                 placement='right'
-                                title="Would you like to cover the transaction costs so that we receive 100% of your gift?">
+                                title="Would you like to cover administration fee so that 100% of your donations will fund the project?">
                                 <Badge.Ribbon
-                                    text={<>{isAdminFeeChecked && feePercentageSliderValue > 9 && <HeartFilled className="pulse-animation" style={{ color: 'white' }} />}&nbsp;&nbsp;Woohoo!</>} 
+                                    text={<>{isAdminFeeChecked && feePercentageSliderValue > 9 && <HeartFilled className="pulse-animation" style={{ color: 'white' }} />}&nbsp;&nbsp;Hooray!</>} 
                                     style={{zIndex: 10, top: 4, padding: '4px 8px', visibility: `${isAdminFeeChecked && feePercentageSliderValue > 9 && 'visible' || 'hidden' }`}}>
                                     <div>
                                         <CheckCard

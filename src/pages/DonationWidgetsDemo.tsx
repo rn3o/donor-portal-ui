@@ -13,7 +13,7 @@ import CreateDonationForm from '../ui/CreateDonationForm';
 
 const { Text, Link } = Typography;
 
-const EmbedExample: React.FC = () => {
+const DonatonWidgetsDemo: React.FC = () => {
 
   const { token } = theme.useToken();
 
@@ -34,8 +34,9 @@ const EmbedExample: React.FC = () => {
   return (
     <div
       style={{
-        height: '80vh',
-        minHeight: 1200,
+        // height: '80vh',
+        // minHeight: 1200,
+        padding: 100,
         alignItems: 'center'
       }}
     >
@@ -64,10 +65,17 @@ const EmbedExample: React.FC = () => {
 
       </Flex>
 
+        {/* <div style={{ margin: `-${token.sizeXL}px` }}> */}
+        <br />
+        <br />
+        <div style={{ width: 400 }}>
+          <CreateDonationForm />
+        </div>
+
       <div />
     </div>
   );
 };
 
-export default EmbedExample;
+export default DonatonWidgetsDemo;
 
