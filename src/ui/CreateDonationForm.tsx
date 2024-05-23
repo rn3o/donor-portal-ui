@@ -9,26 +9,60 @@ import {
     Select,
     Typography,
     Input,
-    Space,
     Checkbox,
     Tooltip,
     Slider,
-    Badge
+    Badge,
+    Tag
 } from 'antd';
-import { CalendarOutlined, CheckCircleFilled, CreditCardOutlined, FileOutlined, GiftFilled, HeartFilled, LeftOutlined } from '@ant-design/icons';
+import { CalendarOutlined, CheckCircleFilled, CreditCardOutlined, GiftFilled, HeartFilled, LeftOutlined, LinkOutlined } from '@ant-design/icons';
 import { CheckCard } from '@ant-design/pro-components';
 import SelectAllocationCascader from './SelectAllocationCascader';
 import type { SliderSingleProps } from 'antd';
+import CreateDonationFormCustomField from './CreateDonationFormCustomField';
 
 const formatter: NonNullable<SliderSingleProps['tooltip']>['formatter'] = (value) => `${value}%`;
 
-const CreateDonationForm: React.FC = () => {
+// Define the allowed custom field types
+type CustomFieldType = 'shortText' | 'longText' | 'date';
+
+interface CustomField {
+    customFieldType: CustomFieldType;
+    [key: string]: any;
+}
+
+interface CreateDonationFormProps {
+    allowRegular?: boolean;
+    allowAllocate?: boolean;
+    allowGiftAid?: boolean;
+    allowUpsell?: boolean;
+    customFields?: CustomField[];
+
+    upsellItemTitle?: string;
+    upsellItemImgUrl?: string;
+    upsellItemDescription?: string;
+    upsellItemValue?: number;
+}
+
+const CreateDonationForm: React.FC<CreateDonationFormProps> = ({
+    allowRegular = true,
+    allowAllocate = false,
+    allowGiftAid = false,
+    allowUpsell = false,
+    customFields = [],
+
+    // assigned default for demo purpose
+    upsellItemImgUrl = 'https://images.pexels.com/photos/7132575/pexels-photo-7132575.jpeg?auto=compress&cs=tinysrgb&w=200',
+    upsellItemTitle = 'Help Gaza Emergency',
+    upsellItemDescription = 'Save lives in Gaza',
+    upsellItemValue = 20,
+}) => {
     const { token } = theme.useToken();
 
-    const [donationAmountValue, setDonationAmountValue] = useState<number>();
+    const [donationAmountValue, setDonationAmountValue] = useState<number>(50);
     const [selectedCurrency, setSelectedCurrency] = useState<string>('gbp');
     const [currencySymbol, setCurrencySymbol] = useState<string>('£');
-    const [selectedAmount, setSelectedAmount] = useState<number | undefined>(undefined);
+    const [selectedAmount, setSelectedAmount] = useState<number | undefined>(50);
 
     const [selectedSegment, setSelectedSegment] = useState<string>('Give Once');
     const [currentStep, setCurrentStep] = useState<number>(1); // Add state for steps
@@ -57,7 +91,7 @@ const CreateDonationForm: React.FC = () => {
 
     const handleInputChange = (value: number) => {
         setDonationAmountValue(value);
-        if (![700, 500, 300, 200, 100, 50, 100, 75, 50, 30, 10, 5].includes(value)) {
+        if (![700, 500, 285, 100, 50, 25, 100, 75, 50, 30, 25, 10].includes(value)) {
             setSelectedAmount(undefined);
         }
     };
@@ -69,6 +103,8 @@ const CreateDonationForm: React.FC = () => {
     const handlePreviousStep = () => {
         setCurrentStep((prev) => prev - 1);
         setIsAdminFeeChecked(false)
+        setIsGiftAidChecked(false)
+        setIsUpsellChecked(false)
         setFeePercentageSliderValue(4)
     };
 
@@ -136,9 +172,11 @@ const CreateDonationForm: React.FC = () => {
     // for processing fee an upsells
 
     const [isAdminFeeChecked, setIsAdminFeeChecked] = useState(false);
+    const [isUpsellChecked, setIsUpsellChecked] = useState(false);
+    const [isGiftAidChecked, setIsGiftAidChecked] = useState(false);
     const [feePercentageSliderValue, setFeePercentageSliderValue] = useState(4); // Initial slider value
 
-    const donationAmountValueWithFee = donationAmountValue + (donationAmountValue*(feePercentageSliderValue/100));
+    const donationAmountValueWithFee = donationAmountValue + (donationAmountValue * (feePercentageSliderValue / 100));
 
 
 
@@ -156,37 +194,41 @@ const CreateDonationForm: React.FC = () => {
 
                 {currentStep === 1 && (
                     <Flex
-                        vertical 
+                        vertical
                         // justify='space-between'
                         // gap={token.sizeMD}
-                        style={{ flex: '1 0 0', width: '100%', minHeight: 480 }}>
+                        style={{ flex: '1 0 0', width: '100%', minHeight: 600 }}>
 
                         <Flex vertical gap={token.sizeMD}>
-                            <Segmented
-                                style={{ width: '100%', fontWeight: 600 }}
-                                block
-                                size='large'
-                                options={[
-                                    { label: 'Give Once', value: 'Give Once' },
-                                    {
-                                        label: 'Monthly',
-                                        value: 'Monthly',
-                                        icon: selectedSegment === 'Monthly' ? (
-                                            <HeartFilled
-                                                className="pulse-animation"
-                                                style={{ color: token.colorErrorActive }}
-                                            />
-                                        ) : null,
-                                    },
-                                ]}
-                                value={selectedSegment}
-                                onChange={handleSegmentChange}
-                            />
-                            {selectedSegment === 'Give Once' && renderCheckCards([700, 500, 300], [200, 100, 50])}
-                            {selectedSegment === 'Monthly' && renderCheckCards([100, 75, 50], [30, 10, 5])}
+
+                            {allowRegular &&
+                                <Segmented
+                                    style={{ width: '100%', fontWeight: 600 }}
+                                    block
+                                    size='large'
+                                    options={[
+                                        { label: 'Give Once', value: 'Give Once' },
+                                        {
+                                            label: 'Give Regularly',
+                                            value: 'Monthly',
+                                            icon: selectedSegment === 'Monthly' ? (
+                                                <HeartFilled
+                                                    className="pulse-animation"
+                                                    style={{ color: token.colorErrorActive }}
+                                                />
+                                            ) : null,
+                                        },
+                                    ]}
+                                    value={selectedSegment}
+                                    onChange={handleSegmentChange}
+                                />}
+
+                            {selectedSegment === 'Give Once' && renderCheckCards([700, 500, 285], [100, 50, 25])}
+                            {selectedSegment === 'Monthly' && renderCheckCards([100, 75, 50], [30, 25, 10])}
                             <InputNumber<number>
+                                autoFocus
                                 className='embed-donation-form'
-                                style={{ color: token.colorPrimary }}
+                                style={{ color: token.colorPrimary, marginTop: `-${token.sizeMD}px` }}
                                 size="large"
                                 prefix={<div style={{ fontSize: token.sizeMD }}>{currencySymbol}</div>}
                                 suffix={<div style={{ fontSize: token.sizeMD, marginRight: token.sizeMS }}>{selectedSegment === 'Monthly' && "/month" || null} </div>}
@@ -209,12 +251,21 @@ const CreateDonationForm: React.FC = () => {
                                     ]}
                                 />}
                             />
-                            {donationAmountValue > 0 && 
-                            <SelectAllocationCascader />
-                            }
+
+
+                            {/* Conditionally show if props allowAllocate and donationAmountValue > 0 */}
+                            {allowAllocate && donationAmountValue > 0 && <SelectAllocationCascader />}
+
+                            {/* Conditionally show CreateDonationFormCustomField components */}
+                            {donationAmountValue > 0 && customFields.map((field, index) => (
+                                <CreateDonationFormCustomField key={index} {...field} />
+                            ))}
+
+
+
                         </Flex>
 
-                        
+
                         <Button
                             style={{ marginTop: 'auto' }}
                             block
@@ -230,16 +281,16 @@ const CreateDonationForm: React.FC = () => {
                 )}
 
                 {currentStep === 2 && selectedSegment === 'Give Once' && (
-                    <Flex gap={token.sizeSM} style={{ width: '100%', minHeight: 480}}
-                    vertical
-                    justify='space-between'>
-                        <Typography.Text style={{ fontFamily : 'inherit', fontSize: 'large', textAlign: 'center'}}>
+                    <Flex gap={token.sizeSM} style={{ width: '100%', minHeight: 600 }}
+                        vertical
+                        justify='space-between'>
+                        <Typography.Text style={{ fontFamily: 'inherit', fontSize: 'large', textAlign: 'center' }}>
                             Would you like to join us as a valued monthly supporter by converting your {currencySymbol}{donationAmountValue} contribution into a monthly gift.
                             <br />
                             <br />
                             <b>
-                            Monthly donations help us
-                            make a long lasting impact.
+                                Monthly donations help us
+                                make a long lasting impact.
                             </b>
                         </Typography.Text>
 
@@ -251,9 +302,9 @@ const CreateDonationForm: React.FC = () => {
                                 onClick={() => {
                                     setSelectedSegment('Monthly');
                                     handleNextStep();
-                                    setDonationAmountValue(donationAmountValue/3)
+                                    setDonationAmountValue(donationAmountValue / 3)
                                 }}
-                                style={{ background: token.colorError}}
+                                style={{ background: token.colorError }}
                                 icon={<GiftFilled
                                     className="pulse-animation"
                                     style={{ color: 'white' }}
@@ -269,14 +320,14 @@ const CreateDonationForm: React.FC = () => {
                                 onClick={() => {
                                     setSelectedSegment('Monthly');
                                     handleNextStep();
-                                    setDonationAmountValue(donationAmountValue/2)
+                                    setDonationAmountValue(donationAmountValue / 2)
                                 }}
                                 icon={<HeartFilled
                                     className="pulse-animation"
                                     style={{ color: 'white' }}
                                 />}
                             >
-                                Donate {currencySymbol}{donationAmountValue/2} per month
+                                Donate {currencySymbol}{donationAmountValue / 2} per month
                             </Button>
 
                             <Button
@@ -290,6 +341,9 @@ const CreateDonationForm: React.FC = () => {
                     </Flex>
                 )}
 
+                {/* if allowRegular==false, don't upsell for monthy */}
+                {currentStep === 2 && !allowRegular && (() => { handleNextStep(); return null; })()}
+
                 {/* if one-off donation is more than 100, don't upsell for monthy */}
                 {currentStep === 2 && donationAmountValue > 100 && (() => { handleNextStep(); return null; })()}
 
@@ -298,7 +352,7 @@ const CreateDonationForm: React.FC = () => {
 
 
                 {currentStep === 3 && (
-                    <Flex vertical gap={token.sizeMD} style={{ width: '100%', minHeight: 480 }}>
+                    <Flex vertical gap={token.sizeMD} style={{ width: '100%', minHeight: 600 }}>
                         {/* <Button
                             block
                             size="large"
@@ -315,12 +369,12 @@ const CreateDonationForm: React.FC = () => {
                                     Your Name
                                 </Typography.Title>
                                 <Input
-                                    style={{ borderRadius: `${token.borderRadius}px ${token.borderRadius}px 0px 0px`, marginBottom: '-1px',}}
+                                    style={{ borderRadius: `${token.borderRadius}px ${token.borderRadius}px 0px 0px`, marginBottom: '-1px', }}
                                     size="large"
                                     placeholder="First Name"
                                 />
                                 <Input
-                                    style={{ borderRadius: `0px 0px ${token.borderRadius}px ${token.borderRadius}px `}}
+                                    style={{ borderRadius: `0px 0px ${token.borderRadius}px ${token.borderRadius}px ` }}
                                     size="large"
                                     placeholder="Last Name"
                                 />
@@ -339,7 +393,7 @@ const CreateDonationForm: React.FC = () => {
                                     Postcode
                                 </Typography.Title>
                                 <Input
-                                    style={{ width : 120}}
+                                    style={{ width: 120 }}
                                     size="large"
                                     placeholder=""
                                 />
@@ -347,7 +401,7 @@ const CreateDonationForm: React.FC = () => {
                             <Checkbox>Subscribe to receive updates from our charity</Checkbox>
                             <Checkbox>I agree with <a>terms and condition</a></Checkbox>
                         </Flex>
-                        <Flex gap={token.sizeSM} style={{marginTop: 'auto'}}>
+                        <Flex gap={token.sizeSM} style={{ marginTop: 'auto' }}>
                             <Button
                                 size="large"
                                 // type='text'
@@ -366,7 +420,7 @@ const CreateDonationForm: React.FC = () => {
                                 // onClick={handleNextStep}
                                 onClick={() => {
                                     handleNextStep();
-                                    {donationAmountValue <= 100 && setIsAdminFeeChecked(true)}
+                                    { donationAmountValue <= 100 && setIsAdminFeeChecked(true) }
                                 }}
                             >
                                 Continue
@@ -376,82 +430,134 @@ const CreateDonationForm: React.FC = () => {
                 )}
 
                 {currentStep === 4 && (
-                    <Flex gap={token.sizeSM} style={{ width: '100%', minHeight: 480 }} vertical>
-                        
-                        <Flex vertical gap={token.sizeXXS} style={{ marginBottom: 'auto'}}>
-                            
+                    <Flex gap={token.sizeSM} style={{ width: '100%', minHeight: 600 }} vertical>
+
+                        <Flex vertical gap={0} style={{ marginBottom: 'auto' }}>
+
                             <Tooltip
                                 open={donationAmountValue > 100 && isAdminFeeChecked === false && true}
                                 placement='right'
-                                title="Would you like to cover the transaction costs so that we receive 100% of your gift?">
+                                title="Would you like to cover administration fee so that 100% of your donations will fund the project?">
                                 <Badge.Ribbon
-                                    text={<>{isAdminFeeChecked && feePercentageSliderValue > 9 && <HeartFilled className="pulse-animation" style={{ color: 'white' }} />}&nbsp;&nbsp;Woohoo!</>} 
-                                    style={{zIndex: 10, top: 4, padding: '4px 8px', visibility: `${isAdminFeeChecked && feePercentageSliderValue > 9 && 'visible' || 'hidden' }`}}>
+                                    text={<>{isAdminFeeChecked && feePercentageSliderValue > 9 && <HeartFilled className="pulse-animation" style={{ color: 'white' }} />}&nbsp;&nbsp;Hooray!</>}
+                                    style={{ zIndex: 10, top: 4, padding: '4px 8px', visibility: `${isAdminFeeChecked && feePercentageSliderValue > 9 && 'visible' || 'hidden'}` }}>
                                     <div>
                                         <CheckCard
                                             avatar="https://images.pexels.com/photos/6289064/pexels-photo-6289064.jpeg?auto=compress&cs=tinysrgb&w=200"
-                                            style={{display: 'flex', flex: 1, width: '100%', paddingBottom: `${isAdminFeeChecked && '24px' || 'unset' }`}}
-                                            title={"Cover Our Fee" + ` ${currencySymbol}${(donationAmountValue*(feePercentageSliderValue/100)).toFixed(2)}` 
-                                            + `${isAdminFeeChecked && ` ` || ` ?` }` }
+                                            style={{ display: 'flex', flex: 1, width: '100%', paddingBottom: `${isAdminFeeChecked && '24px' || 'unset'}` }}
+                                            title={"Cover Our Fee" + ` ${currencySymbol}${(donationAmountValue * (feePercentageSliderValue / 100)).toFixed(2)}`
+                                                + `${isAdminFeeChecked && ` ` || ` ?`}`}
                                             // + `${isAdminFeeChecked && feePercentageSliderValue > 20 && `Thank you!` || `` }` }
                                             // description="Help us pay the processing & platform fee"
-                                            description= "Help us pay the processing & platform fee"
+                                            description="Help us pay the processing & platform fee"
                                             onChange={
                                                 (checked) => { console.log('checked', checked); setIsAdminFeeChecked(checked); }
                                             }
                                             defaultChecked={donationAmountValue <= 100 && true}
-                                                extra={isAdminFeeChecked && <CheckCircleFilled style={{ position: 'absolute', top: 0, right: 0, zIndex: 1, padding: token.sizeXXS, background: token.colorPrimaryBg, fontSize: token.sizeLG, color: token.colorPrimary}} />
+                                            extra={isAdminFeeChecked && <CheckCircleFilled style={{ position: 'absolute', top: 0, right: 0, zIndex: 1, padding: token.sizeXXS, background: token.colorPrimaryBg, fontSize: token.sizeLG, color: token.colorPrimary }} />
                                             }
-                                            />
+                                        />
 
-                                            <Slider 
-                                                style={{ 
-                                                    position: 'absolute',
-                                                    bottom: 30, left: '5%',
-                                                    width: '90%',
-                                                    margin: 'auto',
-                                                    visibility: `${isAdminFeeChecked && 'visible' || 'hidden' }`
-                                                }}
-                                                tooltip={{ formatter }} 
-                                                defaultValue={feePercentageSliderValue} 
-                                                min={3} 
-                                                max={28} 
-                                                onChange={setFeePercentageSliderValue}/>
+                                        <Slider
+                                            style={{
+                                                position: 'absolute',
+                                                bottom: 30, left: '5%',
+                                                width: '90%',
+                                                margin: 'auto',
+                                                visibility: `${isAdminFeeChecked && 'visible' || 'hidden'}`
+                                            }}
+                                            tooltip={{ formatter }}
+                                            defaultValue={feePercentageSliderValue}
+                                            min={3}
+                                            max={28}
+                                            onChange={setFeePercentageSliderValue} />
                                     </div>
                                 </Badge.Ribbon>
                             </Tooltip>
 
                             {/* upsell */}
-                            {/* <CheckCard
-                                avatar="https://images.pexels.com/photos/7132575/pexels-photo-7132575.jpeg?auto=compress&cs=tinysrgb&w=200"
-                                style={{display: 'flex', flex: 1, width: '100%'}}
-                                title="Help Gaza Emergency"
-                                description="Save lives in Gaza"
-                            /> */}
-                            
-                            {/* gift aid */}
-                            {/* <CheckCard
-                                style={{display: 'flex', flex: 1, width: '100%'}}
-                                title="Add Gift Aid to my donation"
-                                description="25% more without any extra cost to you"
-                            /> */}
+                            {allowUpsell &&
+                                <CheckCard
+                                    avatar={upsellItemImgUrl}
+                                    style={{ display: 'flex', flex: 1, width: '100%' }}
+                                    // title="Help Gaza Emergency "
+                                    title={<>{upsellItemTitle} -&nbsp;{currencySymbol}{upsellItemValue}</>}
+                                    description={upsellItemDescription}
+                                    extra={isUpsellChecked && <CheckCircleFilled style={{ position: 'absolute', top: 0, right: 0, zIndex: 1, padding: token.sizeXXS, background: token.colorPrimaryBg, fontSize: token.sizeLG, color: token.colorPrimary }} />
+                                            }
+                                    onChange={
+                                        (checked) => { 
+                                            console.log('checked', checked); 
+                                            setIsUpsellChecked(checked);
+                                            if (checked == true) {
+                                                setDonationAmountValue(donationAmountValue+upsellItemValue)
+                                            } else
+                                            {
+                                                setDonationAmountValue(donationAmountValue-upsellItemValue)
+                                            }
+                                        }
+                                    }
+                                />
+                            }
 
+                            {/* gift aid */}
+                            {allowGiftAid &&
+                            <Tooltip trigger='hover' placement='right' open={!isGiftAidChecked}
+                                title={
+                                    <>
+                                    If you are a UK Taxpayer, we can claim an extra 25p for every £1 you give!<br />
+                                    <a href='https://www.gov.uk/donating-to-charity/gift-aid'
+                                        target='blank' style={{ fontWeight: '600', lineHeight: 2.5, color: 'white'}}>
+                                        <LinkOutlined />&nbsp;<u>Learn more</u>
+                                    </a>
+                                    </>
+                                }>
+                                <CheckCard
+                                    avatar="https://res.cloudinary.com/rn3o/image/upload/v1716480041/gift-aid-it-subtle-grey-bg_hyjg9q.svg"
+                                    style={{ display: 'flex', flex: 1, width: '100%' }}
+                                    title="Gift Aid my donation"
+                                    // description="Boost gift by 25% at no extra cost!"
+                                    onChange={
+                                        (checked) => { 
+                                            console.log('checked', checked);
+                                            setIsGiftAidChecked(checked)
+                                        }
+                                    }
+                                    extra={isGiftAidChecked && <CheckCircleFilled style={{ position: 'absolute', top: 0, right: 0, zIndex: 1, padding: token.sizeXXS, background: token.colorPrimaryBg, fontSize: token.sizeLG, color: token.colorPrimary }} />
+                                            }
+                                    description={
+                                            <>
+                                            Boost gift by 25% at no extra cost!
+                                            { isGiftAidChecked &&
+                                            <Tag bordered={false} color="success" icon={<CheckCircleFilled />} style={{ width: 'auto', marginTop: token.sizeSM}}>
+                                                Gift Aid value: 
+                                                {isAdminFeeChecked ?
+                                                <> {currencySymbol}{donationAmountValueWithFee/4} </>
+                                                :
+                                                <> {currencySymbol}{donationAmountValue/4} </>
+                                                }
+                                            </Tag>
+                                            }
+                                            </>}
+                                />
+                            </Tooltip>
+                            }
                         </Flex>
 
-                        <Typography.Title level={5} style={{ fontFamily: 'inherit', textAlign: 'center', marginTop: 0}}>
-                                Your donation: <br />
-                                &nbsp;
-                                {/* {currencySymbol}{donationAmountValue} {selectedSegment === 'Monthly' && "/month" || null}  */}
-                                <Typography.Title level={3} style={{ fontFamily: 'inherit', textAlign: 'center', marginTop: 0}}>
+                        <Typography.Title level={5} style={{ fontFamily: 'inherit', textAlign: 'center', marginTop: 0 }}>
+                            Your donation: <br />
+                            &nbsp;
+                            {/* {currencySymbol}{donationAmountValue} {selectedSegment === 'Monthly' && "/month" || null}  */}
+                            <Typography.Title level={1} style={{ fontFamily: 'inherit', textAlign: 'center', marginTop: 0, fontWeight: 700 }}>
                                 {currencySymbol}
                                 {isAdminFeeChecked ? ((donationAmountValueWithFee).toFixed(2)) : ((donationAmountValue).toFixed(2))}
-                                {selectedSegment === 'Monthly' && "/month" || null} 
-                                </Typography.Title>
+                                {selectedSegment === 'Monthly' && "/month" || null}
+                            </Typography.Title>
                         </Typography.Title>
-                        
-                        
-                        <Flex vertical gap={token.sizeSM} style={{ marginTop: 'auto'}}>
-                            
+
+
+                        <Flex vertical gap={token.sizeSM} style={{ marginTop: 'auto' }}>
+
                             <Button
                                 block
                                 size="large"
@@ -467,25 +573,25 @@ const CreateDonationForm: React.FC = () => {
                                     block
                                     size="large"
                                     type="primary"
-                                    // onClick={handleNextStep}
+                                // onClick={handleNextStep}
                                 >
                                     Set up Direct Debit
                                 </Button>
-                            ):(
+                            ) : (
                                 <>
-                                {/* google pay */}
-                                <Button
-                                    block
-                                    size="large"
-                                    type="primary"
-                                    // onClick={handleNextStep}
-                                    style={{ background: 'black'}}
-                                >
-                                    <img height={25} src="https://res.cloudinary.com/rn3o/image/upload/v1716372043/gpay_bljz0a.png" />
-                                </Button>
+                                    {/* google pay */}
+                                    <Button
+                                        block
+                                        size="large"
+                                        type="primary"
+                                        // onClick={handleNextStep}
+                                        style={{ background: 'black' }}
+                                    >
+                                        <img height={25} src="https://res.cloudinary.com/rn3o/image/upload/v1716372043/gpay_bljz0a.png" />
+                                    </Button>
 
-                                {/* apple pay */}
-                                {/* <Button
+                                    {/* apple pay */}
+                                    {/* <Button
                                     block
                                     size="large"
                                     type="primary"
@@ -495,19 +601,19 @@ const CreateDonationForm: React.FC = () => {
                                     <img height={22} src="https://res.cloudinary.com/rn3o/image/upload/v1716372044/apay_rpqnwe.png" />
                                 </Button> */}
 
-                                {/* paypal */}
-                                <Button
-                                    block
-                                    size="large"
-                                    type="primary"
-                                    // onClick={handleNextStep}
-                                    style={{ background: '#ffc439'}}
-                                >
-                                    <img height={22} src="https://res.cloudinary.com/rn3o/image/upload/v1716372594/paypal_jilpym.png" />
-                                </Button>
+                                    {/* paypal */}
+                                    <Button
+                                        block
+                                        size="large"
+                                        type="primary"
+                                        // onClick={handleNextStep}
+                                        style={{ background: '#ffc439' }}
+                                    >
+                                        <img height={22} src="https://res.cloudinary.com/rn3o/image/upload/v1716372594/paypal_jilpym.png" />
+                                    </Button>
                                 </>
-                            )}  
-                            
+                            )}
+
                             <Button
                                 block
                                 size="large"
@@ -517,8 +623,8 @@ const CreateDonationForm: React.FC = () => {
                                 onClick={() => {
                                     handlePreviousStep();
                                 }}
-                                style={{ fontSize: 'smaller'}}
-                                >
+                                style={{ fontSize: 'smaller' }}
+                            >
                                 Change my detail
                             </Button>
                         </Flex>
@@ -526,60 +632,60 @@ const CreateDonationForm: React.FC = () => {
                 )}
 
                 {currentStep === 5 && (
-                    <Flex gap={token.sizeSM} style={{ width: '100%', minHeight: 480 }} vertical>
+                    <Flex gap={token.sizeSM} style={{ width: '100%', minHeight: 600 }} vertical>
                         <Button
                             block
                             size="large"
                             type='text'
                             icon={<LeftOutlined />}
                             onClick={handlePreviousStep}
-                            style={{ fontSize: 'smaller'}}
+                            style={{ fontSize: 'smaller' }}
                         >
                             Change Payment Option
                         </Button>
 
-                        <Typography.Text style={{ fontFamily: 'inherit', fontSize: token.sizeMS, textAlign: 'center', padding: token.sizeMD}}>
+                        <Typography.Text style={{ fontFamily: 'inherit', fontSize: token.sizeMS, textAlign: 'center', padding: token.sizeMD }}>
                             Please enter your card details to complete your donation.
                         </Typography.Text>
 
                         <div>
-                                <Typography.Title level={5} style={{ fontFamily: 'inherit', margin: `0px 0px ${token.sizeXXS}px` }}>
-                                    Cardholder Name
-                                </Typography.Title>
-                                <Input
-                                    size="large"
-                                    placeholder="Full Name"
-                                />
+                            <Typography.Title level={5} style={{ fontFamily: 'inherit', margin: `0px 0px ${token.sizeXXS}px` }}>
+                                Cardholder Name
+                            </Typography.Title>
+                            <Input
+                                size="large"
+                                placeholder="Full Name"
+                            />
                         </div>
                         <div>
-                                <Typography.Title level={5} style={{ fontFamily: 'inherit', margin: `0px 0px ${token.sizeXXS}px` }}>
-                                    Card Details
-                                </Typography.Title>
-                                <Input
-                                    size="large"
-                                    placeholder="12 Digits"
-                                    suffix={<CreditCardOutlined style={{ opacity: 0.3}} />}
-                                />
+                            <Typography.Title level={5} style={{ fontFamily: 'inherit', margin: `0px 0px ${token.sizeXXS}px` }}>
+                                Card Details
+                            </Typography.Title>
+                            <Input
+                                size="large"
+                                placeholder="12 Digits"
+                                suffix={<CreditCardOutlined style={{ opacity: 0.3 }} />}
+                            />
                         </div>
                         <Flex>
-                                
-                                <Input
-                                    style={{ borderRadius: `${token.borderRadius}px 0px 0px ${token.borderRadius}px`}}
-                                    size="large"
-                                    placeholder="MM / YY"
-                                />
-                                <Input
-                                    style={{ borderRadius: `0px ${token.borderRadius}px ${token.borderRadius}px 0px`, marginLeft: '-1px',}}
-                                    size="large"
-                                    placeholder="CVC"
-                                />
+
+                            <Input
+                                style={{ borderRadius: `${token.borderRadius}px 0px 0px ${token.borderRadius}px` }}
+                                size="large"
+                                placeholder="MM / YY"
+                            />
+                            <Input
+                                style={{ borderRadius: `0px ${token.borderRadius}px ${token.borderRadius}px 0px`, marginLeft: '-1px', }}
+                                size="large"
+                                placeholder="CVC"
+                            />
                         </Flex>
 
 
-                        
+
                         <Button
                             block
-                            style={{ marginTop: 'auto'}}
+                            style={{ marginTop: 'auto' }}
                             size="large"
                             type="primary"
                             onClick={handleNextStep}
@@ -587,21 +693,21 @@ const CreateDonationForm: React.FC = () => {
                             Pay &nbsp;
                             {currencySymbol}
                             {isAdminFeeChecked ? ((donationAmountValueWithFee).toFixed(2)) : ((donationAmountValue).toFixed(2))}
-                            {selectedSegment === 'Monthly' && "/month" || null} 
+                            {selectedSegment === 'Monthly' && "/month" || null}
                         </Button>
                     </Flex>
                 )}
 
                 {currentStep === 6 && (
-                    <Flex gap={token.sizeSM} style={{ width: '100%', minHeight: 480 }} vertical>
+                    <Flex gap={token.sizeSM} style={{ width: '100%', minHeight: 600 }} vertical>
 
-                        <Typography.Title level={5} style={{ fontFamily: 'inherit', textAlign: 'center'}}>
+                        <Typography.Title level={5} style={{ fontFamily: 'inherit', textAlign: 'center' }}>
                             Thanks for donation, you will receive an email confirmation soon.
                         </Typography.Title>
 
                         <img src="https://res.cloudinary.com/rn3o/image/upload/v1716379834/send-message_h2erlx.svg" />
                         <Button
-                            style={{marginTop: 'auto'}}
+                            style={{ marginTop: 'auto' }}
                             block
                             size="large"
                             onClick={() => {
