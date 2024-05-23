@@ -16,37 +16,37 @@ const GlobalStateToggles: React.FC = () => {
 
   const toggler = {
     fontSize: 10,
-    justifyContent: 'flex-end',
-    align: 'right',
+    justifyContent: 'flex-start',
+    align: 'left',
     width: 120,
-    marginLeft: '-100px',
+    // marginLeft: '-100px',
     gap: '8px',
   };
 
   return (
     <FloatButton.Group
       trigger="click"
-      style={{ right: 24, bottom: 196 }}
+      style={{ left: 24, bottom: 40, zIndex: 999 }}
       icon={<CodeOutlined />}
-      tooltip={<div>Toggle UI States</div>}
+      tooltip={<div>Change UI States (DEMO)</div>}
     >
       <Flex
         vertical
-        justify="flex-end"
+        justify="flex-start"
         gap={8}
-        style={{ alignItems: 'right', background: 'white', padding: 8 }}
+        style={{ alignItems: 'left', background: 'white', padding: 8 }}
       >
         <Flex style={toggler}>
-          {showAlerts ? 'Alerts: Visible' : 'Alerts: Hidden'}
           <Switch size="small" checked={showAlerts} onChange={setShowAlerts} />
+          {showAlerts ? 'Alerts: Visible' : 'Alerts: Hidden'}
         </Flex>
         <Flex style={toggler}>
-          {isEmpty ? 'Empty: YES' : 'Empty: NO'}
           <Switch size="small" checked={isEmpty} onChange={setIsEmpty} />
+          {isEmpty ? 'Empty: YES' : 'Empty: NO'}
         </Flex>
         <Flex style={toggler}>
-          {showMany ? 'Has Many: YES' : 'Has Many: NO'}
           <Switch size="small" checked={showMany} onChange={setShowMany} />
+          {showMany ? 'Has Many: YES' : 'Has Many: NO'}
         </Flex>
       </Flex>
     </FloatButton.Group>

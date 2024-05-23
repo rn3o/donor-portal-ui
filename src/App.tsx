@@ -331,29 +331,6 @@ export default () => {
           },
         }}
       >
-        <FloatButton.Group
-          // open
-          // trigger="click"
-          // type="primary"
-          badge={{ dot: true }}
-          style={{ right: 24, bottom: 80, zIndex: 999 }}
-          icon={<BgColorsOutlined />}
-        >
-          <FloatButton
-            icon={<FormatPainterOutlined />}
-            tooltip={<div>Show Design System</div>}
-            onClick={() => {
-              setPathname('/design-system');
-              navigate('/design-system');
-            }}
-          />
-          <FloatButton
-            icon={<BgColorsOutlined />}
-            tooltip={<div>Change Theme</div>}
-            onClick={showThemerDrawer}
-            badge={{ dot: true }}
-          />
-        </FloatButton.Group>
 
         {/* Themer Start */}
         <Drawer
@@ -757,7 +734,7 @@ export default () => {
       {/* page shortcuts: */}
 
       <FloatButton.Group shape="square" 
-      style={{ left: 4, bottom:200, zIndex: 9999 }}
+      style={{ left: 6, bottom:110, zIndex: 9999 }}
       className={css`&{
         flex-direction: row;
         margin-left: -56px;
@@ -768,18 +745,34 @@ export default () => {
           margin-left: -8px;
         }
         &::after {
-          content: "SHORTCUTS";
+          content: "DEMO SHORTCUTS";
           letter-spacing: 2px;
           display: block;
           position: absolute;
           top: 50%;
           opacity: .5;
-          left: -64px; /* Adjust as needed */
+          left: -90px; 
           transform: translateY(-50%) rotate(-90deg);
           white-space: nowrap;
         }
       `}
       >
+        <FloatButton
+          icon={<BgColorsOutlined />}
+          tooltip={<div>Change Theme</div>}
+          onClick={showThemerDrawer}
+          badge={{ dot: true }}
+        />
+
+        <FloatButton
+          icon={<FormatPainterOutlined />}
+          tooltip={<div>Show Design System</div>}
+          onClick={() => {
+            setPathname('/design-system');
+            navigate('/design-system');
+          }}
+        />
+        
         <FloatButton
         tooltip={<div>Dashboard View</div>}
         onClick={() => navigate('/my-account')}
@@ -799,7 +792,7 @@ export default () => {
          />
 
         <FloatButton
-        tooltip={<div>Top level page (non-dashboard)</div>}
+        tooltip={<div>Blank page (non-dashboard)</div>}
         onClick={() => navigate('/top-level-page')}
         />
 
