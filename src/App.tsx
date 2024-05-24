@@ -341,6 +341,7 @@ export default () => {
           open={openThemerDrawer}
           height={100}
           placement="bottom"
+          style={{ zIndex: 999999}}
           destroyOnClose
         >
           <Flex
@@ -731,10 +732,19 @@ export default () => {
 
       </ConfigProvider>
 
+
+      <FloatButton
+          icon={<BgColorsOutlined />}
+          tooltip={<div>Change Theme</div>}
+          onClick={showThemerDrawer}
+          badge={{ dot: true }}
+          style={{ left: 24, bottom:80, zIndex: 9999 }}
+        />
+
       {/* page shortcuts: */}
 
       <FloatButton.Group shape="square" 
-      style={{ left: 6, bottom:180, zIndex: 9999 }}
+      style={{ left: 6, bottom:280, zIndex: 999 }}
       className={css`&{
         flex-direction: row;
         margin-left: -56px;
@@ -774,12 +784,6 @@ export default () => {
         }
       `}
       >
-        <FloatButton
-          icon={<BgColorsOutlined />}
-          tooltip={<div>Change Theme</div>}
-          onClick={showThemerDrawer}
-          badge={{ dot: true }}
-        />
 
         <FloatButton
           icon={<FormatPainterOutlined />}

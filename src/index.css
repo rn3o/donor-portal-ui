@@ -11,14 +11,12 @@
   font-family: var(--font-family);
 }
 
+/* override some stubborn ant design component styles */
 body,
-h1,
-h2,
-h3,
-h4,
-h5,
+.ant-typography,
 input {
-  font-family: 'inherit';
+  /* font-family: 'inherit'; */
+  font-family: var(--font-family);
 }
 
 .ant-layout-sider-children {

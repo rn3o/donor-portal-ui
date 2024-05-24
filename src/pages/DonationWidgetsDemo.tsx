@@ -9,6 +9,9 @@ import {
   CloseOutlined,
   HeartFilled,
 } from '@ant-design/icons';
+import {
+  ProLayout,
+} from '@ant-design/pro-components';
 import CreateDonationForm from '../ui/CreateDonationForm';
 
 const { Text, Link } = Typography;
@@ -37,7 +40,9 @@ const DonatonWidgetsDemo: React.FC = () => {
         // height: '80vh',
         // minHeight: 1200,
         padding: 60,
-        alignItems: 'center'
+        alignItems: 'center',
+        fontFamily: 'inherit',
+        background: token.colorBgLayout
       }}
     >
       <Button icon={<HeartFilled />} type="primary" onClick={showModal}>
@@ -95,15 +100,16 @@ const DonatonWidgetsDemo: React.FC = () => {
             allowAllocate
             allowGiftAid
             allowUpsell
-            allowRegular={false}
+            allowRegular
             />
         </div>
 
         <div style={{ width: 360 }}>
         <h3>Changeable upsell item</h3>
         <CreateDonationForm
+
             allowAllocate
-            allowGiftAid
+            allowGiftAid={false}
             allowUpsell
             allowRegular={false}
 

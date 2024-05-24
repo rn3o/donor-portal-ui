@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     Card,
     Button,
@@ -32,6 +32,8 @@ interface CustomField {
 }
 
 interface CreateDonationFormProps {
+    defaultCurrency?: string; //TODO
+
     allowRegular?: boolean;
     allowAllocate?: boolean;
     allowGiftAid?: boolean;
@@ -42,14 +44,18 @@ interface CreateDonationFormProps {
     upsellItemImgUrl?: string;
     upsellItemDescription?: string;
     upsellItemValue?: number;
+
+
 }
 
 const CreateDonationForm: React.FC<CreateDonationFormProps> = ({
+    defaultCurrency = 'gbp', //TODO
+
     allowRegular = true,
     allowAllocate = false,
     allowGiftAid = false,
     allowUpsell = false,
-    customFields = [],
+    customFields = [],    
 
     // assigned default for demo purpose
     upsellItemImgUrl = 'https://images.pexels.com/photos/7132575/pexels-photo-7132575.jpeg?auto=compress&cs=tinysrgb&w=200',
@@ -60,7 +66,7 @@ const CreateDonationForm: React.FC<CreateDonationFormProps> = ({
     const { token } = theme.useToken();
 
     const [donationAmountValue, setDonationAmountValue] = useState<number>(50);
-    const [selectedCurrency, setSelectedCurrency] = useState<string>('gbp');
+    const [selectedCurrency, setSelectedCurrency] = useState<string>(defaultCurrency);
     const [currencySymbol, setCurrencySymbol] = useState<string>('£');
     const [selectedAmount, setSelectedAmount] = useState<number | undefined>(50);
 
@@ -532,9 +538,9 @@ const CreateDonationForm: React.FC<CreateDonationFormProps> = ({
                                             <Tag bordered={false} color="success" icon={<CheckCircleFilled />} style={{ width: 'auto', marginTop: token.sizeSM}}>
                                                 Gift Aid value: 
                                                 {isAdminFeeChecked ?
-                                                <> {currencySymbol}{donationAmountValueWithFee/4} </>
+                                                <> {currencySymbol}{(donationAmountValueWithFee/4).toFixed(2)} </>
                                                 :
-                                                <> {currencySymbol}{donationAmountValue/4} </>
+                                                <> {currencySymbol}{(donationAmountValue/4).toFixed(2)} </>
                                                 }
                                             </Tag>
                                             }
