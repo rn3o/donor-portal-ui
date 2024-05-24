@@ -36,12 +36,16 @@ interface CreateDonationFormProps {
     defaultCurrency?: string; //TODO make this available to change from prop
     defaultDonationAmountValue?: number;
     defaultFrequency?: FrequencyOption;
+    autoFocus?: boolean; // auto focus on number input
 
     allowRegular?: boolean;
     allowAllocate?: boolean;
     allowGiftAid?: boolean;
     allowUpsell?: boolean;
     customFields?: CustomField[];
+
+    labelOnce?: string;
+    labelRegular?: string;
 
     upsellItemTitle?: string;
     upsellItemImgUrl?: string;
@@ -52,6 +56,9 @@ interface CreateDonationFormProps {
 
     isLoggedIn?: boolean;
     adminFeeCheckedDefault?: boolean;
+
+    customAmounts?: number[];
+    customAmountDescriptions?: string[];
     
     overrideStep?: number; // dev only
 
@@ -61,12 +68,16 @@ const CreateDonationForm: React.FC<CreateDonationFormProps> = ({
     defaultCurrency = 'gbp', //TODO
     defaultDonationAmountValue = 50,
     defaultFrequency = 'once',
+    autoFocus = false,
 
     allowRegular = true,
     allowAllocate = false,
     allowGiftAid = false,
     allowUpsell = false,
     customFields = [],    
+
+    labelOnce = 'Give Once',
+    labelRegular = 'Give Regularly',
 
     // assigned default for demo purpose
     upsellItemImgUrl = 'https://images.pexels.com/photos/7132575/pexels-photo-7132575.jpeg?auto=compress&cs=tinysrgb&w=200',
@@ -78,6 +89,12 @@ const CreateDonationForm: React.FC<CreateDonationFormProps> = ({
     
     isLoggedIn = false,
     adminFeeCheckedDefault = false,
+
+    customAmounts,
+    customAmountDescriptions,
+
+    // customAmounts = [90, 80],
+    // customAmountDescriptions = ['option 1', 'option 2'],
     
     overrideStep = 1, // dev only
 }) => {
@@ -144,6 +161,13 @@ const CreateDonationForm: React.FC<CreateDonationFormProps> = ({
         fontWeight: 500,
         fontSize: token.sizeMS,
     };
+    const customAmountTitle = {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        fontWeight: 700,
+        fontSize: token.sizeMD,
+    };
 
     const pulseStyle = `
 @keyframes pulse {
@@ -164,7 +188,7 @@ const CreateDonationForm: React.FC<CreateDonationFormProps> = ({
 }
 `;
 
-    const renderCheckCards = (amounts1: number[], amounts2: number[]) => (
+    const renderAmountOptions = (amounts1: number[], amounts2: number[]) => (
         <CheckCard.Group
             onChange={(value) => handleAmountOption(value as number)}
             value={selectedAmount}
@@ -192,6 +216,24 @@ const CreateDonationForm: React.FC<CreateDonationFormProps> = ({
         </CheckCard.Group>
     );
 
+    const renderCustomAmountOptions = (amounts: number[], descriptions: string[]) => (
+        <CheckCard.Group
+            onChange={(value) => handleAmountOption(value as number)}
+            value={selectedAmount}
+        >
+            <Flex vertical>
+                {amounts.map((amount, index) => (
+                    <CheckCard
+                        key={amount}
+                        title={<div style={customAmountTitle}>{currencySymbol}{amount}</div>}
+                        description={descriptions[index]}
+                        value={amount}
+                    />
+                ))}
+            </Flex>
+        </CheckCard.Group>
+    );
+
 
     // for processing fee an upsells
 
@@ -201,8 +243,6 @@ const CreateDonationForm: React.FC<CreateDonationFormProps> = ({
     const [feePercentageSliderValue, setFeePercentageSliderValue] = useState(4); // Initial slider value
 
     const donationAmountValueWithFee = donationAmountValue + (donationAmountValue * (feePercentageSliderValue / 100));
-
-
 
     return (
         <Card bordered={false} style={{ width: '100%' }}>
@@ -227,9 +267,9 @@ const CreateDonationForm: React.FC<CreateDonationFormProps> = ({
                                     block
                                     size='large'
                                     options={[
-                                        { label: 'Give Once', value: 'once' },
+                                        { label: labelOnce, value: 'once' },
                                         {
-                                            label: 'Give Regularly',
+                                            label: labelRegular,
                                             value: 'regular',
                                             icon: selectedSegment === 'regular' ? (
                                                 <HeartFilled
@@ -243,13 +283,25 @@ const CreateDonationForm: React.FC<CreateDonationFormProps> = ({
                                     onChange={handleSegmentChange}
                                 />}
 
-                            {selectedSegment === 'once' && renderCheckCards([700, 500, 285], [100, 50, 25])}
-                            {selectedSegment === 'regular' && renderCheckCards([100, 75, 50], [30, 25, 10])}
+                            {/* TODO: make these amounts option props */}
+                            {selectedSegment === 'once' && (customAmounts === undefined && renderAmountOptions([700, 500, 285], [100, 50, 25]) )}
+                            {selectedSegment === 'regular' && (customAmounts === undefined && renderAmountOptions([700, 500, 285], [100, 50, 25]) )}
+
+                            {/* custom render options */}
+                            {customAmounts != null && renderCustomAmountOptions(customAmounts, customAmountDescriptions)}
+                            
+
                             <InputNumber<number>
-                                // autoFocus
+                                autoFocus={autoFocus}
+                                // disabled={customAmounts != null && true}
                                 className='embed-donation-form'
-                                style={{ color: token.colorPrimary, marginTop: `-${token.sizeMD}px` }}
+                                style={{
+                                    color: token.colorPrimary,
+                                    marginTop: `-${token.sizeMD}px`, 
+                                    visibility: `${customAmounts != null ? 'hidden' : 'visible'}`
+                                }}
                                 size="large"
+                                min={1}
                                 prefix={<div style={{ fontSize: token.sizeMD }}>{currencySymbol}</div>}
                                 suffix={<div style={{ fontSize: token.sizeMD, marginRight: token.sizeMS }}>{selectedSegment === 'regular' && "/month" || null} </div>}
                                 value={donationAmountValue}

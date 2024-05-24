@@ -32,6 +32,21 @@ const DonatonWidgetsDemo: React.FC = () => {
     setIsSpecificAmountDonationModalOpen(false);
   };
 
+  const exampleSection = {
+    padding: token.sizeXXL,
+    border: `solid 1px ${token.colorInfoBorder}`,
+    borderRadius: token.sizeLG
+  }
+  const codeWrapper = {
+    // background: 'grey',
+    maxWidth: 400,
+    display: 'flex',
+  }
+  const codeStyle = {
+    fontFamily: `'Courier New', monospace`,
+    fontSize: token.sizeSM,
+  }
+
   return (
     <ConfigProvider
       theme={{
@@ -58,7 +73,7 @@ const DonatonWidgetsDemo: React.FC = () => {
 
 
         <Divider orientation="left" orientationMargin="0" style={{ width: '100%' }}>
-          Button Triggers</Divider>
+          <h2>Button Triggers</h2></Divider>
 
         {/* Button triggers */}
         <Flex gap={token.sizeSM}>
@@ -140,74 +155,255 @@ const DonatonWidgetsDemo: React.FC = () => {
 
         <br />
         <br />
+        <br />
+        <br />
 
 
         <Divider orientation="left" orientationMargin="0" style={{ width: '100%' }}>
-          Donation Widget On Page</Divider>
+          <h2>Donation Widget On Page</h2></Divider>
 
         <Flex gap={token.sizeLG} wrap='wrap' vertical>
 
-          <div style={{ width: 380 }}>
-            <h3>Custom fields</h3>
+          <Flex wrap='wrap' style={exampleSection}>
+            <h3 style={{ width: '100%' }}>Default with auto focus on amount input</h3>
+
+            <div style={{ width: 380 }}>
+              <CreateDonationForm
+                autoFocus
+                allowAllocate
+              />
+            </div>
+            <div style={codeWrapper}>
+              <pre style={codeStyle}>
+                {`
+                  <CreateDonationForm
+                    autoFocus
+                    allowAllocate
+                  />
+                  `}
+              </pre>
+            </div>
+          </Flex>
+
+          <Flex wrap='wrap' style={exampleSection}>
+            <h3 style={{ width: '100%' }}>Default to Regular option + Custom label</h3>
+
+            <div style={{ width: 380 }}>
+                  <CreateDonationForm
+                    defaultFrequency='regular'
+                    labelRegular='Monthly'
+                    labelOnce='One-off'
+                    defaultDonationAmountValue={10}
+                  />
+            </div>
+            <div style={codeWrapper}>
+              <pre style={codeStyle}>
+                {`
+                  <CreateDonationForm
+                    defaultFrequency='regular'
+                    labelRegular='Monthly'
+                    labelOnce='One-off'
+                    defaultDonationAmountValue={10}
+                  />
+                  `}
+              </pre>
+            </div>
+          </Flex>
+
+          
+          <Flex wrap='wrap' style={exampleSection}>
+            <h3 style={{ width: '100%' }}>Custom Options & Fields (Example 1)</h3>
+
+            <div style={{ width: 380 }}>
+              <CreateDonationForm
+                // defaultDonationAmountValue={null}
+                defaultDonationAmountValue={90} // default to option 1
+                allowRegular={false}
+                customAmounts={[90, 80]}
+                customAmountDescriptions={['Aqiqa for a Boy', 'Aqiqa for a Girl']}
+
+                customFields={[
+                  { customFieldType: 'shortText', placeholderTextField: 'Child\'s Name' },
+                  { customFieldType: 'date', placeholderDatePicker: 'Date of Birth' },
+                  { customFieldType: 'longText', placeholderTextArea: 'Special Notes', maxChar: 200 },
+                ]}
+              />
+            </div>
+            <div style={codeWrapper}>
+              <pre style={codeStyle}>
+                {`
+                  <CreateDonationForm
+                    // defaultDonationAmountValue={null}
+                    defaultDonationAmountValue={90} // default to option 1
+                    allowRegular={false}
+                    customAmounts={[90, 80]}
+                    customAmountDescriptions={['Aqiqa for a Boy', 'Aqiqa for a Girl']}
+    
+                    customFields={[
+                      { customFieldType: 'shortText', placeholderTextField: 'Child\'s Name' },
+                      { customFieldType: 'date', placeholderDatePicker: 'Date of Birth' },
+                      { customFieldType: 'longText', placeholderTextArea: 'Special Notes', maxChar: 200 },
+                    ]}
+                  />
+                  `}
+              </pre>
+            </div>
+          </Flex>
+
+
+          <Flex wrap='wrap' style={exampleSection}>
+            <h3 style={{ width: '100%' }}>Custom Options & Fields (Example 2)</h3>
+
+            <div style={{ width: 380 }}>
+              <CreateDonationForm
+                defaultDonationAmountValue={700} 
+                allowRegular={false}
+                customAmounts={[1000, 700, 500]}
+                customAmountDescriptions={['Large Tube Well', 'Medium Tube Well', 'Small Tube Well']}
+
+                customFields={[
+                  { customFieldType: 'shortText', placeholderTextField: 'Name on plaque (Optional)', maxChar: 30 },
+                ]}
+              />
+            </div>
+            <div style={codeWrapper}>
+              <pre style={codeStyle}>
+                {`
+                  <CreateDonationForm
+                    defaultDonationAmountValue={700} 
+                    allowRegular={false}
+                    customAmounts={[1000, 700, 500]}
+                    customAmountDescriptions={['Large Tube Well', 'Medium Tube Well', 'Small Tube Well']}
+    
+                    customFields={[
+                      { customFieldType: 'shortText', placeholderTextField: 'Name on plaque (Optional)', maxChar: 30 },
+                    ]}
+                  />
+                  `}
+              </pre>
+            </div>
+          </Flex>
+
+
+
+
+          <Flex wrap='wrap' style={exampleSection}>
+            <h3 style={{ width: '100%' }}>Skip form (i.e. when user already signed in)</h3>
+
+            <div style={{ width: 380 }}>
+                <CreateDonationForm
+                  defaultFrequency='regular'
+                  allowAllocate
+                  isLoggedIn
+                />
+            </div>
+            <div style={codeWrapper}>
+              <pre style={codeStyle}>
+                {`
+                  <CreateDonationForm
+                    defaultFrequency='regular'
+                    allowAllocate
+                    isLoggedIn
+                  />
+                  `}
+              </pre>
+            </div>
+          </Flex>
+
+
+
+          <Flex wrap='wrap' style={exampleSection}>
+            <h3 style={{ width: '100%' }}>Frequency 'Once' only</h3>
+
+            <div style={{ width: 380 }}>
+              <CreateDonationForm
+                allowAllocate
+                allowRegular={false}
+              />
+            </div>
+            <div style={codeWrapper}>
+              <pre style={codeStyle}>
+                {`
+                  <CreateDonationForm
+                    allowAllocate
+                    allowRegular={false}
+                  />
+                  `}
+              </pre>
+            </div>
+          </Flex>
+
+
+
+          <Flex wrap='wrap' style={exampleSection}>
+            <h3 style={{ width: '100%' }}>Upsell & gift aid</h3>
+
+            <div style={{ width: 380 }}>
+              <CreateDonationForm
+                allowAllocate
+                allowGiftAid
+                allowUpsell
+                allowRegular
+                height={600}
+                adminFeeCheckedDefault
+                overrideStep={4}
+              />
+            </div>
+            <div style={codeWrapper}>
+              <pre style={codeStyle}>
+                {`
+                  <CreateDonationForm
+                    allowAllocate
+                    allowGiftAid
+                    allowUpsell
+                    allowRegular
+                    height={600}
+                    adminFeeCheckedDefault
+                    overrideStep={4}
+                  />
+                  `}
+              </pre>
+            </div>
+          </Flex>
+
+
+          <Flex wrap='wrap' style={exampleSection}>
+            <h3 style={{ width: '100%' }}>Changeable upsell item</h3>
+
+            <div style={{ width: 380 }}>
             <CreateDonationForm
-              defaultDonationAmountValue={100}
-              // defaultFrequency='regular'
-              // allowAllocate
-              customFields={[
-                { customFieldType: 'shortText', placeholderTextField: 'Baby\'s Name' },
-                { customFieldType: 'date', placeholderDatePicker: 'Birth date' },
-                { customFieldType: 'longText', placeholderTextArea: 'Special Notes', maxChar: 200 },
-              ]}
-            />
-          </div>
-
-
-
-          <div style={{ width: 380 }}>
-            <h3>Skip form (i.e. when already signed in)</h3>
-            <CreateDonationForm
-              allowAllocate
-              allowRegular={false}
-              isLoggedIn
-            />
-          </div>
-
-          <div style={{ width: 380 }}>
-            <h3>Only Once</h3>
-            <CreateDonationForm
-              allowAllocate
-              allowRegular={false}
-            />
-          </div>
-
-          <div style={{ width: 380 }}>
-            <h3>With upsell & gift aid</h3>
-            <CreateDonationForm
-              allowAllocate
-              allowGiftAid
-              allowUpsell
-              allowRegular
-              height={600}
-              adminFeeCheckedDefault
-              overrideStep={4}
-            />
-          </div>
-
-          <div style={{ width: 380 }}>
-            <h3>Changeable upsell item</h3>
-            <CreateDonationForm
-
               allowAllocate
               allowGiftAid={false}
               allowUpsell
               allowRegular={false}
+              overrideStep={4}
 
               upsellItemTitle='Turkey Earthquake Relief'
               upsellItemDescription='Help people rebuild their homes'
               upsellItemImgUrl='https://images.pexels.com/photos/15558948/pexels-photo-15558948/free-photo-of-people-in-a-destroyed-city.jpeg?auto=compress&cs=tinysrgb&w=200'
               upsellItemValue={15}
             />
-          </div>
+            </div>
+            <div style={codeWrapper}>
+              <pre style={codeStyle}>
+                {`
+                  <CreateDonationForm
+                    allowAllocate
+                    allowGiftAid={false}
+                    allowUpsell
+                    allowRegular={false}
+                    overrideStep={4}
+      
+                    upsellItemTitle='Turkey Earthquake Relief'
+                    upsellItemDescription='Help people rebuild their homes'
+                    upsellItemImgUrl='https://images.pexels.com/photos/15558948/pexels-photo-15558948/free-photo-of-people-in-a-destroyed-city.jpeg?auto=compress&cs=tinysrgb&w=200'
+                    upsellItemValue={15}
+                  />
+                  `}
+              </pre>
+            </div>
+          </Flex>
+          
         </Flex>
 
         <div />
