@@ -25,6 +25,7 @@ const formatter: NonNullable<SliderSingleProps['tooltip']>['formatter'] = (value
 
 // Define the allowed custom field types
 type CustomFieldType = 'shortText' | 'longText' | 'date';
+type FrequencyOption = 'once' | 'regular';
 
 interface CustomField {
     customFieldType: CustomFieldType;
@@ -32,7 +33,9 @@ interface CustomField {
 }
 
 interface CreateDonationFormProps {
-    defaultCurrency?: string; //TODO
+    defaultCurrency?: string; //TODO make this available to change from prop
+    defaultDonationAmountValue?: number;
+    defaultFrequency?: FrequencyOption;
 
     allowRegular?: boolean;
     allowAllocate?: boolean;
@@ -45,11 +48,19 @@ interface CreateDonationFormProps {
     upsellItemDescription?: string;
     upsellItemValue?: number;
 
+    height?: number; // min height of the widget -- still flexible depends on content
+
+    isLoggedIn?: boolean;
+    adminFeeCheckedDefault?: boolean;
+    
+    overrideStep?: number; // dev only
 
 }
 
 const CreateDonationForm: React.FC<CreateDonationFormProps> = ({
     defaultCurrency = 'gbp', //TODO
+    defaultDonationAmountValue = 50,
+    defaultFrequency = 'once',
 
     allowRegular = true,
     allowAllocate = false,
@@ -62,18 +73,25 @@ const CreateDonationForm: React.FC<CreateDonationFormProps> = ({
     upsellItemTitle = 'Help Gaza Emergency',
     upsellItemDescription = 'Save lives in Gaza',
     upsellItemValue = 20,
+
+    height = 460,
+    
+    isLoggedIn = false,
+    adminFeeCheckedDefault = false,
+    
+    overrideStep = 1, // dev only
 }) => {
     const { token } = theme.useToken();
 
-    const [donationAmountValue, setDonationAmountValue] = useState<number>(50);
+    const [donationAmountValue, setDonationAmountValue] = useState<number>(defaultDonationAmountValue);
     const [selectedCurrency, setSelectedCurrency] = useState<string>(defaultCurrency);
     const [currencySymbol, setCurrencySymbol] = useState<string>('£');
-    const [selectedAmount, setSelectedAmount] = useState<number | undefined>(50);
+    const [selectedAmount, setSelectedAmount] = useState<number | undefined>(defaultDonationAmountValue);
 
-    const [selectedSegment, setSelectedSegment] = useState<string>('Give Once');
-    const [currentStep, setCurrentStep] = useState<number>(1); // Add state for steps
+    const [selectedSegment, setSelectedSegment] = useState<FrequencyOption>(defaultFrequency);
+    const [currentStep, setCurrentStep] = useState<number>(overrideStep); // Add state for steps
 
-    const handleSegmentChange = (value: string) => {
+    const handleSegmentChange = (value: FrequencyOption) => {
         setSelectedSegment(value);
     };
 
@@ -177,7 +195,7 @@ const CreateDonationForm: React.FC<CreateDonationFormProps> = ({
 
     // for processing fee an upsells
 
-    const [isAdminFeeChecked, setIsAdminFeeChecked] = useState(false);
+    const [isAdminFeeChecked, setIsAdminFeeChecked] = useState(adminFeeCheckedDefault);
     const [isUpsellChecked, setIsUpsellChecked] = useState(false);
     const [isGiftAidChecked, setIsGiftAidChecked] = useState(false);
     const [feePercentageSliderValue, setFeePercentageSliderValue] = useState(4); // Initial slider value
@@ -199,11 +217,7 @@ const CreateDonationForm: React.FC<CreateDonationFormProps> = ({
                 <style>{pulseStyle}</style>
 
                 {currentStep === 1 && (
-                    <Flex
-                        vertical
-                        // justify='space-between'
-                        // gap={token.sizeMD}
-                        style={{ flex: '1 0 0', width: '100%', minHeight: 600 }}>
+                     <Flex gap={token.sizeMD} style={{ width: '100%', minHeight: height }} vertical>
 
                         <Flex vertical gap={token.sizeMD}>
 
@@ -213,11 +227,11 @@ const CreateDonationForm: React.FC<CreateDonationFormProps> = ({
                                     block
                                     size='large'
                                     options={[
-                                        { label: 'Give Once', value: 'Give Once' },
+                                        { label: 'Give Once', value: 'once' },
                                         {
                                             label: 'Give Regularly',
-                                            value: 'Monthly',
-                                            icon: selectedSegment === 'Monthly' ? (
+                                            value: 'regular',
+                                            icon: selectedSegment === 'regular' ? (
                                                 <HeartFilled
                                                     className="pulse-animation"
                                                     style={{ color: token.colorErrorActive }}
@@ -229,15 +243,15 @@ const CreateDonationForm: React.FC<CreateDonationFormProps> = ({
                                     onChange={handleSegmentChange}
                                 />}
 
-                            {selectedSegment === 'Give Once' && renderCheckCards([700, 500, 285], [100, 50, 25])}
-                            {selectedSegment === 'Monthly' && renderCheckCards([100, 75, 50], [30, 25, 10])}
+                            {selectedSegment === 'once' && renderCheckCards([700, 500, 285], [100, 50, 25])}
+                            {selectedSegment === 'regular' && renderCheckCards([100, 75, 50], [30, 25, 10])}
                             <InputNumber<number>
-                                autoFocus
+                                // autoFocus
                                 className='embed-donation-form'
                                 style={{ color: token.colorPrimary, marginTop: `-${token.sizeMD}px` }}
                                 size="large"
                                 prefix={<div style={{ fontSize: token.sizeMD }}>{currencySymbol}</div>}
-                                suffix={<div style={{ fontSize: token.sizeMD, marginRight: token.sizeMS }}>{selectedSegment === 'Monthly' && "/month" || null} </div>}
+                                suffix={<div style={{ fontSize: token.sizeMD, marginRight: token.sizeMS }}>{selectedSegment === 'regular' && "/month" || null} </div>}
                                 value={donationAmountValue}
                                 onChange={handleInputChange}
                                 formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
@@ -286,8 +300,8 @@ const CreateDonationForm: React.FC<CreateDonationFormProps> = ({
                     </Flex>
                 )}
 
-                {currentStep === 2 && selectedSegment === 'Give Once' && (
-                    <Flex gap={token.sizeSM} style={{ width: '100%', minHeight: 600 }}
+                {currentStep === 2 && selectedSegment === 'once' && (
+                    <Flex gap={token.sizeSM} style={{ width: '100%', minHeight: height }}
                         vertical
                         justify='space-between'>
                         <Typography.Text style={{ fontFamily: 'inherit', fontSize: 'large', textAlign: 'center' }}>
@@ -306,7 +320,7 @@ const CreateDonationForm: React.FC<CreateDonationFormProps> = ({
                                 size="large"
                                 type="primary"
                                 onClick={() => {
-                                    setSelectedSegment('Monthly');
+                                    setSelectedSegment('regular');
                                     handleNextStep();
                                     setDonationAmountValue(donationAmountValue / 3)
                                 }}
@@ -324,7 +338,7 @@ const CreateDonationForm: React.FC<CreateDonationFormProps> = ({
                                 size="large"
                                 type="primary"
                                 onClick={() => {
-                                    setSelectedSegment('Monthly');
+                                    setSelectedSegment('regular');
                                     handleNextStep();
                                     setDonationAmountValue(donationAmountValue / 2)
                                 }}
@@ -339,7 +353,11 @@ const CreateDonationForm: React.FC<CreateDonationFormProps> = ({
                             <Button
                                 block
                                 size="large"
-                                onClick={handleNextStep}
+                                onClick={() => {
+                                    { donationAmountValue <= 100 && setIsAdminFeeChecked(true) }
+                                    handleNextStep()
+                                }}
+
                             >
                                 Donate {currencySymbol}{donationAmountValue} as one-off
                             </Button>
@@ -354,11 +372,11 @@ const CreateDonationForm: React.FC<CreateDonationFormProps> = ({
                 {currentStep === 2 && donationAmountValue > 100 && (() => { handleNextStep(); return null; })()}
 
                 {/* if donation is 100 or less, offer monthly giving plan */}
-                {currentStep === 2 && selectedSegment === 'Monthly' && (() => { handleNextStep(); return null; })()}
+                {currentStep === 2 && selectedSegment === 'regular' && (() => { handleNextStep(); return null; })()}
 
 
                 {currentStep === 3 && (
-                    <Flex vertical gap={token.sizeMD} style={{ width: '100%', minHeight: 600 }}>
+                    <Flex gap={token.sizeMD} style={{ width: '100%', minHeight: height }} vertical>
                         {/* <Button
                             block
                             size="large"
@@ -435,15 +453,18 @@ const CreateDonationForm: React.FC<CreateDonationFormProps> = ({
                     </Flex>
                 )}
 
+                {/* if user is logged in, then skip asking name and email step */}
+                {currentStep === 3 && isLoggedIn && (() => { handleNextStep(); { donationAmountValue <= 100 && setIsAdminFeeChecked(true) } ; return null; })()}
+
                 {currentStep === 4 && (
-                    <Flex gap={token.sizeSM} style={{ width: '100%', minHeight: 600 }} vertical>
+                    <Flex gap={token.sizeSM} style={{ width: '100%', minHeight: height }} vertical>
 
                         <Flex vertical gap={0} style={{ marginBottom: 'auto' }}>
 
                             <Tooltip
                                 open={donationAmountValue > 100 && isAdminFeeChecked === false && true}
                                 placement='right'
-                                title="Would you like to cover administration fee so that 100% of your donations will fund the project?">
+                                title="Would you like to cover administration fee so that 100% of your gift will fund the project?">
                                 <Badge.Ribbon
                                     text={<>{isAdminFeeChecked && feePercentageSliderValue > 9 && <HeartFilled className="pulse-animation" style={{ color: 'white' }} />}&nbsp;&nbsp;Hooray!</>}
                                     style={{ zIndex: 10, top: 4, padding: '4px 8px', visibility: `${isAdminFeeChecked && feePercentageSliderValue > 9 && 'visible' || 'hidden'}` }}>
@@ -553,11 +574,11 @@ const CreateDonationForm: React.FC<CreateDonationFormProps> = ({
                         <Typography.Title level={5} style={{ fontFamily: 'inherit', textAlign: 'center', marginTop: 0 }}>
                             Your donation: <br />
                             &nbsp;
-                            {/* {currencySymbol}{donationAmountValue} {selectedSegment === 'Monthly' && "/month" || null}  */}
+                            {/* {currencySymbol}{donationAmountValue} {selectedSegment === 'regular' && "/month" || null}  */}
                             <Typography.Title level={1} style={{ fontFamily: 'inherit', textAlign: 'center', marginTop: 0, fontWeight: 700 }}>
                                 {currencySymbol}
                                 {isAdminFeeChecked ? ((donationAmountValueWithFee).toFixed(2)) : ((donationAmountValue).toFixed(2))}
-                                {selectedSegment === 'Monthly' && "/month" || null}
+                                {selectedSegment === 'regular' && "/month" || null}
                             </Typography.Title>
                         </Typography.Title>
 
@@ -574,7 +595,7 @@ const CreateDonationForm: React.FC<CreateDonationFormProps> = ({
                                 Pay with Credit/Debit Card
                             </Button>
 
-                            {selectedSegment === 'Monthly' ? (
+                            {selectedSegment === 'regular' ? (
                                 <Button
                                     block
                                     size="large"
@@ -620,31 +641,55 @@ const CreateDonationForm: React.FC<CreateDonationFormProps> = ({
                                 </>
                             )}
 
-                            <Button
-                                block
-                                size="large"
-                                type='text'
-                                icon={<LeftOutlined />}
-                                // onClick={handlePreviousStep}
-                                onClick={() => {
-                                    handlePreviousStep();
-                                }}
-                                style={{ fontSize: 'smaller' }}
-                            >
-                                Change my detail
-                            </Button>
+                            {!isLoggedIn ?
+                                <Button
+                                    block
+                                    size="large"
+                                    type='text'
+                                    icon={<LeftOutlined />}
+                                    // onClick={handlePreviousStep}
+                                    onClick={() => {
+                                        handlePreviousStep();
+                                    }}
+                                    style={{ fontSize: 'smaller' }}
+                                >
+                                    Change my detail
+                                </Button>
+                                :
+                                <Button
+                                    block
+                                    size="large"
+                                    type='text'
+                                    icon={<LeftOutlined />}
+                                    // onClick={handlePreviousStep}
+                                    onClick={() => {
+                                        setCurrentStep(1);
+                                        setIsAdminFeeChecked(false)
+                                        setIsGiftAidChecked(false)
+                                        setIsUpsellChecked(false)
+                                        setFeePercentageSliderValue(4)
+                                    }}
+                                    style={{ fontSize: 'smaller' }}
+                                >
+                                    Change amount
+                                </Button>
+                            }
+
                         </Flex>
                     </Flex>
                 )}
 
                 {currentStep === 5 && (
-                    <Flex gap={token.sizeSM} style={{ width: '100%', minHeight: 600 }} vertical>
+                    <Flex gap={token.sizeSM} style={{ width: '100%', minHeight: height }} vertical>
                         <Button
                             block
                             size="large"
                             type='text'
                             icon={<LeftOutlined />}
-                            onClick={handlePreviousStep}
+                            onClick={() => {
+                                handlePreviousStep()
+                                // setIsAdminFeeChecked(false)
+                                }}
                             style={{ fontSize: 'smaller' }}
                         >
                             Change Payment Option
@@ -699,13 +744,13 @@ const CreateDonationForm: React.FC<CreateDonationFormProps> = ({
                             Pay &nbsp;
                             {currencySymbol}
                             {isAdminFeeChecked ? ((donationAmountValueWithFee).toFixed(2)) : ((donationAmountValue).toFixed(2))}
-                            {selectedSegment === 'Monthly' && "/month" || null}
+                            {selectedSegment === 'regular' && "/month" || null}
                         </Button>
                     </Flex>
                 )}
 
                 {currentStep === 6 && (
-                    <Flex gap={token.sizeSM} style={{ width: '100%', minHeight: 600 }} vertical>
+                    <Flex gap={token.sizeSM} style={{ width: '100%', minHeight: height }} vertical>
 
                         <Typography.Title level={5} style={{ fontFamily: 'inherit', textAlign: 'center' }}>
                             Thanks for donation, you will receive an email confirmation soon.
