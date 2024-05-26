@@ -54,7 +54,7 @@ const DonationCreate: React.FC = () => {
     >
 
       <Flex align="center" vertical>
-          <CreateDonationForm />
+          <CreateDonationForm isLoggedIn />
         </Flex>
     </PageContainer>
   );

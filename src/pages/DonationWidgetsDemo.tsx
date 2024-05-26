@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Flex, Typography, Modal, Button, theme, ConfigProvider } from 'antd';
+import { Flex, Typography, Modal, Button, Popconfirm, theme, ConfigProvider } from 'antd';
 import {
   CloseOutlined,
   HeartFilled,
@@ -115,8 +115,8 @@ const DonatonWidgetsDemo: React.FC = () => {
           width={400}
           // title="Basic Modal" 
           open={isGenericDonationModalOpen}
-          onOk={handleOk}
-          onCancel={handleCancel}
+          // onOk={handleOk}
+          // onCancel={handleCancel}
           footer={[]}
         >
           <div style={{ margin: `-${token.sizeXL}px` }}>
@@ -128,7 +128,16 @@ const DonatonWidgetsDemo: React.FC = () => {
             />
           </div>
 
-          <Button shape="circle" icon={<CloseOutlined />} onClick={handleCancel} style={{ position: 'absolute', right: -50, top: -50, opacity: 0.5 }} />
+          <Popconfirm
+            title="Are you sure"
+            // description="Details you entered wont be saved"
+            onConfirm={handleCancel}
+            okText="Yes"
+            cancelText="No"
+            placement="right"
+          >
+            <Button shape="circle" icon={<CloseOutlined />} style={{ position: 'absolute', right: -50, top: -50, opacity: 0.5 }} />
+          </Popconfirm>
         </Modal>
 
         {/* specific amount modal, directly to payment options */}
@@ -138,8 +147,8 @@ const DonatonWidgetsDemo: React.FC = () => {
           width={400}
           // title="Basic Modal" 
           open={isSpecificAmountDonationModalOpen}
-          onOk={handleOk}
-          onCancel={handleCancel}
+          // onOk={handleOk}
+          // onCancel={handleCancel}
           footer={[]}
         >
           <div style={{ margin: `-${token.sizeXL}px` }}>
@@ -150,7 +159,16 @@ const DonatonWidgetsDemo: React.FC = () => {
             />
           </div>
 
-          <Button shape="circle" icon={<CloseOutlined />} onClick={handleCancel} style={{ position: 'absolute', right: -50, top: -50, opacity: 0.5 }} />
+          <Popconfirm
+            title="Are you sure"
+            // description="Details you entered wont be saved"
+            onConfirm={handleCancel}
+            okText="Yes"
+            cancelText="No"
+            placement="right"
+          >
+            <Button shape="circle" icon={<CloseOutlined />} style={{ position: 'absolute', right: -50, top: -50, opacity: 0.5 }} />
+          </Popconfirm>
         </Modal>
 
         <br />
@@ -162,7 +180,7 @@ const DonatonWidgetsDemo: React.FC = () => {
         <Divider orientation="left" orientationMargin="0" style={{ width: '100%' }}>
           <h2>Donation Widget On Page</h2></Divider>
 
-        <Flex gap={token.sizeLG} wrap='wrap' vertical>
+        <Flex gap={token.sizeXL} wrap='wrap' vertical>
 
           <Flex wrap='wrap' style={exampleSection}>
             <h3 style={{ width: '100%' }}>Default with auto focus on amount input</h3>
@@ -179,6 +197,35 @@ const DonatonWidgetsDemo: React.FC = () => {
                   <CreateDonationForm
                     autoFocus
                     allowAllocate
+                  />
+                  `}
+              </pre>
+            </div>
+          </Flex>
+
+
+
+          <Flex wrap='wrap' style={exampleSection}>
+            <h3 style={{ width: '100%' }}>Custom Amount</h3>
+
+            <div style={{ width: 380 }}>
+              <CreateDonationForm
+                autoFocus
+                allowAllocate
+                defaultDonationAmountValue={3}
+                onceAmountsOptions={[4,3,2,1]}
+                regularAmountsOptions={[3,2,1]}
+              />
+            </div>
+            <div style={codeWrapper}>
+              <pre style={codeStyle}>
+                {`
+                  <CreateDonationForm
+                    autoFocus
+                    allowAllocate
+                    defaultDonationAmountValue={3}
+                    onceAmountsOptions={[4,3,2,1]}
+                    regularAmountsOptions={[3,2,1]}
                   />
                   `}
               </pre>
@@ -377,6 +424,7 @@ const DonatonWidgetsDemo: React.FC = () => {
               allowUpsell
               allowRegular={false}
               overrideStep={4}
+              adminFeeCheckedDefault
 
               upsellItemTitle='Turkey Earthquake Relief'
               upsellItemDescription='Help people rebuild their homes'
