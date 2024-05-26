@@ -57,6 +57,8 @@ interface CreateDonationFormProps {
     isLoggedIn?: boolean;
     adminFeeCheckedDefault?: boolean;
 
+    onceAmountsOptions?: number[];
+    regularAmountsOptions?: number[];
     customAmounts?: number[];
     customAmountDescriptions?: string[];
     
@@ -90,8 +92,11 @@ const CreateDonationForm: React.FC<CreateDonationFormProps> = ({
     isLoggedIn = false,
     adminFeeCheckedDefault = false,
 
+    
+    onceAmountsOptions = [700, 500, 285, 100, 50, 25],
+    regularAmountsOptions = [250, 100, 50, 30, 25, 10],
     customAmounts,
-    customAmountDescriptions,
+    customAmountDescriptions = undefined,
 
     // customAmounts = [90, 80],
     // customAmountDescriptions = ['option 1', 'option 2'],
@@ -132,7 +137,7 @@ const CreateDonationForm: React.FC<CreateDonationFormProps> = ({
 
     const handleInputChange = (value: number) => {
         setDonationAmountValue(value);
-        if (![700, 500, 285, 100, 50, 25, 100, 75, 50, 30, 25, 10].includes(value)) {
+        if (!onceAmountsOptions.includes(value) || !regularAmountsOptions.includes(value)) {
             setSelectedAmount(undefined);
         }
     };
@@ -149,9 +154,27 @@ const CreateDonationForm: React.FC<CreateDonationFormProps> = ({
         setFeePercentageSliderValue(4)
     };
 
+    const amountOptionsContainer = {
+        // gap: token.sizeSM,
+        gap: 6,
+        justifyContent: 'center',
+        flexWrap: 'wrap', // Enable wrapping
+        boxSizing: 'border-box',
+        alignItems: 'stretch',
+    }
     const amountOptionStyle = {
         display: 'flex',
+        gap: token.sizeMS,
         justifyContent: 'center',
+        boxSizing: 'border-box',
+        alignItems: 'stretch',
+        // flex: onceAmountsOptions.length === 4 ? `1 1 calc(50% - 12px)` : `1 1 calc(33% - 12px)`,
+        flex: selectedSegment === 'once'
+                        ? (onceAmountsOptions.length === 4 ? '1 1 calc(50% - 12px)' : '1 1 calc(33% - 12px)')
+                        : (regularAmountsOptions.length === 4 ? '1 1 calc(50% - 12px)' : '1 1 calc(33% - 12px)'),
+        minWidth: `calc(33% - 4px)`,
+        "margin-inline-end": 0,
+        "margin-block-end": 0,
     };
 
     const amountTitle = {
@@ -188,25 +211,17 @@ const CreateDonationForm: React.FC<CreateDonationFormProps> = ({
 }
 `;
 
-    const renderAmountOptions = (amounts1: number[], amounts2: number[]) => (
+    const renderAmountOptions = (amounts: number[]) => (
         <CheckCard.Group
             onChange={(value) => handleAmountOption(value as number)}
             value={selectedAmount}
         >
-            <Flex>
-                {amounts1.map(amount => (
+            {/* @ts-ignore */}
+            <Flex style={amountOptionsContainer}>
+                {amounts.map(amount => (
                     <CheckCard
-                        key={amount}
-                        style={amountOptionStyle}
-                        title={<div style={amountTitle}>{currencySymbol}{amount}</div>}
-                        value={amount}
-                    />
-                ))}
-            </Flex>
-            <Flex>
-                {amounts2.map(amount => (
-                    <CheckCard
-                        key={amount}
+                    key={amount}
+                        // @ts-ignore
                         style={amountOptionStyle}
                         title={<div style={amountTitle}>{currencySymbol}{amount}</div>}
                         value={amount}
@@ -225,6 +240,7 @@ const CreateDonationForm: React.FC<CreateDonationFormProps> = ({
                 {amounts.map((amount, index) => (
                     <CheckCard
                         key={amount}
+                        style={{ width: '100%'}}
                         title={<div style={customAmountTitle}>{currencySymbol}{amount}</div>}
                         description={descriptions[index]}
                         value={amount}
@@ -284,10 +300,11 @@ const CreateDonationForm: React.FC<CreateDonationFormProps> = ({
                                 />}
 
                             {/* TODO: make these amounts option props */}
-                            {selectedSegment === 'once' && (customAmounts === undefined && renderAmountOptions([700, 500, 285], [100, 50, 25]) )}
-                            {selectedSegment === 'regular' && (customAmounts === undefined && renderAmountOptions([700, 500, 285], [100, 50, 25]) )}
+                            {selectedSegment === 'once' && (customAmounts === undefined && renderAmountOptions(onceAmountsOptions) )}
+                            {selectedSegment === 'regular' && (customAmounts === undefined && renderAmountOptions(regularAmountsOptions) )}
 
-                            {/* custom render options */}
+                            {/* custom render options */} 
+                            {/* @ts-ignore */}
                             {customAmounts != null && renderCustomAmountOptions(customAmounts, customAmountDescriptions)}
                             
 
@@ -297,7 +314,6 @@ const CreateDonationForm: React.FC<CreateDonationFormProps> = ({
                                 className='embed-donation-form'
                                 style={{
                                     color: token.colorPrimary,
-                                    marginTop: `-${token.sizeMD}px`, 
                                     visibility: `${customAmounts != null ? 'hidden' : 'visible'}`
                                 }}
                                 size="large"
@@ -305,6 +321,7 @@ const CreateDonationForm: React.FC<CreateDonationFormProps> = ({
                                 prefix={<div style={{ fontSize: token.sizeMD }}>{currencySymbol}</div>}
                                 suffix={<div style={{ fontSize: token.sizeMD, marginRight: token.sizeMS }}>{selectedSegment === 'regular' && "/month" || null} </div>}
                                 value={donationAmountValue}
+                                // @ts-ignore
                                 onChange={handleInputChange}
                                 formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                                 parser={(value) => value?.replace(/\$\s?|(,*)/g, '') as unknown as number}
@@ -733,19 +750,7 @@ const CreateDonationForm: React.FC<CreateDonationFormProps> = ({
 
                 {currentStep === 5 && (
                     <Flex gap={token.sizeSM} style={{ width: '100%', minHeight: height }} vertical>
-                        <Button
-                            block
-                            size="large"
-                            type='text'
-                            icon={<LeftOutlined />}
-                            onClick={() => {
-                                handlePreviousStep()
-                                // setIsAdminFeeChecked(false)
-                                }}
-                            style={{ fontSize: 'smaller' }}
-                        >
-                            Change Payment Option
-                        </Button>
+                        
 
                         <Typography.Text style={{ fontFamily: 'inherit', fontSize: token.sizeMS, textAlign: 'center', padding: token.sizeMD }}>
                             Please enter your card details to complete your donation.
@@ -797,6 +802,20 @@ const CreateDonationForm: React.FC<CreateDonationFormProps> = ({
                             {currencySymbol}
                             {isAdminFeeChecked ? ((donationAmountValueWithFee).toFixed(2)) : ((donationAmountValue).toFixed(2))}
                             {selectedSegment === 'regular' && "/month" || null}
+                        </Button>
+
+                        <Button
+                            block
+                            size="large"
+                            type='text'
+                            icon={<LeftOutlined />}
+                            onClick={() => {
+                                handlePreviousStep()
+                                // setIsAdminFeeChecked(false)
+                                }}
+                            style={{ fontSize: 'smaller' }}
+                        >
+                            Change Payment Option
                         </Button>
                     </Flex>
                 )}
