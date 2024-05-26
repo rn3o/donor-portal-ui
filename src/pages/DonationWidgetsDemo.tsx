@@ -206,12 +206,10 @@ const DonatonWidgetsDemo: React.FC = () => {
 
 
           <Flex wrap='wrap' style={exampleSection}>
-            <h3 style={{ width: '100%' }}>Custom Amount</h3>
+            <h3 style={{ width: '100%' }}>Display Custom Amount</h3>
 
             <div style={{ width: 380 }}>
               <CreateDonationForm
-                autoFocus
-                allowAllocate
                 defaultDonationAmountValue={3}
                 onceAmountsOptions={[4,3,2,1]}
                 regularAmountsOptions={[3,2,1]}
@@ -221,8 +219,6 @@ const DonatonWidgetsDemo: React.FC = () => {
               <pre style={codeStyle}>
                 {`
                   <CreateDonationForm
-                    autoFocus
-                    allowAllocate
                     defaultDonationAmountValue={3}
                     onceAmountsOptions={[4,3,2,1]}
                     regularAmountsOptions={[3,2,1]}
