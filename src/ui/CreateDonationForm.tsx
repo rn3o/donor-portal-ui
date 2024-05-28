@@ -13,9 +13,10 @@ import {
     Tooltip,
     Slider,
     Badge,
-    Tag
+    Tag,
+    Drawer
 } from 'antd';
-import { CalendarOutlined, CheckCircleFilled, CreditCardOutlined, GiftFilled, HeartFilled, LeftOutlined, LinkOutlined } from '@ant-design/icons';
+import { CalendarOutlined, CheckCircleFilled, CloseOutlined, CreditCardOutlined, GiftFilled, HeartFilled, LeftOutlined, LinkOutlined } from '@ant-design/icons';
 import { CheckCard } from '@ant-design/pro-components';
 import SelectAllocationCascader from './SelectAllocationCascader';
 import type { SliderSingleProps } from 'antd';
@@ -62,8 +63,9 @@ interface CreateDonationFormProps {
     customAmounts?: number[];
     customAmountDescriptions?: string[];
     
-    overrideStep?: number; // dev only
+    isMultiCheckout?: boolean;
 
+    overrideStep?: number; // dev only
 }
 
 const CreateDonationForm: React.FC<CreateDonationFormProps> = ({
@@ -100,6 +102,8 @@ const CreateDonationForm: React.FC<CreateDonationFormProps> = ({
 
     // customAmounts = [90, 80],
     // customAmountDescriptions = ['option 1', 'option 2'],
+
+    isMultiCheckout = false,
     
     overrideStep = 1, // dev only
 }) => {
@@ -260,6 +264,20 @@ const CreateDonationForm: React.FC<CreateDonationFormProps> = ({
 
     const donationAmountValueWithFee = donationAmountValue + (donationAmountValue * (feePercentageSliderValue / 100));
 
+    // For multi checkout (drawer demo)
+
+    const [openMultiCheckOutDrawer, setOpenMultiCheckOutDrawer] = useState(false);
+
+    const showMultiCheckOutDrawer = () => {
+        setOpenMultiCheckOutDrawer(true);
+    };
+  
+    const closeMultiCheckOutDrawer = () => {
+        setOpenMultiCheckOutDrawer(false);
+    };
+
+
+
     return (
         <Card bordered={false} style={{ width: '100%' }}>
             <Flex
@@ -355,17 +373,33 @@ const CreateDonationForm: React.FC<CreateDonationFormProps> = ({
                         </Flex>
 
 
-                        <Button
-                            style={{ marginTop: 'auto' }}
-                            block
-                            size="large"
-                            // icon={<FileOutlined />}
-                            type="primary"
-                            onClick={handleNextStep}
-                            disabled={donationAmountValue === undefined || donationAmountValue <= 0 && true}
-                        >
-                            Continue
-                        </Button>
+                        
+
+                        {isMultiCheckout ? (
+                            <Button
+                                style={{ marginTop: 'auto' }}
+                                block
+                                size="large"
+                                // icon={<FileOutlined />}
+                                type="primary"
+                                onClick={showMultiCheckOutDrawer}
+                                disabled={donationAmountValue === undefined || donationAmountValue <= 0 && true}
+                            >
+                                Add to Basket
+                            </Button>
+                        ):(
+                            <Button
+                                style={{ marginTop: 'auto' }}
+                                block
+                                size="large"
+                                // icon={<FileOutlined />}
+                                type="primary"
+                                onClick={handleNextStep}
+                                disabled={donationAmountValue === undefined || donationAmountValue <= 0 && true}
+                            >
+                                Continue
+                            </Button>
+                        )}
                     </Flex>
                 )}
 
@@ -844,6 +878,30 @@ const CreateDonationForm: React.FC<CreateDonationFormProps> = ({
                     </Flex>
                 )}
             </Flex>
+
+            <Drawer title="Your Donation Basket" onClose={closeMultiCheckOutDrawer} open={openMultiCheckOutDrawer}>
+                <Card bordered style={{border: `solid 1px ${token.colorPrimary}`}}>
+                    <Flex justify='space-between'>
+                        <Flex vertical>
+                            {/* {currencySymbol}{donationAmountValue}{selectedSegment === 'regular' && "/month" || null} */}
+
+                            <Typography.Title level={4} style={{ fontFamily: 'inherit', textAlign: 'left', marginTop: 0, fontWeight: 700 }}>
+                                        {currencySymbol}
+                                        {isAdminFeeChecked ? ((donationAmountValueWithFee).toFixed(2)) : ((donationAmountValue).toFixed(2))}
+                                        {selectedSegment === 'regular' && "/month" || null}
+                            </Typography.Title>
+                            <>
+                                allocation name
+                            </>
+                        </Flex>
+                        <CloseOutlined />
+                    </Flex>
+                </Card>
+                <br />
+                <br />
+                <br />
+                <p> -WIP- </p>
+            </Drawer>
         </Card>
     );
 };

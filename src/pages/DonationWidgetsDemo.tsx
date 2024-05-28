@@ -203,6 +203,29 @@ const DonatonWidgetsDemo: React.FC = () => {
             </div>
           </Flex>
 
+          <Flex wrap='wrap' style={exampleSection}>
+            <h3 style={{ width: '100%' }}>Multi Checkout (add to basket instead payment flow)</h3>
+
+            <div style={{ width: 380 }}>
+              <CreateDonationForm
+                autoFocus
+                allowAllocate
+                isMultiCheckout
+              />
+            </div>
+            <div style={codeWrapper}>
+              <pre style={codeStyle}>
+                {`
+                  <CreateDonationForm
+                    autoFocus
+                    allowAllocate
+                    isMultiCheckout
+                  />
+                  `}
+              </pre>
+            </div>
+          </Flex>
+
 
 
           <Flex wrap='wrap' style={exampleSection}>
