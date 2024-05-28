@@ -204,7 +204,7 @@ const DonatonWidgetsDemo: React.FC = () => {
           </Flex>
 
           <Flex wrap='wrap' style={exampleSection}>
-            <h3 style={{ width: '100%' }}>Multi Checkout (add to basket instead payment flow)</h3>
+            <h3 style={{ width: '100%' }}>Multi Checkout (add to basket instead of quick checkout flow)</h3>
 
             <div style={{ width: 380 }}>
               <CreateDonationForm
