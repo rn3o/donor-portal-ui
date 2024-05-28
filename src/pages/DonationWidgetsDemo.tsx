@@ -208,7 +208,6 @@ const DonatonWidgetsDemo: React.FC = () => {
 
             <div style={{ width: 380 }}>
               <CreateDonationForm
-                autoFocus
                 allowAllocate
                 isMultiCheckout
               />
