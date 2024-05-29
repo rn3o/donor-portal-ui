@@ -124,7 +124,7 @@ const DonatonWidgetsDemo: React.FC = () => {
             <CreateDonationForm
               allowAllocate
             // customFields={[
-            //   { customFieldType: 'longText', placeholderTextField: 'Add some notes' },
+            //   { customFieldType: 'longText', placeholder: 'Add some notes' },
             // ]}
             />
           </div>
@@ -285,13 +285,21 @@ const DonatonWidgetsDemo: React.FC = () => {
                 // defaultDonationAmountValue={null}
                 defaultDonationAmountValue={90} // default to option 1
                 allowRegular={false}
-                customAmounts={[90, 80]}
-                customAmountDescriptions={['Aqiqa for a Boy', 'Aqiqa for a Girl']}
+
+                restrictOptions
+
+                restrictedAmounts={[
+                  { amount: 90, description: 'Aqiqa for a Boy'},
+                  { amount: 80, description: 'Aqiqa for a Girl'},
+              ]}
+
+                // customAmounts={[90, 80]}
+                // customAmountDescriptions={['Aqiqa for a Boy', 'Aqiqa for a Girl']}
 
                 customFields={[
-                  { customFieldType: 'shortText', placeholderTextField: 'Child\'s Name' },
-                  { customFieldType: 'date', placeholderDatePicker: 'Date of Birth' },
-                  { customFieldType: 'longText', placeholderTextArea: 'Special Notes', maxChar: 200 },
+                  { customFieldType: 'shortText', placeholder: 'Child\'s Name' },
+                  { customFieldType: 'date', placeholder: 'Date of Birth' },
+                  { customFieldType: 'longText', placeholder: 'Special Notes', maxChar: 200 },
                 ]}
               />
             </div>
@@ -306,9 +314,9 @@ const DonatonWidgetsDemo: React.FC = () => {
                     customAmountDescriptions={['Aqiqa for a Boy', 'Aqiqa for a Girl']}
     
                     customFields={[
-                      { customFieldType: 'shortText', placeholderTextField: 'Child\'s Name' },
-                      { customFieldType: 'date', placeholderDatePicker: 'Date of Birth' },
-                      { customFieldType: 'longText', placeholderTextArea: 'Special Notes', maxChar: 200 },
+                      { customFieldType: 'shortText', placeholder: 'Child\'s Name' },
+                      { customFieldType: 'date', placeholder: 'Date of Birth' },
+                      { customFieldType: 'longText', placeholder: 'Special Notes', maxChar: 200 },
                     ]}
                   />
                   `}
@@ -324,11 +332,19 @@ const DonatonWidgetsDemo: React.FC = () => {
               <CreateDonationForm
                 defaultDonationAmountValue={700} 
                 allowRegular={false}
-                customAmounts={[1000, 700, 500]}
-                customAmountDescriptions={['Large Tube Well', 'Medium Tube Well', 'Small Tube Well']}
+
+
+                restrictOptions
+                restrictedAmounts={[
+                    { amount: 1000, description: 'Large Tube Well'},
+                    { amount: 700, description: 'Medium Tube Well'},
+                    { amount: 500, description: 'Small Tube Well'},
+                ]}
+                // customAmounts={[1000, 700, 500]}
+                // customAmountDescriptions={['Large Tube Well', 'Medium Tube Well', 'Small Tube Well']}
 
                 customFields={[
-                  { customFieldType: 'shortText', placeholderTextField: 'Name on plaque (Optional)', maxChar: 30 },
+                  { customFieldType: 'shortText', placeholder: 'Name on plaque (Optional)', maxChar: 30 },
                 ]}
               />
             </div>
@@ -342,7 +358,7 @@ const DonatonWidgetsDemo: React.FC = () => {
                     customAmountDescriptions={['Large Tube Well', 'Medium Tube Well', 'Small Tube Well']}
     
                     customFields={[
-                      { customFieldType: 'shortText', placeholderTextField: 'Name on plaque (Optional)', maxChar: 30 },
+                      { customFieldType: 'shortText', placeholder: 'Name on plaque (Optional)', maxChar: 30 },
                     ]}
                   />
                   `}
@@ -640,7 +656,7 @@ const DonationFormConfigurator: React.FC = () => {
           <Form.Item name="labelRegular" label="Label Regular">
             <Input />
           </Form.Item>
-          
+
           <Form.Item name="autoFocus" valuePropName="checked">
             <Checkbox>Auto Focus</Checkbox>
           </Form.Item>

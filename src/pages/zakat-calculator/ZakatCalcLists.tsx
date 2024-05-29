@@ -5,6 +5,7 @@ import { ProCard, PageContainer } from '@ant-design/pro-components';
 import { useNavigate } from 'react-router-dom';
 
 import { PlusOutlined } from '@ant-design/icons';
+import DonationFormBuilder from '../DonationFormBuilder';
 
 const ZakatCalcLists: React.FC = () => {
   const navigate = useNavigate();
@@ -35,7 +36,8 @@ const ZakatCalcLists: React.FC = () => {
           }
         }
       >
-        <Flex align="center" vertical>
+        <DonationFormBuilder />
+        {/* <Flex align="center" vertical>
           <Result
             // status="404"
             // icon={
@@ -56,7 +58,7 @@ const ZakatCalcLists: React.FC = () => {
               </Button>
             }
           />
-        </Flex>
+        </Flex> */}
       </ProCard>
     </PageContainer>
   );

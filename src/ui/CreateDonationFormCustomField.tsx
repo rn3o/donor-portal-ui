@@ -5,17 +5,19 @@ import TextArea from 'antd/es/input/TextArea';
 
 interface CreateDonationFormCustomFieldProps {
   maxChar?: number;
-  placeholderTextField?: string;
-  placeholderTextArea?: string;
-  placeholderDatePicker?: string;
+  placeholder?: string;
+  // placeholderTextField?: string;
+  // placeholderTextArea?: string;
+  // placeholderDatePicker?: string;
   customFieldType: 'shortText' | 'longText' | 'date';
 }
 
 const CreateDonationFormCustomField: React.FC<CreateDonationFormCustomFieldProps> = ({
   maxChar = 60,
-  placeholderTextField = 'On behalf of..',
-  placeholderTextArea = 'Add some notes',
-  placeholderDatePicker = 'Select Date',
+  placeholder = 'Placeholder Text',
+  // placeholderTextField = 'On behalf of..',
+  // placeholderTextArea = 'Add some notes',
+  // placeholderDatePicker = 'Select Date',
   customFieldType,
 }) => {
   const { token } = theme.useToken();
@@ -30,7 +32,8 @@ const CreateDonationFormCustomField: React.FC<CreateDonationFormCustomFieldProps
           }}
           size="large"
           maxLength={maxChar}
-          placeholder={placeholderTextField}
+          // placeholder={placeholderTextField}
+          placeholder={placeholder}
           prefix={<EditOutlined style={{ opacity: 0.5 }} />}
         />
       )}
@@ -41,12 +44,16 @@ const CreateDonationFormCustomField: React.FC<CreateDonationFormCustomFieldProps
             show: true,
             max: maxChar,
           }}
-          placeholder={placeholderTextArea}
+          // placeholder={placeholderTextArea}
+          placeholder={placeholder}
         />
       )}
 
       {customFieldType === 'date' && (
-        <DatePicker size="large" placeholder={placeholderDatePicker} />
+        <DatePicker size="large" 
+        // placeholder={placeholderDatePicker}
+          placeholder={placeholder}
+         />
       )}
     </>
   );

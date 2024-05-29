@@ -33,12 +33,18 @@ interface CustomField {
     [key: string]: any;
 }
 
+interface restrictedAmounts{
+    amount: number;
+    description: string;
+}
+
 interface CreateDonationFormProps {
     defaultCurrency?: 'string'; 
     defaultDonationAmountValue?: number;
     defaultFrequency?: FrequencyOption;
     autoFocus?: boolean; // auto focus on number input
 
+    allowAmountInput?: boolean;
     allowRegular?: boolean;
     allowAllocate?: boolean;
     allowGiftAid?: boolean;
@@ -60,8 +66,11 @@ interface CreateDonationFormProps {
 
     onceAmountsOptions?: number[];
     regularAmountsOptions?: number[];
-    customAmounts?: number[];
-    customAmountDescriptions?: string[];
+
+    restrictOptions?: boolean;
+    restrictedAmounts?: restrictedAmounts[];
+    // customAmounts?: number[];
+    // customAmountDescriptions?: string[];
     
     isMultiCheckout?: boolean;
 
@@ -74,6 +83,7 @@ const CreateDonationForm: React.FC<CreateDonationFormProps> = ({
     defaultFrequency = 'once',
     autoFocus = false,
 
+    allowAmountInput = true,
     allowRegular = true,
     allowAllocate = false,
     allowGiftAid = false,
@@ -97,8 +107,11 @@ const CreateDonationForm: React.FC<CreateDonationFormProps> = ({
     
     onceAmountsOptions = [700, 500, 285, 100, 50, 25],
     regularAmountsOptions = [250, 100, 50, 30, 25, 10],
-    customAmounts,
-    customAmountDescriptions = undefined,
+
+    restrictOptions = false,
+    restrictedAmounts = [],
+    // customAmounts,
+    // customAmountDescriptions,
 
     // customAmounts = [90, 80],
     // customAmountDescriptions = ['option 1', 'option 2'],
@@ -120,7 +133,14 @@ const CreateDonationForm: React.FC<CreateDonationFormProps> = ({
     useEffect(() => {
         setSelectedSegment(defaultFrequency);
     }, [defaultFrequency]);
-    
+
+    useEffect(() => {
+        if (!allowRegular) {
+            setSelectedSegment('once');
+        }else{
+            // setSelectedSegment('regular');
+        }
+    }, [allowRegular]);
 
     useEffect(() => {
         const currencySymbols: { [key: string]: string } = {
@@ -144,14 +164,14 @@ const CreateDonationForm: React.FC<CreateDonationFormProps> = ({
         setSelectedSegment(value);
     };
 
-    // const handleAmountOption = (value: number) => {
-    //     setDonationAmountValue(value);
-    //     setSelectedAmount(value);
-    // };
-    const handleAmountOption = (value: number | undefined) => {
-        setDonationAmountValue(value || defaultDonationAmountValue);
-        setSelectedAmount(value || defaultDonationAmountValue);
+    const handleAmountOption = (value: number) => {
+        setDonationAmountValue(value);
+        setSelectedAmount(value);
     };
+    // const handleAmountOption = (value: number | undefined) => {
+    //     setDonationAmountValue(value || defaultDonationAmountValue);
+    //     setSelectedAmount(value || defaultDonationAmountValue);
+    // };
 
     const handleChangeCurrency = (value: string) => {
         setSelectedCurrency(value);
@@ -172,20 +192,6 @@ const CreateDonationForm: React.FC<CreateDonationFormProps> = ({
             setSelectedAmount(undefined);
         }
     };
-    // const handleInputChange = (value: number | undefined) => {
-    //     if (value !== undefined && !isNaN(value) && value >= 0) {
-    //         setDonationAmountValue(value);
-    //         if (!onceAmountsOptions.includes(value) || !regularAmountsOptions.includes(value)) {
-    //             setSelectedAmount(undefined);
-    //         } else {
-    //             setSelectedAmount(value);
-    //         }
-    //     } else {
-    //         // Handle invalid input or empty value
-    //         setDonationAmountValue(defaultDonationAmountValue);
-    //         setSelectedAmount(defaultDonationAmountValue);
-    //     }
-    // };
     
     
 
@@ -278,23 +284,24 @@ const CreateDonationForm: React.FC<CreateDonationFormProps> = ({
         </CheckCard.Group>
     );
 
-    const renderCustomAmountOptions = (amounts: number[], descriptions: string[]) => (
+    const renderCustomAmountOptions = (restrictedAmounts) => (
+
         <CheckCard.Group
-            onChange={(value) => handleAmountOption(value as number)}
-            value={selectedAmount}
-        >
-            <Flex vertical>
-                {amounts.map((amount, index) => (
-                    <CheckCard
-                        key={amount}
-                        style={{ width: '100%'}}
-                        title={<div style={customAmountTitle}>{currencySymbol}{amount}</div>}
-                        description={descriptions[index]}
-                        value={amount}
-                    />
-                ))}
-            </Flex>
-        </CheckCard.Group>
+        onChange={(value) => handleAmountOption(value as number)}
+        value={selectedAmount}
+    >
+        <Flex vertical>
+            {restrictedAmounts.map((item, index) => (
+                <CheckCard
+                    key={index} 
+                    style={{ width: '100%' }}
+                    title={<div style={customAmountTitle}>{currencySymbol}{item.amount}</div>}
+                    description={item.description}
+                    value={item.amount}
+                />
+            ))}
+        </Flex>
+    </CheckCard.Group>
     );
 
 
@@ -363,49 +370,52 @@ const CreateDonationForm: React.FC<CreateDonationFormProps> = ({
                                     ]}
                                     value={selectedSegment}
                                     onChange={handleSegmentChange}
-                                />}
+                                />
+                                }
 
-                            {/* TODO: make these amounts option props */}
-                            {selectedSegment === 'once' && (customAmounts === undefined && renderAmountOptions(onceAmountsOptions) )}
-                            {selectedSegment === 'regular' && (customAmounts === undefined && renderAmountOptions(regularAmountsOptions) )}
+                            {selectedSegment === 'once' && (!restrictOptions && renderAmountOptions(onceAmountsOptions) )}
+                            {selectedSegment === 'regular' && (!restrictOptions && renderAmountOptions(regularAmountsOptions) )}
 
                             {/* custom render options */} 
                             {/* @ts-ignore */}
-                            {customAmounts != null && renderCustomAmountOptions(customAmounts, customAmountDescriptions)}
+                            {/* {restrictOptions && customAmounts !== undefined && renderCustomAmountOptions(customAmounts, customAmountDescriptions)} */}
+                            {restrictOptions && restrictedAmounts !== undefined && renderCustomAmountOptions(restrictedAmounts)}
                             
 
-                            <InputNumber<number>
-                                autoFocus={autoFocus}
-                                disabled={customAmounts != null && true}
-                                className='embed-donation-form'
-                                style={{
-                                    color: token.colorPrimary,
-                                    visibility: `${customAmounts != null ? 'hidden' : 'visible'}`
-                                }}
-                                size="large"
-                                min={1}
-                                prefix={<div style={{ fontSize: token.sizeMD }}>{currencySymbol}</div>}
-                                suffix={<div style={{ fontSize: token.sizeMD, marginRight: token.sizeMS }}>{selectedSegment === 'regular' && "/month" || null} </div>}
-                                value={donationAmountValue}
-                                // @ts-ignore
-                                onChange={handleInputChange}
-                                formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-                                parser={(value) => value?.replace(/\$\s?|(,*)/g, '') as unknown as number}
-                                required
-                                addonAfter={<Select
-                                    value={selectedCurrency}
-                                    style={{ width: 86, zIndex: 1 }}
-                                    onChange={handleChangeCurrency}
-                                    suffixIcon={null}
-                                    options={[
-                                        { value: 'gbp', label: '🇬🇧 GBP' },
-                                        { value: 'usd', label: '🇺🇸 USD' },
-                                        { value: 'eur', label: '🇪🇺 EUR' },
-                                        { value: 'cad', label: '🇨🇦 CAD' },
-                                        { value: 'sgd', label: '🇸🇬 SGD' },
-                                    ]}
-                                />}
-                            />
+                            {allowAmountInput &&
+                                <InputNumber<number>
+                                    autoFocus={autoFocus}
+                                    // disabled={restrictOptions && true}
+                                    className='embed-donation-form'
+                                    style={{
+                                        color: token.colorPrimary,
+                                        // visibility: `${restrictOptions ? 'hidden' : 'visible'}`
+                                    }}
+                                    size="large"
+                                    min={1}
+                                    prefix={<div style={{ fontSize: token.sizeMD }}>{currencySymbol}</div>}
+                                    suffix={<div style={{ fontSize: token.sizeMD, marginRight: token.sizeMS }}>{selectedSegment === 'regular' && "/month" || null} </div>}
+                                    value={donationAmountValue}
+                                    // @ts-ignore
+                                    onChange={handleInputChange}
+                                    formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                                    parser={(value) => value?.replace(/\$\s?|(,*)/g, '') as unknown as number}
+                                    required
+                                    addonAfter={<Select
+                                        value={selectedCurrency}
+                                        style={{ width: 86, zIndex: 1 }}
+                                        onChange={handleChangeCurrency}
+                                        suffixIcon={null}
+                                        options={[
+                                            { value: 'gbp', label: '🇬🇧 GBP' },
+                                            { value: 'usd', label: '🇺🇸 USD' },
+                                            { value: 'eur', label: '🇪🇺 EUR' },
+                                            { value: 'cad', label: '🇨🇦 CAD' },
+                                            { value: 'sgd', label: '🇸🇬 SGD' },
+                                        ]}
+                                    />}
+                                />
+                            }
 
 
                             {/* Conditionally show if props allowAllocate and donationAmountValue > 0 */}
@@ -447,7 +457,7 @@ const CreateDonationForm: React.FC<CreateDonationFormProps> = ({
                                 onClick={handleNextStep}
                                 disabled={donationAmountValue === undefined || donationAmountValue <= 0 && true}
                             >
-                                Continue
+                                Donate {currencySymbol}{donationAmountValue}{selectedSegment === 'regular' && "/month" || null}
                             </Button>
                         )}
                     </Flex>
