@@ -34,7 +34,7 @@ interface CustomField {
 }
 
 interface CreateDonationFormProps {
-    defaultCurrency?: string; //TODO make this available to change from prop
+    defaultCurrency?: 'string'; 
     defaultDonationAmountValue?: number;
     defaultFrequency?: FrequencyOption;
     autoFocus?: boolean; // auto focus on number input
@@ -69,7 +69,7 @@ interface CreateDonationFormProps {
 }
 
 const CreateDonationForm: React.FC<CreateDonationFormProps> = ({
-    defaultCurrency = 'gbp', //TODO
+    defaultCurrency = 'gbp',
     defaultDonationAmountValue = 50,
     defaultFrequency = 'once',
     autoFocus = false,
@@ -117,13 +117,40 @@ const CreateDonationForm: React.FC<CreateDonationFormProps> = ({
     const [selectedSegment, setSelectedSegment] = useState<FrequencyOption>(defaultFrequency);
     const [currentStep, setCurrentStep] = useState<number>(overrideStep); // Add state for steps
 
+    useEffect(() => {
+        setSelectedSegment(defaultFrequency);
+    }, [defaultFrequency]);
+    
+
+    useEffect(() => {
+        const currencySymbols: { [key: string]: string } = {
+            'gbp': '£',
+            'usd': '$',
+            'eur': '€',
+            'cad': 'CA$',
+            'sgd': 'S$ ',
+        };
+        setCurrencySymbol(currencySymbols[defaultCurrency]);
+        setSelectedCurrency(defaultCurrency);
+    }, [defaultCurrency]);
+
+    useEffect(() => {
+        setDonationAmountValue(defaultDonationAmountValue);
+    }, [defaultDonationAmountValue]);
+
+
+
     const handleSegmentChange = (value: FrequencyOption) => {
         setSelectedSegment(value);
     };
 
-    const handleAmountOption = (value: number) => {
-        setDonationAmountValue(value);
-        setSelectedAmount(value);
+    // const handleAmountOption = (value: number) => {
+    //     setDonationAmountValue(value);
+    //     setSelectedAmount(value);
+    // };
+    const handleAmountOption = (value: number | undefined) => {
+        setDonationAmountValue(value || defaultDonationAmountValue);
+        setSelectedAmount(value || defaultDonationAmountValue);
     };
 
     const handleChangeCurrency = (value: string) => {
@@ -145,6 +172,22 @@ const CreateDonationForm: React.FC<CreateDonationFormProps> = ({
             setSelectedAmount(undefined);
         }
     };
+    // const handleInputChange = (value: number | undefined) => {
+    //     if (value !== undefined && !isNaN(value) && value >= 0) {
+    //         setDonationAmountValue(value);
+    //         if (!onceAmountsOptions.includes(value) || !regularAmountsOptions.includes(value)) {
+    //             setSelectedAmount(undefined);
+    //         } else {
+    //             setSelectedAmount(value);
+    //         }
+    //     } else {
+    //         // Handle invalid input or empty value
+    //         setDonationAmountValue(defaultDonationAmountValue);
+    //         setSelectedAmount(defaultDonationAmountValue);
+    //     }
+    // };
+    
+    
 
     const handleNextStep = () => {
         setCurrentStep((prev) => prev + 1);
@@ -262,13 +305,18 @@ const CreateDonationForm: React.FC<CreateDonationFormProps> = ({
     const [isGiftAidChecked, setIsGiftAidChecked] = useState(false);
     const [feePercentageSliderValue, setFeePercentageSliderValue] = useState(4); // Initial slider value
 
-    const donationAmountValueWithFee = donationAmountValue + (donationAmountValue * (feePercentageSliderValue / 100));
+    // const donationAmountValueWithFee = donationAmountValue + (donationAmountValue * (feePercentageSliderValue / 100));
+
+    // Calculate the donation amount with fee and format it to 2 decimal places
+    const donationAmountValueWithFee : any = (donationAmountValue + (donationAmountValue * (feePercentageSliderValue / 100))).toFixed(2);
 
     // For multi checkout (drawer demo)
 
     const [openMultiCheckOutDrawer, setOpenMultiCheckOutDrawer] = useState(false);
 
     const showMultiCheckOutDrawer = () => {
+        { donationAmountValue <= 100 && setIsAdminFeeChecked(true) }
+        setFeePercentageSliderValue(4)
         setOpenMultiCheckOutDrawer(true);
     };
   
@@ -328,7 +376,7 @@ const CreateDonationForm: React.FC<CreateDonationFormProps> = ({
 
                             <InputNumber<number>
                                 autoFocus={autoFocus}
-                                // disabled={customAmounts != null && true}
+                                disabled={customAmounts != null && true}
                                 className='embed-donation-form'
                                 style={{
                                     color: token.colorPrimary,
@@ -345,7 +393,7 @@ const CreateDonationForm: React.FC<CreateDonationFormProps> = ({
                                 parser={(value) => value?.replace(/\$\s?|(,*)/g, '') as unknown as number}
                                 required
                                 addonAfter={<Select
-                                    defaultValue="gbp"
+                                    value={selectedCurrency}
                                     style={{ width: 86, zIndex: 1 }}
                                     onChange={handleChangeCurrency}
                                     suffixIcon={null}
@@ -382,7 +430,9 @@ const CreateDonationForm: React.FC<CreateDonationFormProps> = ({
                                 size="large"
                                 // icon={<FileOutlined />}
                                 type="primary"
-                                onClick={showMultiCheckOutDrawer}
+                                onClick={() => {
+                                    showMultiCheckOutDrawer()
+                                }}
                                 disabled={donationAmountValue === undefined || donationAmountValue <= 0 && true}
                             >
                                 Add to Basket
@@ -433,7 +483,7 @@ const CreateDonationForm: React.FC<CreateDonationFormProps> = ({
                                     style={{ color: 'white' }}
                                 />}
                             >
-                                Donate {currencySymbol}${Math.floor(donationAmountValue / 3)} per month
+                                Donate {currencySymbol}{Math.floor(donationAmountValue / 3)} per month
                             </Button>
 
                             <Button
@@ -662,9 +712,9 @@ const CreateDonationForm: React.FC<CreateDonationFormProps> = ({
                                             <Tag bordered={false} color="success" icon={<CheckCircleFilled />} style={{ width: 'auto', marginTop: token.sizeSM}}>
                                                 Gift Aid value: 
                                                 {isAdminFeeChecked ?
-                                                <> {currencySymbol}{(donationAmountValueWithFee/4).toFixed(2)} </>
+                                                <> {currencySymbol}{(donationAmountValueWithFee/4)} </>
                                                 :
-                                                <> {currencySymbol}{(donationAmountValue/4).toFixed(2)} </>
+                                                <> {currencySymbol}{(donationAmountValue/4)} </>
                                                 }
                                             </Tag>
                                             }
@@ -680,7 +730,7 @@ const CreateDonationForm: React.FC<CreateDonationFormProps> = ({
                             {/* {currencySymbol}{donationAmountValue} {selectedSegment === 'regular' && "/month" || null}  */}
                             <Typography.Title level={1} style={{ fontFamily: 'inherit', textAlign: 'center', marginTop: 0, fontWeight: 700 }}>
                                 {currencySymbol}
-                                {isAdminFeeChecked ? ((donationAmountValueWithFee).toFixed(2)) : ((donationAmountValue).toFixed(2))}
+                                {isAdminFeeChecked ? ((donationAmountValueWithFee)) : ((donationAmountValue).toFixed(2))}
                                 {selectedSegment === 'regular' && "/month" || null}
                             </Typography.Title>
                         </Typography.Title>
@@ -771,6 +821,8 @@ const CreateDonationForm: React.FC<CreateDonationFormProps> = ({
                                         setIsGiftAidChecked(false)
                                         setIsUpsellChecked(false)
                                         setFeePercentageSliderValue(4)
+                                        setDonationAmountValue(defaultDonationAmountValue)
+                                        setSelectedAmount(defaultDonationAmountValue)
                                     }}
                                     style={{ fontSize: 'smaller' }}
                                 >
@@ -834,7 +886,7 @@ const CreateDonationForm: React.FC<CreateDonationFormProps> = ({
                         >
                             Pay &nbsp;
                             {currencySymbol}
-                            {isAdminFeeChecked ? ((donationAmountValueWithFee).toFixed(2)) : ((donationAmountValue).toFixed(2))}
+                            {isAdminFeeChecked ? ((donationAmountValueWithFee)) : ((donationAmountValue))}
                             {selectedSegment === 'regular' && "/month" || null}
                         </Button>
 
@@ -887,7 +939,7 @@ const CreateDonationForm: React.FC<CreateDonationFormProps> = ({
 
                             <Typography.Title level={4} style={{ fontFamily: 'inherit', textAlign: 'left', marginTop: 0, fontWeight: 700 }}>
                                         {currencySymbol}
-                                        {isAdminFeeChecked ? ((donationAmountValueWithFee).toFixed(2)) : ((donationAmountValue).toFixed(2))}
+                                        {isAdminFeeChecked ? ((donationAmountValueWithFee)) : ((donationAmountValue))}
                                         {selectedSegment === 'regular' && "/month" || null}
                             </Typography.Title>
                             <>
@@ -898,9 +950,114 @@ const CreateDonationForm: React.FC<CreateDonationFormProps> = ({
                     </Flex>
                 </Card>
                 <br />
-                <br />
-                <br />
-                <p> -WIP- </p>
+                <Tooltip
+                    open={donationAmountValue > 100 && isAdminFeeChecked === false && true}
+                    placement='right'
+                    title="Would you like to cover administration fee so that 100% of your gift will fund the project?">
+                    <Badge.Ribbon
+                        text={<>{isAdminFeeChecked && feePercentageSliderValue > 9 && <HeartFilled className="pulse-animation" style={{ color: 'white' }} />}&nbsp;&nbsp;Hooray!</>}
+                        style={{ zIndex: 10, top: 4, padding: '4px 8px', visibility: `${isAdminFeeChecked && feePercentageSliderValue > 9 && 'visible' || 'hidden'}` }}>
+                        <div>
+                            <CheckCard
+                                avatar="https://images.pexels.com/photos/6289064/pexels-photo-6289064.jpeg?auto=compress&cs=tinysrgb&w=200"
+                                style={{ display: 'flex', flex: 1, width: '100%', paddingBottom: `${isAdminFeeChecked && '24px' || 'unset'}` }}
+                                title={"Cover Our Fee" + ` ${currencySymbol}${(donationAmountValue * (feePercentageSliderValue / 100))}`
+                                    + `${isAdminFeeChecked && ` ` || ` ?`}`}
+                                // + `${isAdminFeeChecked && feePercentageSliderValue > 20 && `Thank you!` || `` }` }
+                                // description="Help us pay the processing & platform fee"
+                                description="Help us pay the processing & platform fee"
+                                onChange={
+                                    (checked) => { console.log('checked', checked); setIsAdminFeeChecked(checked); }
+                                }
+                                defaultChecked={donationAmountValue <= 100 && true}
+                                extra={isAdminFeeChecked && <CheckCircleFilled style={{ position: 'absolute', top: 0, right: 0, zIndex: 1, padding: token.sizeXXS, background: token.colorPrimaryBg, fontSize: token.sizeLG, color: token.colorPrimary }} />
+                                }
+                            />
+
+                            <Slider
+                                style={{
+                                    position: 'absolute',
+                                    bottom: 30, left: '5%',
+                                    width: '90%',
+                                    margin: 'auto',
+                                    visibility: `${isAdminFeeChecked && 'visible' || 'hidden'}`
+                                }}
+                                tooltip={{ formatter }}
+                                defaultValue={feePercentageSliderValue}
+                                min={3}
+                                max={28}
+                                onChange={setFeePercentageSliderValue} />
+                        </div>
+                    </Badge.Ribbon>
+                </Tooltip>
+
+                {/* upsell */}
+                {/* {allowUpsell && */}
+                    <CheckCard
+                        avatar={upsellItemImgUrl}
+                        style={{ display: 'flex', flex: 1, width: '100%' }}
+                        // title="Help Gaza Emergency "
+                        title={<>{upsellItemTitle} -&nbsp;{currencySymbol}{upsellItemValue}</>}
+                        description={upsellItemDescription}
+                        extra={isUpsellChecked && <CheckCircleFilled style={{ position: 'absolute', top: 0, right: 0, zIndex: 1, padding: token.sizeXXS, background: token.colorPrimaryBg, fontSize: token.sizeLG, color: token.colorPrimary }} />
+                                }
+                        onChange={
+                            (checked) => { 
+                                console.log('checked', checked); 
+                                setIsUpsellChecked(checked);
+                                if (checked == true) {
+                                    setDonationAmountValue(donationAmountValue+upsellItemValue)
+                                } else
+                                {
+                                    setDonationAmountValue(donationAmountValue-upsellItemValue)
+                                }
+                            }
+                        }
+                    />
+                {/* } */}
+
+                {/* gift aid */}
+                {allowGiftAid &&
+                <Tooltip trigger='hover' placement='right' open={!isGiftAidChecked}
+                    title={
+                        <>
+                        If you are a UK Taxpayer, we can claim an extra 25p for every £1 you give!<br />
+                        <a href='https://www.gov.uk/donating-to-charity/gift-aid'
+                            target='blank' style={{ fontWeight: '600', lineHeight: 2.5, color: 'white'}}>
+                            <LinkOutlined />&nbsp;<u>Learn more</u>
+                        </a>
+                        </>
+                    }>
+                    <CheckCard
+                        avatar="https://res.cloudinary.com/rn3o/image/upload/v1716480041/gift-aid-it-subtle-grey-bg_hyjg9q.svg"
+                        style={{ display: 'flex', flex: 1, width: '100%' }}
+                        title="Gift Aid my donation"
+                        // description="Boost gift by 25% at no extra cost!"
+                        onChange={
+                            (checked) => { 
+                                console.log('checked', checked);
+                                setIsGiftAidChecked(checked)
+                            }
+                        }
+                        extra={isGiftAidChecked && <CheckCircleFilled style={{ position: 'absolute', top: 0, right: 0, zIndex: 1, padding: token.sizeXXS, background: token.colorPrimaryBg, fontSize: token.sizeLG, color: token.colorPrimary }} />
+                                }
+                        description={
+                                <>
+                                Boost gift by 25% at no extra cost!
+                                { isGiftAidChecked &&
+                                <Tag bordered={false} color="success" icon={<CheckCircleFilled />} style={{ width: 'auto', marginTop: token.sizeSM}}>
+                                    Gift Aid value: 
+                                    {isAdminFeeChecked ?
+                                    <> {currencySymbol}{(donationAmountValueWithFee/4)} </>
+                                    :
+                                    <> {currencySymbol}{(donationAmountValue/4)} </>
+                                    }
+                                </Tag>
+                                }
+                                </>}
+                    />
+                </Tooltip>
+                }
             </Drawer>
         </Card>
     );
