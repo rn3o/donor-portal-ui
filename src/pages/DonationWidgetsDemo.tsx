@@ -286,9 +286,9 @@ const DonatonWidgetsDemo: React.FC = () => {
                 defaultDonationAmountValue={90} // default to option 1
                 allowRegular={false}
 
-                restrictOptions
+                useDescriptiveAmount
 
-                restrictedAmounts={[
+                descriptiveAmountOptions={[
                   { amount: 90, description: 'Aqiqa for a Boy'},
                   { amount: 80, description: 'Aqiqa for a Girl'},
               ]}
@@ -334,8 +334,8 @@ const DonatonWidgetsDemo: React.FC = () => {
                 allowRegular={false}
 
 
-                restrictOptions
-                restrictedAmounts={[
+                useDescriptiveAmount
+                descriptiveAmountOptions={[
                     { amount: 1000, description: 'Large Tube Well'},
                     { amount: 700, description: 'Medium Tube Well'},
                     { amount: 500, description: 'Small Tube Well'},

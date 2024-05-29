@@ -33,7 +33,7 @@ interface CustomField {
     [key: string]: any;
 }
 
-interface restrictedAmounts{
+interface descriptiveAmountOptions{
     amount: number;
     description: string;
 }
@@ -67,10 +67,8 @@ interface CreateDonationFormProps {
     onceAmountsOptions?: number[];
     regularAmountsOptions?: number[];
 
-    restrictOptions?: boolean;
-    restrictedAmounts?: restrictedAmounts[];
-    // customAmounts?: number[];
-    // customAmountDescriptions?: string[];
+    useDescriptiveAmount?: boolean;
+    descriptiveAmountOptions?: descriptiveAmountOptions[];
     
     isMultiCheckout?: boolean;
 
@@ -108,13 +106,12 @@ const CreateDonationForm: React.FC<CreateDonationFormProps> = ({
     onceAmountsOptions = [700, 500, 285, 100, 50, 25],
     regularAmountsOptions = [250, 100, 50, 30, 25, 10],
 
-    restrictOptions = false,
-    restrictedAmounts = [],
-    // customAmounts,
-    // customAmountDescriptions,
-
-    // customAmounts = [90, 80],
-    // customAmountDescriptions = ['option 1', 'option 2'],
+    useDescriptiveAmount = false,
+    descriptiveAmountOptions = [
+        {amount: 100, description: 'option 1 description'},
+        {amount: 200, description: 'option 2 description'},
+        {amount: 300, description: 'option 3 description'},
+    ],
 
     isMultiCheckout = false,
     
@@ -284,18 +281,18 @@ const CreateDonationForm: React.FC<CreateDonationFormProps> = ({
         </CheckCard.Group>
     );
 
-    const renderCustomAmountOptions = (restrictedAmounts) => (
+    const renderCustomAmountOptions = (descriptiveAmountOptions) => (
 
         <CheckCard.Group
         onChange={(value) => handleAmountOption(value as number)}
         value={selectedAmount}
     >
         <Flex vertical>
-            {restrictedAmounts.map((item, index) => (
+            {descriptiveAmountOptions.map((item, index) => (
                 <CheckCard
                     key={index} 
                     style={{ width: '100%' }}
-                    title={<div style={customAmountTitle}>{currencySymbol}{item.amount}</div>}
+                    title={<div style={customAmountTitle}>{currencySymbol}{item.amount}{selectedSegment === 'regular' && "/month" || null}</div>}
                     description={item.description}
                     value={item.amount}
                 />
@@ -373,23 +370,23 @@ const CreateDonationForm: React.FC<CreateDonationFormProps> = ({
                                 />
                                 }
 
-                            {selectedSegment === 'once' && (!restrictOptions && renderAmountOptions(onceAmountsOptions) )}
-                            {selectedSegment === 'regular' && (!restrictOptions && renderAmountOptions(regularAmountsOptions) )}
+                            {selectedSegment === 'once' && (!useDescriptiveAmount && renderAmountOptions(onceAmountsOptions) )}
+                            {selectedSegment === 'regular' && (!useDescriptiveAmount && renderAmountOptions(regularAmountsOptions) )}
 
                             {/* custom render options */} 
                             {/* @ts-ignore */}
-                            {/* {restrictOptions && customAmounts !== undefined && renderCustomAmountOptions(customAmounts, customAmountDescriptions)} */}
-                            {restrictOptions && restrictedAmounts !== undefined && renderCustomAmountOptions(restrictedAmounts)}
+                            {/* {useDescriptiveAmount && customAmounts !== undefined && renderCustomAmountOptions(customAmounts, customAmountDescriptions)} */}
+                            {useDescriptiveAmount && descriptiveAmountOptions !== undefined && renderCustomAmountOptions(descriptiveAmountOptions)}
                             
 
                             {allowAmountInput &&
                                 <InputNumber<number>
                                     autoFocus={autoFocus}
-                                    // disabled={restrictOptions && true}
+                                    // disabled={useDescriptiveAmount && true}
                                     className='embed-donation-form'
                                     style={{
                                         color: token.colorPrimary,
-                                        // visibility: `${restrictOptions ? 'hidden' : 'visible'}`
+                                        // visibility: `${useDescriptiveAmount ? 'hidden' : 'visible'}`
                                     }}
                                     size="large"
                                     min={1}

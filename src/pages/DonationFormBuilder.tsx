@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Flex, Typography, Button, ConfigProvider, theme } from 'antd';
-import { Space, Card, Form, Input, InputNumber, Checkbox, Select } from 'antd';
+import { Space, Card, Form, Input, InputNumber, Checkbox, Select, Segmented } from 'antd';
 import CreateDonationForm from '../ui/CreateDonationForm';
 import { CloseCircleOutlined } from '@ant-design/icons';
 
@@ -18,7 +18,7 @@ const DonationFormBuilder: React.FC = () => {
   const [formProps, setFormProps] = useState({});
   const [allowRegular, setAllowRegular] = useState(true);
   const [defaultFrequency, setDefaultFrequency] = useState('once' || 'regular');
-  const [restrictOptions, setRestrictOptions] = useState(true);
+  const [useDescriptiveAmount, setUseDescriptiveAmount] = useState(true);
 
   const handleFormChange = (_, allValues) => {
     setFormProps(allValues);
@@ -27,23 +27,32 @@ const DonationFormBuilder: React.FC = () => {
   const handleAllowRegularChange = (e) => {
     setAllowRegular(e.target.checked);
     form.setFieldsValue({ allowRegular: e.target.checked });
-    if (!setAllowRegular){
+    if (!setAllowRegular) {
       setDefaultFrequency('once');
     }
   };
 
-  const handleRestrictOptionsChange = (e) => {
-    setRestrictOptions(e.target.checked);
-    form.setFieldsValue({ restrictOptions: e.target.checked });
+  const handleUseDescriptiveAmountChange = (e) => {
+    setUseDescriptiveAmount(e.target.checked);
+    form.setFieldsValue({ useDescriptiveAmount: e.target.checked });
+    if (!useDescriptiveAmount) {
+      setUseDescriptiveAmount(true);
+    }
   };
 
 
+  const [selectedSegment, setSelectedSegment] = useState<string>('amountOnly');
+  const handleSegmentChange = (value: string) => {
+    setSelectedSegment(value);
+  };
+
   return (
-    <Flex style={{ maxWidth: 900, margin: 'auto' }}>
-      <Flex gap={token.sizeLG}>
+    <Flex style={{ maxWidth: 1000, margin: 'auto' }}>
+      <Flex gap={100}>
         <Form
           form={form}
           layout="vertical"
+          style={{ width: 300, paddingTop: 100 }}
           initialValues={{
             defaultCurrency: 'gbp',
             defaultDonationAmountValue: 50,
@@ -66,13 +75,15 @@ const DonationFormBuilder: React.FC = () => {
             regularAmountsOptions: [30, 25, 10],
             // onceAmountsOptions: [700, 500, 285, 100, 50, 25],
             // regularAmountsOptions: [250, 100, 50, 30, 25, 10],
-            restrictOptions: false,
-            restrictedAmounts: [],
+            // useDescriptiveAmount: false,
+            // descriptiveAmountOptions: [],
+            descriptiveAmountOptions: [
+              { amount: 100, description: 'option 1 description' },
+              { amount: 200, description: 'option 2 description' },
+              { amount: 300, description: 'option 3 description' },
+            ],
+
             customFields: [],
-            // restrictedAmounts: [
-            //   { amount: 90, description: 'Aqiqa for a Boy' },
-            //   { amount: 80, description: 'Aqiqa for a Girl' },
-            // ],
             // customFields: [
             //   { customFieldType: 'shortText', placeholderTextField: "Child's Name" },
             //   { customFieldType: 'date', placeholderDatePicker: 'Date of Birth' },
@@ -95,71 +106,30 @@ const DonationFormBuilder: React.FC = () => {
               ]}
             />
           </Form.Item>
-          <Form.Item name="defaultDonationAmountValue" label="Default Donation Amount">
-            <InputNumber min={1} />
-          </Form.Item>
 
-          <Form.List name="onceAmountsOptions">
-            {(fields, { add, remove }) => (
-              <>
-                <Typography.Title level={5}>Suggested One-off Amount</Typography.Title>
-                {fields.map(({ key, name, ...restField }) => (
-                  <Space key={key} style={{ display: 'flex', marginBottom: 8 }} align="baseline">
-                    <Form.Item
-                      {...restField}
-                      name={[name]}
-                      rules={[{ required: true, message: 'Missing amount' }]}
-                    >
-                      <InputNumber min={1} />
-                    </Form.Item>
-                    {fields.length > 0 && (
-                      <Button icon={<CloseCircleOutlined />} type="link" onClick={() => remove(name)}>
+          <Segmented
+            style={{ width: '100%', fontWeight: 600 }}
+            block
+            size='large'
+            options={[
+              { label: 'Amount Only', value: 'amountOnly' },
+              { label: 'Amount + Description', value: 'descriptive' },
+            ]}
+            value={selectedSegment}
+            onChange={handleSegmentChange}
+          />
 
-                      </Button>
-                    )}
-                  </Space>
-                ))}
-                {fields.length < 6 && (
-                  <Form.Item>
-                    <Button type="dashed" onClick={() => {
-                      
-                      add(10)
-                      }} block>
-                      Add Amount
-                    </Button>
-                  </Form.Item>
-                )}
-              </>
-            )}
-          </Form.List>
-
-          <Form.Item name="allowAmountInput" valuePropName="checked">
-            <Checkbox>Allow Amount input</Checkbox>
-          </Form.Item>
-
-          <Form.Item name="allowRegular" valuePropName="checked">
-            <Checkbox onChange={handleAllowRegularChange}>Allow Regular Donations</Checkbox>
-          </Form.Item>
-
-          {allowRegular && (
+          {selectedSegment === 'amountOnly' ? (
             <>
-              <Form.Item name="defaultFrequency" label="Default Frequency">
-                <Select>
-                  <Option value="once">Once</Option>
-                  <Option value="regular">Regular</Option>
-                </Select>
-              </Form.Item>
-
-              <Form.List name="regularAmountsOptions">
+              <Form.List name="onceAmountsOptions">
                 {(fields, { add, remove }) => (
                   <>
-                    <Typography.Title level={5}>Suggested Regular Amount</Typography.Title>
-                    {fields.map(({ key, name, fieldKey, ...restField }) => (
-                      <Space key={key} style={{ display: 'flex', marginBottom: 8 }} align="baseline">
+                    <Typography.Title level={5}>Suggested One-off Amount</Typography.Title>
+                    {fields.map(({ key, name, ...restField }) => (
+                      <Space key={key} style={{ display: 'flex' }} align="baseline">
                         <Form.Item
                           {...restField}
                           name={[name]}
-                          fieldKey={[fieldKey]}
                           rules={[{ required: true, message: 'Missing amount' }]}
                         >
                           <InputNumber min={1} />
@@ -173,35 +143,73 @@ const DonationFormBuilder: React.FC = () => {
                     ))}
                     {fields.length < 6 && (
                       <Form.Item>
-                        <Button type="dashed" onClick={() => add(5)} block>
-                          Add Amount
+                        <Button type="dashed" onClick={() => {
+
+                          add(10)
+                        }} block>
+                          Add Another
                         </Button>
                       </Form.Item>
                     )}
                   </>
                 )}
               </Form.List>
+
+              {allowRegular && (
+                <>
+                  
+
+                  <Form.List name="regularAmountsOptions">
+                    {(fields, { add, remove }) => (
+                      <>
+                        <Typography.Title level={5}>Suggested Regular Amount</Typography.Title>
+                        {fields.map(({ key, name, fieldKey, ...restField }) => (
+                          <Space key={key} style={{ display: 'flex' }} align="baseline">
+                            <Form.Item
+                              {...restField}
+                              name={[name]}
+                              fieldKey={[fieldKey]}
+                              rules={[{ required: true, message: 'Missing amount' }]}
+                            >
+                              <InputNumber min={1} />
+                            </Form.Item>
+                            {fields.length > 0 && (
+                              <Button icon={<CloseCircleOutlined />} type="link" onClick={() => remove(name)}>
+
+                              </Button>
+                            )}
+                          </Space>
+                        ))}
+                        {fields.length < 6 && (
+                          <Form.Item>
+                            <Button type="dashed" onClick={() => add(5)} block>
+                              Add Amount
+                            </Button>
+                          </Form.Item>
+                        )}
+                      </>
+                    )}
+                  </Form.List>
+                </>
+              )}
             </>
-          )}
 
-          <Form.Item name="restrictOptions" valuePropName="checked">
-            <Checkbox onChange={handleRestrictOptionsChange}>Restrict Options</Checkbox>
-          </Form.Item>
 
-          {restrictOptions && (
 
-            <Form.List name="restrictedAmounts">
+          ) : (
+
+            <Form.List name="descriptiveAmountOptions">
               {(fields, { add, remove }) => (
                 <>
                   <Typography.Title level={5}>Custom Amounts</Typography.Title>
                   {fields.map(({ key, name, ...restField }) => (
-                    <Space key={key} style={{ display: 'flex', marginBottom: 8 }} align="baseline">
+                    <Space key={key} style={{ display: 'flex' }} align="baseline">
                       <Form.Item
                         {...restField}
                         name={[name, 'amount']}
                         rules={[{ required: true, message: 'Missing amount' }]}
                       >
-                        <InputNumber min={1} placeholder="Amount" style={{width: 64}} />
+                        <InputNumber min={1} placeholder="Amount" style={{ width: 64 }} />
                       </Form.Item>
                       <Form.Item
                         {...restField}
@@ -225,15 +233,38 @@ const DonationFormBuilder: React.FC = () => {
                 </>
               )}
             </Form.List>
-          )
-          }
+
+          )}
+
+<Form.Item name="defaultFrequency" label="Default Frequency">
+                    <Select>
+                      <Option value="once">Once</Option>
+                      <Option value="regular">Regular</Option>
+                    </Select>
+                  </Form.Item>
+
+          <Form.Item name="defaultDonationAmountValue" label="Default Donation Amount">
+            <InputNumber min={1} />
+          </Form.Item>
+
+          <Form.Item name="allowAmountInput" valuePropName="checked">
+            <Checkbox>Allow Amount input</Checkbox>
+          </Form.Item>
+
+          <Form.Item name="allowRegular" valuePropName="checked">
+            <Checkbox onChange={handleAllowRegularChange}>Allow Regular Donations</Checkbox>
+          </Form.Item>
+
+
+
+
 
           <Form.List name="customFields">
             {(fields, { add, remove }) => (
               <>
                 <Typography.Title level={5}>Custom Fields</Typography.Title>
                 {fields.map(({ key, name, ...restField }) => (
-                  <Space key={key} style={{ display: 'flex', marginBottom: 8 }} align="baseline">
+                  <Space key={key} style={{ display: 'flex' }} align="baseline">
                     <Form.Item
                       {...restField}
                       name={[name, 'customFieldType']}
@@ -300,12 +331,12 @@ const DonationFormBuilder: React.FC = () => {
           <Form.Item name="height" label="Height">
             <InputNumber min={100} />
           </Form.Item>
-          <Form.Item name="isLoggedIn" valuePropName="checked">
+          {/* <Form.Item name="isLoggedIn" valuePropName="checked">
             <Checkbox>Is Logged In</Checkbox>
-          </Form.Item>
-          <Form.Item name="adminFeeCheckedDefault" valuePropName="checked">
+          </Form.Item> */}
+          {/* <Form.Item name="adminFeeCheckedDefault" valuePropName="checked">
             <Checkbox>Admin Fee Checked by Default</Checkbox>
-          </Form.Item>
+          </Form.Item> */}
 
           <Form.Item>
             <Button type="primary" onClick={() => {
@@ -314,6 +345,9 @@ const DonationFormBuilder: React.FC = () => {
             }}>Reset to Default</Button>
           </Form.Item>
         </Form>
+
+        {/* TODO add themer for design section */}
+
         <Flex style={{ position: 'relative' }} vertical>
           <ConfigProvider
             theme={{
@@ -322,11 +356,17 @@ const DonationFormBuilder: React.FC = () => {
               },
             }}
           >
-            <div style={{ position: 'fixed', top: 80 }}>
+            <div style={{ position: 'fixed', top: 80, width: 400 }}>
               <Typography.Title level={4}>Live Preview</Typography.Title>
-              <CreateDonationForm {...formProps} />
-              {/* <CreateDonationForm {...formProps} restrictOptions allowRegular={false} customAmounts={[1]} customAmountDescriptions={['desc']}/> */}
-              {/* <CreateDonationForm {...formProps} customAmounts={[]} customAmountDescriptions={['']} /> */}
+
+              {selectedSegment === 'amountOnly' ? (
+                <CreateDonationForm {...formProps} useDescriptiveAmount={false} />
+              ) : (
+                <CreateDonationForm {...formProps} useDescriptiveAmount />
+              )}
+
+              {/* if useDescriptiveAmount than use this on preview */}
+              {/* <CreateDonationForm {...formProps} useDescriptiveAmount/> */}
             </div>
           </ConfigProvider>
         </Flex>
