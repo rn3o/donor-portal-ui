@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Flex, Typography, Modal, Button, Popconfirm, theme, ConfigProvider } from 'antd';
+import { Space, Card, Form, Input, InputNumber, Checkbox, Select } from 'antd';
 import {
   CloseOutlined,
   HeartFilled,
@@ -123,7 +124,7 @@ const DonatonWidgetsDemo: React.FC = () => {
             <CreateDonationForm
               allowAllocate
             // customFields={[
-            //   { customFieldType: 'longText', placeholderTextField: 'Add some notes' },
+            //   { customFieldType: 'longText', placeholder: 'Add some notes' },
             // ]}
             />
           </div>
@@ -284,13 +285,21 @@ const DonatonWidgetsDemo: React.FC = () => {
                 // defaultDonationAmountValue={null}
                 defaultDonationAmountValue={90} // default to option 1
                 allowRegular={false}
-                customAmounts={[90, 80]}
-                customAmountDescriptions={['Aqiqa for a Boy', 'Aqiqa for a Girl']}
+
+                useDescriptiveAmount
+
+                descriptiveAmountOptions={[
+                  { amount: 90, description: 'Aqiqa for a Boy'},
+                  { amount: 80, description: 'Aqiqa for a Girl'},
+              ]}
+
+                // customAmounts={[90, 80]}
+                // customAmountDescriptions={['Aqiqa for a Boy', 'Aqiqa for a Girl']}
 
                 customFields={[
-                  { customFieldType: 'shortText', placeholderTextField: 'Child\'s Name' },
-                  { customFieldType: 'date', placeholderDatePicker: 'Date of Birth' },
-                  { customFieldType: 'longText', placeholderTextArea: 'Special Notes', maxChar: 200 },
+                  { customFieldType: 'shortText', placeholder: 'Child\'s Name' },
+                  { customFieldType: 'date', placeholder: 'Date of Birth' },
+                  { customFieldType: 'longText', placeholder: 'Special Notes', maxChar: 200 },
                 ]}
               />
             </div>
@@ -305,9 +314,9 @@ const DonatonWidgetsDemo: React.FC = () => {
                     customAmountDescriptions={['Aqiqa for a Boy', 'Aqiqa for a Girl']}
     
                     customFields={[
-                      { customFieldType: 'shortText', placeholderTextField: 'Child\'s Name' },
-                      { customFieldType: 'date', placeholderDatePicker: 'Date of Birth' },
-                      { customFieldType: 'longText', placeholderTextArea: 'Special Notes', maxChar: 200 },
+                      { customFieldType: 'shortText', placeholder: 'Child\'s Name' },
+                      { customFieldType: 'date', placeholder: 'Date of Birth' },
+                      { customFieldType: 'longText', placeholder: 'Special Notes', maxChar: 200 },
                     ]}
                   />
                   `}
@@ -323,11 +332,19 @@ const DonatonWidgetsDemo: React.FC = () => {
               <CreateDonationForm
                 defaultDonationAmountValue={700} 
                 allowRegular={false}
-                customAmounts={[1000, 700, 500]}
-                customAmountDescriptions={['Large Tube Well', 'Medium Tube Well', 'Small Tube Well']}
+
+
+                useDescriptiveAmount
+                descriptiveAmountOptions={[
+                    { amount: 1000, description: 'Large Tube Well'},
+                    { amount: 700, description: 'Medium Tube Well'},
+                    { amount: 500, description: 'Small Tube Well'},
+                ]}
+                // customAmounts={[1000, 700, 500]}
+                // customAmountDescriptions={['Large Tube Well', 'Medium Tube Well', 'Small Tube Well']}
 
                 customFields={[
-                  { customFieldType: 'shortText', placeholderTextField: 'Name on plaque (Optional)', maxChar: 30 },
+                  { customFieldType: 'shortText', placeholder: 'Name on plaque (Optional)', maxChar: 30 },
                 ]}
               />
             </div>
@@ -341,7 +358,7 @@ const DonatonWidgetsDemo: React.FC = () => {
                     customAmountDescriptions={['Large Tube Well', 'Medium Tube Well', 'Small Tube Well']}
     
                     customFields={[
-                      { customFieldType: 'shortText', placeholderTextField: 'Name on plaque (Optional)', maxChar: 30 },
+                      { customFieldType: 'shortText', placeholder: 'Name on plaque (Optional)', maxChar: 30 },
                     ]}
                   />
                   `}
@@ -469,8 +486,11 @@ const DonatonWidgetsDemo: React.FC = () => {
               </pre>
             </div>
           </Flex>
+
           
         </Flex>
+
+        <DonationFormConfigurator />
 
         <div />
       </div>
@@ -480,3 +500,204 @@ const DonatonWidgetsDemo: React.FC = () => {
 
 export default DonatonWidgetsDemo;
 
+
+const { Option } = Select;
+
+const DonationFormConfigurator: React.FC = () => {
+
+  const [defaultCurrency, setDefaultCurrency] = useState('gbp');
+  const handleCurrencyChange = (value: string) => {
+    setDefaultCurrency(value);
+};
+
+  const [form] = Form.useForm();
+
+  const [formProps, setFormProps] = useState({});
+
+  const handleFormChange = (_, allValues) => {
+    setFormProps(allValues);
+  };
+
+  return (
+    <Card title="Donation Form Configurator">
+      <Flex>
+        <Form
+          form={form}
+          layout="vertical"
+          initialValues={{
+            defaultCurrency: 'gbp',
+            defaultDonationAmountValue: 50,
+            defaultFrequency: 'once',
+            autoFocus: false,
+            allowRegular: true,
+            allowAllocate: false,
+            allowGiftAid: false,
+            allowUpsell: false,
+            labelOnce: 'Give Once',
+            labelRegular: 'Give Regularly',
+            upsellItemTitle: 'Help Gaza Emergency',
+            upsellItemDescription: 'Save lives in Gaza',
+            upsellItemValue: 20,
+            height: 460,
+            isLoggedIn: false,
+            adminFeeCheckedDefault: false,
+            // onceAmountsOptions: [],
+            // regularAmountsOptions: [],
+            onceAmountsOptions: [700, 500, 285, 100, 50, 25],
+            regularAmountsOptions: [250, 100, 50, 30, 25, 10],
+          }}
+          onValuesChange={handleFormChange}
+        >
+          <Form.Item name="defaultCurrency" label="Default Currency">
+          <Select
+                value={defaultCurrency}
+                onChange={handleCurrencyChange}
+                style={{ width: 100 }}
+                options={[
+                    { value: 'gbp', label: '🇬🇧 GBP' },
+                    { value: 'usd', label: '🇺🇸 USD' },
+                    { value: 'eur', label: '🇪🇺 EUR' },
+                    { value: 'cad', label: '🇨🇦 CAD' },
+                    { value: 'sgd', label: '🇸🇬 SGD' },
+                ]}
+            />
+            {/* <Select>
+              <Option value="gbp">GBP</Option>
+              <Option value="usd">USD</Option>
+              <Option value="eur">EUR</Option>
+              <Option value="cad">CAD</Option>
+              <Option value="sgd">SGD</Option>
+            </Select> */}
+          </Form.Item>
+          <Form.Item name="defaultDonationAmountValue" label="Default Donation Amount">
+            <InputNumber min={1} />
+          </Form.Item>
+          
+
+          {/* Dynamic Fields for onceAmountsOptions */}
+          <Form.List name="onceAmountsOptions">
+            {(fields, { add, remove }) => (
+              <>
+                <Typography.Title level={5}>Once Amounts Options</Typography.Title>
+                {fields.map(({ key, name,  ...restField }) => (
+                  <Space key={key} style={{ display: 'flex', marginBottom: 8 }} align="baseline">
+                    <Form.Item
+                      {...restField}
+                      name={[name]}
+                      rules={[{ required: true, message: 'Missing amount' }]}
+                    >
+                      <InputNumber min={1} />
+                    </Form.Item>
+                    {fields.length > 2 && (
+                      <Button type="link" onClick={() => remove(name)}>
+                        Remove
+                      </Button>
+                    )}
+                  </Space>
+                ))}
+                {fields.length < 6 && (
+                  <Form.Item>
+                    <Button type="dashed" onClick={() => add()} block>
+                      Add Amount
+                    </Button>
+                  </Form.Item>
+                )}
+              </>
+            )}
+          </Form.List>
+
+          <Form.Item name="allowRegular" valuePropName="checked">
+            <Checkbox>Allow Regular Donations</Checkbox>
+          </Form.Item>
+
+          <Form.Item name="defaultFrequency" label="Default Frequency">
+            <Select>
+              <Option value="once">Once</Option>
+              <Option value="regular">Regular</Option>
+            </Select>
+          </Form.Item>
+
+          {/* Dynamic Fields for regularAmountsOptions */}
+          <Form.List name="regularAmountsOptions">
+            {(fields, { add, remove }) => (
+              <>
+                <Typography.Title level={5}>Regular Amounts Options</Typography.Title>
+                {fields.map(({ key, name, fieldKey, ...restField }) => (
+                  <Space key={key} style={{ display: 'flex', marginBottom: 8 }} align="baseline">
+                    <Form.Item
+                      {...restField}
+                      name={[name]}
+                      fieldKey={[fieldKey]}
+                      rules={[{ required: true, message: 'Missing amount' }]}
+                    >
+                      <InputNumber min={1} />
+                    </Form.Item>
+                    {fields.length > 2 && (
+                      <Button type="link" onClick={() => remove(name)}>
+                        Remove
+                      </Button>
+                    )}
+                  </Space>
+                ))}
+                {fields.length < 6 && (
+                  <Form.Item>
+                    <Button type="dashed" onClick={() => add()} block>
+                      Add Amount
+                    </Button>
+                  </Form.Item>
+                )}
+              </>
+            )}
+          </Form.List>
+
+          <Form.Item name="labelOnce" label="Label Once">
+            <Input />
+          </Form.Item>
+          <Form.Item name="labelRegular" label="Label Regular">
+            <Input />
+          </Form.Item>
+
+          <Form.Item name="autoFocus" valuePropName="checked">
+            <Checkbox>Auto Focus</Checkbox>
+          </Form.Item>
+         
+          <Form.Item name="allowAllocate" valuePropName="checked">
+            <Checkbox>Allow Allocation</Checkbox>
+          </Form.Item>
+          <Form.Item name="allowGiftAid" valuePropName="checked">
+            <Checkbox>Allow Gift Aid</Checkbox>
+          </Form.Item>
+          <Form.Item name="allowUpsell" valuePropName="checked">
+            <Checkbox>Allow Upsell</Checkbox>
+          </Form.Item>
+          <Form.Item name="upsellItemTitle" label="Upsell Item Title">
+            <Input />
+          </Form.Item>
+          <Form.Item name="upsellItemDescription" label="Upsell Item Description">
+            <Input />
+          </Form.Item>
+          <Form.Item name="upsellItemValue" label="Upsell Item Value">
+            <InputNumber min={1} />
+          </Form.Item>
+          <Form.Item name="height" label="Height">
+            <InputNumber min={100} />
+          </Form.Item>
+          <Form.Item name="isLoggedIn" valuePropName="checked">
+            <Checkbox>Is Logged In</Checkbox>
+          </Form.Item>
+          <Form.Item name="adminFeeCheckedDefault" valuePropName="checked">
+            <Checkbox>Admin Fee Checked by Default</Checkbox>
+          </Form.Item>
+          
+          <Form.Item>
+            <Button type="primary" onClick={() => form.resetFields()}>Reset to Default</Button>
+          </Form.Item>
+        </Form>
+        <Flex vertical>
+          <Typography.Title level={4}>Live Preview</Typography.Title>
+          <CreateDonationForm {...formProps} />
+        </Flex>
+      </Flex>
+    </Card>
+  );
+};

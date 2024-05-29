@@ -27,6 +27,7 @@ import {
   LoginOutlined,
   MailOutlined,
   ProductOutlined,
+  GroupOutlined,
 } from '@ant-design/icons';
 import type { ProSettings } from '@ant-design/pro-components';
 import {
@@ -73,6 +74,7 @@ import TopLevelPage from './pages/TopLevelPage';
 import TeamInvitation from './pages/TeamInvitation';
 import LoginPage from './pages/loginPage';
 import DonationWidgetsDemo from './pages/DonationWidgetsDemo';
+import DonationFormBuilder from './pages/DonationFormBuilder';
 // import FundraisingPages from './pages/fundraising/FundraisingPages';
 // import FundraisingTeams from './pages/fundraising/FundraisingTeams';
 // import FundraisingTeamInvitation from './pages/fundraising/FundraisingTeamInvitation';
@@ -143,6 +145,7 @@ export default () => {
     '/team-invitation',
     '/top-level-page',
     '/donation-widgets-demo',
+    '/form-builder',
     // add more
   ]
 
@@ -807,6 +810,12 @@ export default () => {
         />
 
         <FloatButton
+        tooltip={<div>Donation Form Builder</div>}
+        onClick={() => navigate('/form-builder')}
+        icon={<GroupOutlined />}
+        />
+
+        <FloatButton
         tooltip={<div>Login Screen</div>}
         onClick={() => navigate('/login')}
         icon={<LoginOutlined />}
@@ -883,6 +892,7 @@ const NonDashboardPage = () => (
     <Route path="/login" element={<LoginPage />} />
     <Route path="/top-level-page" element={<TopLevelPage />} />
     <Route path="/donation-widgets-demo" element={<DonationWidgetsDemo />} />
+    <Route path="/form-builder" element={<DonationFormBuilder />} />
   </Routes>
 )
 
