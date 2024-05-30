@@ -39,12 +39,13 @@ const AccountSettings: React.FC = () => {
           <TabPane tab="Contact Preferences" key="3">
             <ContactPrefs />
           </TabPane>
-          <TabPane tab="Invoices" key="4">
+          {/* Move these */}
+          {/* <TabPane tab="Invoices" key="4">
             <Invoices />
           </TabPane>
           <TabPane tab="Tax Statements" key="5">
             <TaxStatements />
-          </TabPane>
+          </TabPane> */}
           <TabPane tab="GDPR" key="6">
             <GDPR />
           </TabPane>

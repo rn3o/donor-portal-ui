@@ -16,7 +16,7 @@ import {
     Tag,
     Drawer
 } from 'antd';
-import { CalendarOutlined, CheckCircleFilled, CloseOutlined, CreditCardOutlined, GiftFilled, HeartFilled, LeftOutlined, LinkOutlined } from '@ant-design/icons';
+import { CalendarOutlined, CheckCircleFilled, CloseOutlined, CreditCardOutlined, GiftFilled, HeartFilled, LeftOutlined, LinkOutlined, ShoppingOutlined } from '@ant-design/icons';
 import { CheckCard } from '@ant-design/pro-components';
 import SelectAllocationCascader from './SelectAllocationCascader';
 import type { SliderSingleProps } from 'antd';
@@ -143,6 +143,10 @@ const CreateDonationForm: React.FC<CreateDonationFormProps> = ({
             // setSelectedSegment('regular');
         }
     }, [allowRegular]);
+
+    useEffect(() => {
+        // multi checkout
+    }, [isMultiCheckout]);
 
     useEffect(() => {
         const currencySymbols: { [key: string]: string } = {
@@ -273,9 +277,9 @@ const CreateDonationForm: React.FC<CreateDonationFormProps> = ({
         >
             {/* @ts-ignore */}
             <Flex style={amountOptionsContainer}>
-                {amounts.map(amount => (
+                {amounts.map((amount, index) => (
                     <CheckCard
-                    key={amount}
+                    key={index}
                         // @ts-ignore
                         style={amountOptionStyle}
                         title={<div style={amountTitle}>{currencySymbol}{amount}</div>}
@@ -293,7 +297,7 @@ const CreateDonationForm: React.FC<CreateDonationFormProps> = ({
         value={selectedAmount}
     >
         <Flex vertical>
-            {descriptiveAmountOptions.map((item, index) => (
+            {descriptiveAmountOptions.map((item, index: number) => (
                 <CheckCard
                     key={index} 
                     style={{ width: '100%' }}
@@ -436,20 +440,20 @@ const CreateDonationForm: React.FC<CreateDonationFormProps> = ({
                         
 
                         {isMultiCheckout ? (
+                            <Flex vertical gap={token.sizeSM} style={{ marginTop: 'auto' }}>
                             <Button
-                                style={{ marginTop: 'auto' }}
-                                block
-                                size="large"
-                                // icon={<FileOutlined />}
-                                type="primary"
-                                onClick={() => {
-                                    showMultiCheckOutDrawer()
-                                }}
-                                disabled={donationAmountValue === undefined || donationAmountValue <= 0 && true}
-                            >
-                                Add to Basket
+                                    style={{ marginTop: 'auto' }}
+                                    block
+                                    size="large"
+                                    icon={<ShoppingOutlined />}
+                                    type="text"
+                                    onClick={() => {
+                                        showMultiCheckOutDrawer()
+                                    }}
+                                    disabled={donationAmountValue === undefined || donationAmountValue <= 0 && true}
+                                >
+                                    Add to Donation Basket
                             </Button>
-                        ):(
                             <Button
                                 style={{ marginTop: 'auto' }}
                                 block
@@ -461,6 +465,21 @@ const CreateDonationForm: React.FC<CreateDonationFormProps> = ({
                             >
                                 Donate {currencySymbol}{donationAmountValue}{selectedSegment === 'regular' && "/month" || null}
                             </Button>
+                        </Flex>
+                        ):(
+                            <Flex vertical gap={token.sizeSM} style={{ marginTop: 'auto' }}>
+                                <Button
+                                    style={{ marginTop: 'auto' }}
+                                    block
+                                    size="large"
+                                    // icon={<FileOutlined />}
+                                    type="primary"
+                                    onClick={handleNextStep}
+                                    disabled={donationAmountValue === undefined || donationAmountValue <= 0 && true}
+                                >
+                                    Donate {currencySymbol}{donationAmountValue}{selectedSegment === 'regular' && "/month" || null}
+                                </Button>
+                            </Flex>
                         )}
                     </Flex>
                 )}

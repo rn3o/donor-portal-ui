@@ -28,6 +28,7 @@ import {
   MailOutlined,
   ProductOutlined,
   GroupOutlined,
+  ShoppingOutlined,
 } from '@ant-design/icons';
 import type { ProSettings } from '@ant-design/pro-components';
 import {
@@ -238,7 +239,7 @@ export default () => {
     }));
   };
 
-  const [primaryColorTheme, setPrimaryColorTheme] = React.useState('#1677ff');
+  const [primaryColorTheme, setPrimaryColorTheme] = React.useState(token.colorPrimary);
 
   const [themeRadius, setThemeRadius] = React.useState(6);
 
@@ -641,8 +642,8 @@ export default () => {
                 </Flex>
               ) : undefined,
               // <InfoCircleFilled key="InfoCircleFilled" />,
-              <QuestionCircleFilled key="QuestionCircleFilled" />,
-              <AppstoreOutlined key="AppstoreOutlined" />,
+              // <QuestionCircleFilled key="QuestionCircleFilled" />,
+              <ShoppingOutlined />,
             ];
           }}
           headerTitleRender={(logo, title, _) => {

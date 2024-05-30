@@ -31,7 +31,7 @@ const FormBuilderPageTemp: React.FC = () => {
           Share
         </Button>,
       ]}
-      style={{ width: '100%', margin: 'auto', maxWidth: '1200px' }}
+      style={{ width: '100%', margin: 'auto', maxWidth: '1280px' }}
     >
       <ProCard
         style={{
