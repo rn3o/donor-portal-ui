@@ -129,6 +129,7 @@ const ZakatCalcCreate = lazy(() =>
 );
 
 const AccountSettings = lazy(() => import('./pages/AccountSettings'));
+const FormBuilderPageTemp = lazy(() => import('./pages/FormBuilderPageTemp'));
 
 export const AppLogoContext = createContext<string>('');
 
@@ -1061,6 +1062,16 @@ const Content = () => (
         <Suspense fallback={<>loading</>}>
           {' '}
           <AccountSettings />{' '}
+        </Suspense>
+      }
+    />
+
+    <Route
+      path="/formbuildertemp"
+      element={
+        <Suspense fallback={<>loading</>}>
+          {' '}
+          <FormBuilderPageTemp />{' '}
         </Suspense>
       }
     />

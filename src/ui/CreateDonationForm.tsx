@@ -102,9 +102,10 @@ const CreateDonationForm: React.FC<CreateDonationFormProps> = ({
     isLoggedIn = false,
     adminFeeCheckedDefault = false,
 
-    
-    onceAmountsOptions = [700, 500, 285, 100, 50, 25],
-    regularAmountsOptions = [250, 100, 50, 30, 25, 10],
+    onceAmountsOptions = [100, 50, 25],
+    regularAmountsOptions = [30, 25, 10],
+    // onceAmountsOptions = [700, 500, 285, 100, 50, 25],
+    // regularAmountsOptions = [250, 100, 50, 30, 25, 10],
 
     useDescriptiveAmount = false,
     descriptiveAmountOptions = [
@@ -127,6 +128,10 @@ const CreateDonationForm: React.FC<CreateDonationFormProps> = ({
     const [selectedSegment, setSelectedSegment] = useState<FrequencyOption>(defaultFrequency);
     const [currentStep, setCurrentStep] = useState<number>(overrideStep); // Add state for steps
 
+    useEffect(() => {
+        setCurrentStep(overrideStep);
+    }, [overrideStep]);
+    
     useEffect(() => {
         setSelectedSegment(defaultFrequency);
     }, [defaultFrequency]);
