@@ -10,6 +10,7 @@ import {
   CalendarOutlined,
   TeamOutlined,
   SettingOutlined,
+  GroupOutlined,
 } from '@ant-design/icons';
 
 import MyAccount from './../pages/MyAccount';
@@ -84,6 +85,12 @@ export default {
         path: '/account-settings',
         name: 'Account Settings',
         icon: <SettingOutlined />,
+      },
+
+      {
+        path: '/formbuildertemp',
+        name: 'Form Builder (TEMP)',
+        icon: <GroupOutlined />,
       },
 
       // {

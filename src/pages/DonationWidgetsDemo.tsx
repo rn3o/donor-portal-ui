@@ -622,12 +622,11 @@ const DonationFormConfigurator: React.FC = () => {
             {(fields, { add, remove }) => (
               <>
                 <Typography.Title level={5}>Regular Amounts Options</Typography.Title>
-                {fields.map(({ key, name, fieldKey, ...restField }) => (
+                {fields.map(({ key, name, ...restField }) => (
                   <Space key={key} style={{ display: 'flex', marginBottom: 8 }} align="baseline">
                     <Form.Item
                       {...restField}
                       name={[name]}
-                      fieldKey={[fieldKey]}
                       rules={[{ required: true, message: 'Missing amount' }]}
                     >
                       <InputNumber min={1} />
