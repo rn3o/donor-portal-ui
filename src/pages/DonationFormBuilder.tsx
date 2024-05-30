@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { Flex, Tabs, Typography, Button, ConfigProvider, theme, Affix, Space, Card, Form, Input, InputNumber, Checkbox, Select, Segmented, ColorPicker, Slider, Radio } from 'antd';
+import { Flex, message, Modal, Tabs, Typography, Button, ConfigProvider, theme, Affix, Space, Card, Form, Input, InputNumber, Checkbox, Select, Segmented, ColorPicker, Slider, Radio, Divider } from 'antd';
 import CreateDonationForm from '../ui/CreateDonationForm';
-import { CloseCircleOutlined, ColumnWidthOutlined, FontColorsOutlined, FontSizeOutlined, QuestionCircleOutlined, RadiusUprightOutlined } from '@ant-design/icons';
+import { CloseCircleOutlined, CodepenCircleOutlined, ColumnWidthOutlined, CopyOutlined, FontColorsOutlined, FontSizeOutlined, FormatPainterOutlined, MailOutlined, QuestionCircleOutlined, RadiusUprightOutlined } from '@ant-design/icons';
+import TextArea from 'antd/es/input/TextArea';
 
 const { Text, Link } = Typography;
 const { Option } = Select;
@@ -22,6 +23,25 @@ const DonationFormBuilder: React.FC = () => {
   const [allowAmountInput, setAllowAmountInput] = useState(true);
   const [defaultFrequency, setDefaultFrequency] = useState('once' || 'regular');
   const [useDescriptiveAmount, setUseDescriptiveAmount] = useState(true);
+  
+  const [overrideFormStep, setOverrideFormStep] = useState<number>(1);
+
+  const onTabChange = (key: string) => {
+    console.log(key);
+    if (key === 'paymentTab')
+    {
+      setOverrideFormStep(4)
+    }
+    if (key === 'donationOptionsTab')
+    {
+      setOverrideFormStep(1)
+    }
+    if (key === 'donorFormTab')
+    {
+      setOverrideFormStep(3)
+    }
+  };
+  
 
   const handleFormChange = (_, allValues) => {
     setFormProps(allValues);
@@ -68,8 +88,8 @@ const DonationFormBuilder: React.FC = () => {
         form={form}
         layout="vertical"
         style={{
-          width: 300,
-          maxWidth: 300,
+          width: 400,
+          maxWidth: 400,
         }}
         initialValues={{
           defaultCurrency: 'gbp',
@@ -113,8 +133,9 @@ const DonationFormBuilder: React.FC = () => {
 
         <Tabs
           tabPosition='top'
+          onChange={onTabChange}
         >
-          <TabPane tab="Donation Options" key="1">
+          <TabPane tab="Donation Options" key="donationOptionsTab">
             <Form.Item name="defaultCurrency" label="Default Currency">
               <Select
                 value={defaultCurrency}
@@ -168,7 +189,8 @@ const DonationFormBuilder: React.FC = () => {
                           <Button type="dashed" onClick={() => {
 
                             add(10)
-                          }} block>
+                          }} block
+                          style={{ maxWidth:240}}>
                             Add Option
                           </Button>
                         </Form.Item>
@@ -205,7 +227,8 @@ const DonationFormBuilder: React.FC = () => {
                           ))}
                           {fields.length < 6 && (
                             <Form.Item>
-                              <Button type="dashed" onClick={() => add(5)} block>
+                              <Button type="dashed" onClick={() => add(5)} block
+                              style={{ maxWidth:240}}>
                                 Add Option
                               </Button>
                             </Form.Item>
@@ -266,7 +289,8 @@ const DonationFormBuilder: React.FC = () => {
                         </Space>
                       ))}
                       <Form.Item>
-                        <Button type="dashed" onClick={() => add({ amount: 100, description: 'Default Description' })} block>
+                        <Button type="dashed" onClick={() => add({ amount: 100, description: 'Default Description' })} block
+                        style={{ maxWidth:240}}>
                           Add Option
                         </Button>
                       </Form.Item>
@@ -308,6 +332,8 @@ const DonationFormBuilder: React.FC = () => {
               </Form.Item>
             }
 
+            <Divider />
+
             <Form.List name="customFields">
               {(fields, { add, remove }) => (
                 <>
@@ -340,7 +366,8 @@ const DonationFormBuilder: React.FC = () => {
                     </Space>
                   ))}
                   <Form.Item>
-                    <Button type="dashed" onClick={() => add()} block>
+                    <Button type="dashed" onClick={() => add()} block
+                    style={{ maxWidth:240}}>
                       Add Custom Field
                     </Button>
                   </Form.Item>
@@ -369,15 +396,90 @@ const DonationFormBuilder: React.FC = () => {
               }}>Reset to Default</Button>
             </Form.Item>
 
-
-            {/* Design Tab */}
           </TabPane>
-          <TabPane tab="Design" key="2">
+
+          
+
+          {/* Donor Form Tab */}
+          <TabPane tab="Donor Details" key="donorFormTab">
+            <Form.List name="customFields">
+              {(fields, { add, remove }) => (
+                <>
+                  <Typography.Title level={5}>Custom Fields</Typography.Title>
+                  {fields.map(({ key, name, ...restField }) => (
+                    <Space key={key} style={{ display: 'flex' }} align="baseline">
+                      <Form.Item
+                        {...restField}
+                        name={[name, 'customFieldType']}
+                        rules={[{ required: true, message: 'Missing field type' }]}
+                      >
+                        <Select placeholder="Field Type">
+                          <Option value="shortText">Short Text</Option>
+                          <Option value="date">Date</Option>
+                          <Option value="longText">Long Text</Option>
+                        </Select>
+                      </Form.Item>
+                      <Form.Item
+                        {...restField}
+                        name={[name, 'placeholder']}
+                        rules={[{ required: true, message: 'Missing placeholder' }]}
+                      >
+                        <Input placeholder="Placeholder" />
+                      </Form.Item>
+                      {fields.length > 0 && (
+                        <Button icon={<CloseCircleOutlined />} type="link" onClick={() => remove(name)}>
+
+                        </Button>
+                      )}
+                    </Space>
+                  ))}
+                  <Form.Item>
+                    <Button type="dashed" onClick={() => add()} block
+                    style={{ maxWidth:240}}>
+                      Add Field
+                    </Button>
+                  </Form.Item>
+                </>
+              )}
+            </Form.List>
+
+            TODO
+
+          </TabPane>
+
+          {/* Payments Tab */}
+          <TabPane tab="Payment" key="paymentTab">
+            <Form.Item name="allowGiftAid" valuePropName="checked">
+                <Checkbox>Allow Gift Aid</Checkbox>
+              </Form.Item>
+              <Form.Item name="allowUpsell" valuePropName="checked">
+                <Checkbox>Allow Upsell</Checkbox>
+              </Form.Item>
+              <Form.Item name="upsellItemTitle" label="Upsell Item Title">
+                <Input />
+              </Form.Item>
+              <Form.Item name="upsellItemDescription" label="Upsell Item Description">
+                <Input />
+              </Form.Item>
+              <Form.Item name="upsellItemImageUrl" label="Upsell Item Image URL">
+                <Input />
+              </Form.Item>
+              <Form.Item name="upsellItemValue" label="Upsell Item Value">
+                <InputNumber min={1} style={{ width: 64 }} />
+              </Form.Item>
+
+              <Divider />
+
+              TODO:<br />
+              payment method, etc
+          </TabPane>
+
+          {/* Design Tab */}
+          <TabPane tab="Design" key="designTab">
             <Flex
               gap={token.sizeMD}
               style={{
                 // scale: '0.8',
-                padding: token.sizeXS,
                 // background: token.colorBgBase,
                 borderRadius: token.borderRadiusOuter,
               }}
@@ -391,15 +493,17 @@ const DonationFormBuilder: React.FC = () => {
               </Flex>
 
               <Flex align='center' gap={token.sizeSM}>
-                <Form.Item name="height" label="Form Height">
+                <Form.Item name="height" label="Initial Form Height">
                   <InputNumber min={100} /> 
-                </Form.Item><QuestionCircleOutlined />
+                </Form.Item>
+                {/* <QuestionCircleOutlined /> */}
               </Flex>
 
 
-              <>
+
+              <Flex align="center" gap={token.sizeSM}>
+                <FormatPainterOutlined /> Color
                 <ColorPicker
-                  style={{ width: 110 }}
                   showText
                   value={token.colorPrimary}
                 // value={primaryColorTheme}
@@ -407,82 +511,76 @@ const DonationFormBuilder: React.FC = () => {
                 // onChangeComplete={(color) =>
                 //   setPrimaryColorTheme(color.toHexString())
                 // }
+                style={{ marginLeft: 'auto'
+                }}
                 />
-              </>
+              </Flex>
 
-              <Flex align="center" gap="4px">
+              <Flex align="center" gap={token.sizeSM}>
                 <FontColorsOutlined /> Font
                 <Select
+                  value={"Helvetica"}
                   // options={fontFamilies}
                   // value={selectedFont}
                   // onChange={handleFontChange}
                   style={{
-                    width: 140,
+                    width: 140, marginLeft: 'auto'
                   }}
                 />
               </Flex>
 
-              <Flex align="center" gap="4px">
+              <Flex align="center" gap={token.sizeSM}>
                 <FontSizeOutlined />
+                Font Size
                 <InputNumber
                   min={11}
                   max={16}
+                  defaultValue={14}
                   // defaultValue={themeFontSize}
                   // onChange={setThemeFontSize}
                   changeOnWheel
-                  style={{ width: 60 }}
+                  style={{ width: 60, marginLeft: 'auto' }}
                 />
               </Flex>
 
-              <Flex align="center" gap="4px">
+              <Flex align="center" gap={token.sizeSM}>
                 <RadiusUprightOutlined /> Corners
                 <Slider
                   // defaultValue={themeRadius}
                   // onChangeComplete={setThemeRadius}
                   min={0}
                   max={24}
-                  style={{ width: 80 }}
+                  style={{ width: 120, marginLeft: 'auto' }}
                 />
               </Flex>
 
-              <Flex align="center" gap="4px">
+              <Flex align="center" gap={token.sizeSM}>
                 <ColumnWidthOutlined /> Spacing
                 <Slider
                   // defaultValue={themeSpacingSize}
                   // onChangeComplete={setThemeSpacingSize}
                   min={1}
                   max={5}
-                  style={{ width: 80 }}
+                  style={{ width: 120, marginLeft: 'auto' }}
                 />
               </Flex>
+
+              <Flex gap={token.sizeSM} vertical>
+                <Flex gap={token.sizeSM}>
+                  <CodepenCircleOutlined /> Custom CSS <QuestionCircleOutlined />
+                </Flex>
+                
+               <TextArea 
+               autoSize={{ minRows: 5}}
+               size='large'></TextArea>
+              </Flex>
+
             </Flex>
           </TabPane>
 
-
-
-          {/* Payments Tab */}
-          <TabPane tab="Payment" key="4">
-            <Form.Item name="allowGiftAid" valuePropName="checked">
-                <Checkbox>Allow Gift Aid</Checkbox>
-              </Form.Item>
-              <Form.Item name="allowUpsell" valuePropName="checked">
-                <Checkbox>Allow Upsell</Checkbox>
-              </Form.Item>
-              <Form.Item name="upsellItemTitle" label="Upsell Item Title">
-                <Input />
-              </Form.Item>
-              <Form.Item name="upsellItemDescription" label="Upsell Item Description">
-                <Input />
-              </Form.Item>
-              <Form.Item name="upsellItemValue" label="Upsell Item Value">
-                <InputNumber min={1} style={{ width: 64 }} />
-              </Form.Item>
-          </TabPane>
         </Tabs>
       </Form>
       </Flex>
-
-      {/* TODO add themer for design section */}
 
       {/* Live Preview Area */}
 
@@ -511,9 +609,9 @@ const DonationFormBuilder: React.FC = () => {
             <Flex style={{ minWidth: 380, maxWidth: 380 }} vertical align='center'>
               <Typography.Title level={4}>Live Preview</Typography.Title>
               {selectedSegment === 'amountOnly' ? (
-                <CreateDonationForm {...formProps} useDescriptiveAmount={false} />
+                <CreateDonationForm {...formProps} useDescriptiveAmount={false} overrideStep={overrideFormStep} />
               ) : (
-                <CreateDonationForm {...formProps} useDescriptiveAmount />
+                <CreateDonationForm {...formProps} useDescriptiveAmount overrideStep={overrideFormStep}/>
               )}
             </Flex>
           </Affix>
@@ -528,3 +626,5 @@ const DonationFormBuilder: React.FC = () => {
 };
 
 export default DonationFormBuilder;
+
+
