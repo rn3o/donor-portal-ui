@@ -39,7 +39,10 @@ const FormBuilderPageTemp: React.FC = () => {
           // minHeight: 600,
         }}
       >
-        <DonationFormBuilder />
+        <div
+          style={{marginLeft: `-${token.sizeXL}px`}}>
+          <DonationFormBuilder />
+        </div>
       </ProCard>
     </PageContainer>
   );

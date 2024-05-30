@@ -111,7 +111,7 @@ const DonationFormBuilder: React.FC = () => {
 
   const handleFontChange = (value) => {
     setSelectedFont(value);
-    // document.documentElement.style.setProperty('--font-family', value);
+    document.documentElement.style.setProperty('--font-family', value);
   };
   
   // Form Themer End
@@ -125,6 +125,7 @@ const DonationFormBuilder: React.FC = () => {
         // maxWidth: 1000,
         // padding: '0 40px', 
         // margin: 'auto' 
+        paddingLeft: token.sizeXL, // temporarily
       }}
     >
       <Flex style={{
@@ -200,6 +201,7 @@ const DonationFormBuilder: React.FC = () => {
               </Form.Item>
 
               <Segmented
+                block
                 style={{ fontWeight: 600 }}
                 size='large'
                 options={[
@@ -419,11 +421,9 @@ const DonationFormBuilder: React.FC = () => {
                     <InputNumber min={1} style={{ width: 64 }} />
                   </Form.Item>
 
-                  <Flex align='center' gap={token.sizeSM}>
-                    <Form.Item name="autoFocus" valuePropName="checked">
-                      <Checkbox>Auto Focus on Amount Input <QuestionCircleOutlined /></Checkbox>
-                    </Form.Item>
-                  </Flex>
+                  <Form.Item name="autoFocus" valuePropName="checked">
+                    <Checkbox>Auto Focus on Amount Input <QuestionCircleOutlined /></Checkbox>
+                  </Form.Item>
                 </>
               }
 
@@ -487,9 +487,8 @@ const DonationFormBuilder: React.FC = () => {
               {/* <Form.Item name="isLoggedIn" valuePropName="checked">
             <Checkbox>Is Logged In</Checkbox>
           </Form.Item> */}
-              {/* <Form.Item name="adminFeeCheckedDefault" valuePropName="checked">
-            <Checkbox>Admin Fee Checked by Default</Checkbox>
-          </Form.Item> */}
+
+            <Divider />
 
               <Form.Item>
                 <Button type="text" onClick={() => {
@@ -556,6 +555,9 @@ const DonationFormBuilder: React.FC = () => {
               </Form.Item>
               <Form.Item name="allowUpsell" valuePropName="checked">
                 <Checkbox>Allow Upsell</Checkbox>
+              </Form.Item>
+              <Form.Item name="adminFeeCheckedDefault" valuePropName="checked">
+                <Checkbox>Admin Fee Checked by Default</Checkbox>
               </Form.Item>
               <Form.Item name="upsellItemTitle" label="Upsell Item Title">
                 <Input />

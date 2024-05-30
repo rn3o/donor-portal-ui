@@ -894,7 +894,13 @@ const NonDashboardPage = () => (
     <Route path="/login" element={<LoginPage />} />
     <Route path="/top-level-page" element={<TopLevelPage />} />
     <Route path="/donation-widgets-demo" element={<DonationWidgetsDemo />} />
-    <Route path="/form-builder" element={<DonationFormBuilder />} />
+    
+    {/* Temporary */}
+    <Route path="/form-builder" element={
+    <div style={{padding:40, background: 'white'}}>
+      <DonationFormBuilder />
+    </div>
+  } />
   </Routes>
 )
 
