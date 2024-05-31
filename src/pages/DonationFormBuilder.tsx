@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Flex, message, Modal, Tabs, Typography, Button, ConfigProvider, theme, Affix, Space, Card, Form, Input, InputNumber, Checkbox, Select, Segmented, ColorPicker, Slider, Radio, Divider } from 'antd';
+import { Flex, Anchor, message, Modal, Tabs, Typography, Button, ConfigProvider, theme, Affix, Space, Card, Form, Input, InputNumber, Checkbox, Select, Segmented, ColorPicker, Slider, Radio, Divider } from 'antd';
 import CreateDonationForm from '../ui/CreateDonationForm';
 import { CloseCircleOutlined, CodepenCircleOutlined, ColumnWidthOutlined, CopyOutlined, FontColorsOutlined, FontSizeOutlined, FormatPainterOutlined, MailOutlined, QuestionCircleOutlined, RadiusUprightOutlined } from '@ant-design/icons';
 import TextArea from 'antd/es/input/TextArea';
@@ -36,10 +36,14 @@ const DonationFormBuilder: React.FC = () => {
     if (key === 'donationOptionsTab') {
       setOverrideFormStep(1)
     }
+    if (key === 'designTab') {
+      setOverrideFormStep(1)
+    }
     if (key === 'donorFormTab') {
       setOverrideFormStep(3)
     }
   };
+
 
 
   const handleFormChange = (_, allValues) => {
@@ -117,8 +121,60 @@ const DonationFormBuilder: React.FC = () => {
   // Form Themer End
 
 
+  const onAnchorChange = (key: string) => {
+    console.log(key);
+    if (key === '#payments') {
+      setOverrideFormStep(4)
+    }
+    if (key === '#donation-options') {
+      setOverrideFormStep(1)
+    }
+    if (key === '#design') {
+      setOverrideFormStep(1)
+    }
+    if (key === '#donor-details') {
+      setOverrideFormStep(3)
+    }
+  };
+
+
 
   return (
+    <>
+    {/* <div style={{ padding: '20px' }}> */}
+    <Anchor
+      onChange={onAnchorChange}
+      targetOffset={180}
+      offsetTop={60}
+      direction="horizontal"
+      style={{ 
+        background: token.colorBgElevated,
+        marginLeft: token.sizeXL, // temporarily
+      }}
+      items={[
+        {
+          key: 'donation-options',
+          href: '#donation-options',
+          title: 'Donation Options',
+        },
+        {
+          key: 'donor-details',
+          href: '#donor-details',
+          title: 'Donor Details',
+        },
+        {
+          key: 'payments',
+          href: '#payments',
+          title: 'Payments',
+        },
+        {
+          key: 'design',
+          href: '#design',
+          title: 'Design',
+        },
+      ]}
+    />
+  {/* </div> */}
     <Flex gap={40}
       justify='space-between'
       style={{
@@ -179,12 +235,15 @@ const DonationFormBuilder: React.FC = () => {
           }}
           onValuesChange={handleFormChange}
         >
+          
+          <Typography.Title level={3}>Donation Options</Typography.Title>
+          <div id="donation-options" />
 
-          <Tabs
+          {/* <Tabs
             tabPosition='top'
             onChange={onTabChange}
-          >
-            <TabPane tab="Donation Options" key="donationOptionsTab">
+          > */}
+            {/* <TabPane tab="Donation Options" key="donationOptionsTab"> */}
               <Form.Item name="defaultCurrency" label="Default Currency">
                 <Select
                   value={defaultCurrency}
@@ -497,12 +556,15 @@ const DonationFormBuilder: React.FC = () => {
                 }}>Reset to Default</Button>
               </Form.Item>
 
-            </TabPane>
-
-
-
+            {/* </TabPane> */}
+            
             {/* Donor Form Tab */}
-            <TabPane tab="Donor Details" key="donorFormTab">
+            {/* <TabPane tab="Donor Details" key="donorFormTab"> */}
+
+            <Divider />
+            <Typography.Title level={3}>Donor Details</Typography.Title>
+            <div id="donor-details" />
+
               <Form.List name="customFields">
                 {(fields, { add, remove }) => (
                   <>
@@ -544,12 +606,38 @@ const DonationFormBuilder: React.FC = () => {
                 )}
               </Form.List>
 
-              TODO: contact preference options, etc
 
-            </TabPane>
+              TODO: contact preference options, etc
+              <br />
+              <br />
+              <br />
+              <br />
+              <br />
+              <br />
+              <br />
+              <br />
+              <br />
+              <br />
+              <br />
+              <br />
+              <br />
+              <br />
+              <br />
+              <br />
+              <br />
+              <br />
+              <br />
+              <br />
+              <br />
+
+            {/* </TabPane> */}
+
+            <Divider />
+            <Typography.Title level={3}>Payments</Typography.Title>
+            <div id="payments" />
 
             {/* Payments Tab */}
-            <TabPane tab="Payment" key="paymentTab">
+            {/* <TabPane tab="Payment" key="paymentTab"> */}
               <Form.Item name="allowGiftAid" valuePropName="checked">
                 <Checkbox>Allow Gift Aid</Checkbox>
               </Form.Item>
@@ -576,10 +664,28 @@ const DonationFormBuilder: React.FC = () => {
 
               TODO:<br />
               payment method, etc
-            </TabPane>
+              <br />
+              <br />
+              <br />
+              <br />
+              <br />
+              <br />
+              <br />
+              <br />
+              <br />
+              <br />
+              <br />
+              <br />
+            {/* </TabPane> */}
+
+
+
+            <Divider />
+            <Typography.Title level={3}>Design</Typography.Title>
+            <div id="design" />
 
             {/* Design Tab */}
-            <TabPane tab="Design" key="designTab">
+            {/* <TabPane tab="Design" key="designTab"> */}
               <Flex
                 gap={token.sizeMD}
                 style={{
@@ -673,14 +779,14 @@ const DonationFormBuilder: React.FC = () => {
                   </Flex>
 
                   <TextArea
-                    autoSize={{ minRows: 5 }}
+                    autoSize={{ minRows: 20 }}
                     size='large'></TextArea>
                 </Flex>
 
               </Flex>
-            </TabPane>
+            {/* </TabPane> */}
 
-          </Tabs>
+          {/* </Tabs> */}
         </Form>
       </Flex>
 
@@ -757,6 +863,7 @@ const DonationFormBuilder: React.FC = () => {
         </ConfigProvider>
       </Flex>
     </Flex>
+    </>
   );
 };
 
