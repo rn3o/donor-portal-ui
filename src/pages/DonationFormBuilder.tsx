@@ -123,16 +123,16 @@ const DonationFormBuilder: React.FC = () => {
 
   const onAnchorChange = (key: string) => {
     console.log(key);
-    if (key === 'payments') {
+    if (key === '#payments') {
       setOverrideFormStep(4)
     }
-    if (key === 'donation-options') {
+    if (key === '#donation-options') {
       setOverrideFormStep(1)
     }
-    if (key === 'design') {
+    if (key === '#design') {
       setOverrideFormStep(1)
     }
-    if (key === 'donor-details') {
+    if (key === '#donor-details') {
       setOverrideFormStep(3)
     }
   };
@@ -144,6 +144,7 @@ const DonationFormBuilder: React.FC = () => {
     {/* <div style={{ padding: '20px' }}> */}
     <Anchor
       onChange={onAnchorChange}
+      targetOffset={180}
       offsetTop={60}
       direction="horizontal"
       style={{ 
@@ -164,7 +165,7 @@ const DonationFormBuilder: React.FC = () => {
         {
           key: 'payments',
           href: '#payments',
-          title: 'Payment',
+          title: 'Payments',
         },
         {
           key: 'design',
@@ -234,8 +235,8 @@ const DonationFormBuilder: React.FC = () => {
           }}
           onValuesChange={handleFormChange}
         >
-
           
+          <Typography.Title level={3}>Donation Options</Typography.Title>
           <div id="donation-options" />
 
           {/* <Tabs
@@ -560,6 +561,8 @@ const DonationFormBuilder: React.FC = () => {
             {/* Donor Form Tab */}
             {/* <TabPane tab="Donor Details" key="donorFormTab"> */}
 
+            <Divider />
+            <Typography.Title level={3}>Donor Details</Typography.Title>
             <div id="donor-details" />
 
               <Form.List name="customFields">
@@ -603,32 +606,34 @@ const DonationFormBuilder: React.FC = () => {
                 )}
               </Form.List>
 
-              <br />
-              <br />
-              <br />
-              <br />
-              <br />
-              <br />
-              <br />
-              <br />
-              <br />
-              <br />
-              <br />
-              <br />
-              <br />
-              <br />
-              <br />
-              <br />
-              <br />
-              <br />
-              <br />
-              <br />
-              <br />
 
               TODO: contact preference options, etc
+              <br />
+              <br />
+              <br />
+              <br />
+              <br />
+              <br />
+              <br />
+              <br />
+              <br />
+              <br />
+              <br />
+              <br />
+              <br />
+              <br />
+              <br />
+              <br />
+              <br />
+              <br />
+              <br />
+              <br />
+              <br />
 
             {/* </TabPane> */}
 
+            <Divider />
+            <Typography.Title level={3}>Payments</Typography.Title>
             <div id="payments" />
 
             {/* Payments Tab */}
@@ -659,10 +664,24 @@ const DonationFormBuilder: React.FC = () => {
 
               TODO:<br />
               payment method, etc
+              <br />
+              <br />
+              <br />
+              <br />
+              <br />
+              <br />
+              <br />
+              <br />
+              <br />
+              <br />
+              <br />
+              <br />
             {/* </TabPane> */}
 
 
 
+            <Divider />
+            <Typography.Title level={3}>Design</Typography.Title>
             <div id="design" />
 
             {/* Design Tab */}
@@ -760,7 +779,7 @@ const DonationFormBuilder: React.FC = () => {
                   </Flex>
 
                   <TextArea
-                    autoSize={{ minRows: 5 }}
+                    autoSize={{ minRows: 20 }}
                     size='large'></TextArea>
                 </Flex>
 
