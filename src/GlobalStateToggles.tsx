@@ -26,7 +26,7 @@ const GlobalStateToggles: React.FC = () => {
   return (
     <FloatButton.Group
       trigger="click"
-      style={{ left: 24, bottom: 128, zIndex: 999 }}
+      style={{ left: 4, bottom: 150, zIndex: 999, opacity: .5, transform: 'scale(.75)' }}
       icon={<CodeOutlined />}
       tooltip={<div>Change UI States (DEMO)</div>}
     >
