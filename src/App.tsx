@@ -29,6 +29,7 @@ import {
   ProductOutlined,
   GroupOutlined,
   ShoppingOutlined,
+  SettingOutlined,
 } from '@ant-design/icons';
 import type { ProSettings } from '@ant-design/pro-components';
 import {
@@ -53,6 +54,7 @@ import {
   InputNumber,
   Switch,
   Radio,
+  Avatar,
 } from 'antd';
 
 import type { ColorPickerProps } from 'antd';
@@ -466,7 +468,7 @@ export default () => {
 
         {shouldRenderProLayout && (
         <ProLayout
-          menuExtraRender={({ collapsed }) =>
+          menuExtraRender={({ collapsed, isMobile }) =>
             collapsed ? (
               <Flex vertical gap="16px">
                 <Flex
@@ -510,6 +512,7 @@ export default () => {
                     cursor: 'pointer',
                     borderRadius: 8,
                     height: '40px',
+                    display: !isMobile ? '' : 'none',
                   }}
                   className={css`
                       &:hover {
@@ -537,7 +540,7 @@ export default () => {
                   </Text>
                   <QuickAccessMenu />
                 </Flex>
-                <Divider style={{ margin: '12px 0' }} />
+                <Divider style={{ margin: '12px 0',  }} />
               </Flex>
             )
           }
@@ -720,6 +723,10 @@ export default () => {
 
           <HeroBackgroundImage imageUrl={heroImage} />
 
+          <MobileNavBottomBar />
+
+          
+
           {/* <Flex style={{ maxWidth: 800, margin: 'auto' }}> */}
           <Content />
           {/* </Flex> */}
@@ -743,7 +750,7 @@ export default () => {
           tooltip={<div>Change Theme</div>}
           onClick={showThemerDrawer}
           badge={{ dot: true }}
-          style={{ left: 24, bottom:80, zIndex: 9999 }}
+          style={{ left: 4, bottom:110, zIndex: 9999, opacity: .5, transform: 'scale(.75)' }}
         />
 
       {/* page shortcuts: */}
@@ -883,6 +890,51 @@ const HeroBackgroundImage = ({ imageUrl }) => {
           'linear-gradient(to top, rgba(0,0,0,0), rgba(0,0,0,0.15) 100%)', // For Safari compatibility
       }}
     ></div>
+  );
+};
+
+// mobile menu
+
+const MobileNavBottomBar = () => {
+
+  const { token } = theme.useToken();
+
+  if (document.body.clientWidth < 680)
+  return (
+    <div
+      style={{
+        width: '100%',
+        margin: '-32px -8px 0 -8px',
+        // background: 'blue',
+        background: token.colorBgElevated,
+        boxShadow: token.boxShadow,
+        position: 'fixed',
+        bottom: 0,
+        zIndex: 999,
+        // visibility: isMobile ? 'visible' : 'hidden'
+      }}
+    >
+      <Flex
+        justify='space-around'
+        align='center'
+        style={{
+          padding: token.sizeSM,
+        }}
+      >
+        <Button type='text' size='large' icon={<HomeOutlined />}></Button>
+        <Button type='text' size='large' icon={<MailOutlined />}></Button>
+        <Button
+          type="primary"
+          shape="circle"
+          icon={<HeartOutlined />}
+        size='large'
+        >
+        </Button>
+        <Button type='text' size='large' icon={<ShoppingOutlined />}></Button>
+        <Button type='text' size='large' icon={<SettingOutlined />}></Button>
+        {/* <Avatar src='https://images.pexels.com/photos/1681010/pexels-photo-1681010.jpeg?auto=compress&cs=tinysrgb&w=60' /> */}
+      </Flex>
+    </div>
   );
 };
 
