@@ -1,13 +1,8 @@
 import React, { useState, useContext } from 'react';
 import { Flex, Typography, Card, Avatar, theme, Input, Button, Divider } from 'antd';
 import {
-  FolderOutlined,
-  ShareAltOutlined,
-  UserOutlined,
-  PlusOutlined,
   FacebookFilled,
   LinkedinFilled,
-  InstagramFilled,
   AppleFilled,
   GoogleOutlined,
   CheckCircleFilled,
